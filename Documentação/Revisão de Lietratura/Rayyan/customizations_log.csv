@@ -1,0 +1,33 @@
+created_at,user_id,user_email,article_id,key,value
+2023-09-03T19:51:56.293Z,329661,manu.rockemba@gmail.com,1075120265,included,0
+2023-09-03T19:53:50.982Z,329661,manu.rockemba@gmail.com,1075120286,included,1
+2023-09-03T19:54:46.263Z,329661,manu.rockemba@gmail.com,1075120288,included,1
+2023-09-03T19:55:50.014Z,329661,manu.rockemba@gmail.com,1075120287,included,1
+2023-09-03T20:14:17.148Z,329661,manu.rockemba@gmail.com,1075120283,included,1
+2023-09-03T20:31:30.890Z,329661,manu.rockemba@gmail.com,1075120276,included,1
+2023-09-03T20:36:31.471Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075120265,included,1
+2023-09-03T20:48:27.914Z,329661,manu.rockemba@gmail.com,1075120265,included,1
+2023-09-03T21:33:57.796Z,329661,manu.rockemba@gmail.com,1075127895,included,1
+2023-09-03T21:35:16.656Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127942,included,-1
+2023-09-03T21:35:18.015Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127942,included,1
+2023-09-03T21:35:42.890Z,329661,manu.rockemba@gmail.com,1075127936,included,1
+2023-09-03T21:35:49.546Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127942,"""it's possible to learn about the SoC with fuzy logic""",1
+2023-09-03T21:36:27.656Z,329661,manu.rockemba@gmail.com,1075127913,included,1
+2023-09-03T21:38:55.392Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127900,included,1
+2023-09-03T21:40:54.815Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127901,included,1
+2023-09-03T21:41:21.549Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127901,"""to find out the difference between state of CHARGE and state of CHARGING""",1
+2023-09-03T22:02:14.637Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127917,included,1
+2023-09-03T22:02:36.997Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127924,included,1
+2023-09-03T22:03:54.591Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127894,included,1
+2023-09-03T22:06:36.780Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127896,included,1
+2023-09-03T22:07:20.359Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127916,included,1
+2023-09-03T22:11:24.564Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127933,included,1
+2023-09-03T22:13:43.518Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075127923,included,1
+2023-09-03T23:26:28.475Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075120283,"""PDF is impossible to download""",1
+2023-09-03T23:26:29.162Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075120283,included,-1
+2023-09-03T23:26:47.365Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075120283,"""PDF is impossible to download""",deleted
+2023-09-03T23:26:48.569Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075120283,"""__EXR__PDF is impossible to download""",1
+2023-09-03T23:26:48.615Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075120283,included,-1
+2023-09-03T23:26:55.553Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075120283,"""__EXR__PDF is impossible to download""",deleted
+2023-09-03T23:26:56.444Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075120283,included,-1
+2023-09-03T23:26:57.241Z,395487,rodrigo.ferraz.souza@grad.ufsc.br,1075120283,included,1

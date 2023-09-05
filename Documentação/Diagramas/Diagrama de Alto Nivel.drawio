@@ -1,0 +1,131 @@
+<mxfile host="app.diagrams.net" modified="2023-09-05T14:38:13.425Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36" etag="80w2hvszoKDm8TXEtPd5" version="21.7.0" type="device">
+  <diagram id="sSibwnS2LVPJoNCfGSBo" name="Página-1">
+    <mxGraphModel dx="2117" dy="542" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;strokeColor=#000000;" parent="1" source="QLTdcfm45pftR2-Uuxbt-1" target="QLTdcfm45pftR2-Uuxbt-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-17" value="Dados solar&lt;br&gt;formatados" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#000000;" parent="QLTdcfm45pftR2-Uuxbt-7" vertex="1" connectable="0">
+          <mxGeometry x="-0.035" y="-3" relative="1" as="geometry">
+            <mxPoint x="27" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="QLTdcfm45pftR2-Uuxbt-1" target="QLTdcfm45pftR2-Uuxbt-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="210" />
+              <mxPoint x="310" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-18" value="Dados pluviômetro&lt;br&gt;formatados" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="QLTdcfm45pftR2-Uuxbt-8" vertex="1" connectable="0">
+          <mxGeometry x="-0.085" y="2" relative="1" as="geometry">
+            <mxPoint x="-48" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontColor=#0000FF;strokeColor=#000000;" parent="1" source="QLTdcfm45pftR2-Uuxbt-1" target="QLTdcfm45pftR2-Uuxbt-4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-20" value="Envia os dados" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#000000;" parent="QLTdcfm45pftR2-Uuxbt-13" vertex="1" connectable="0">
+          <mxGeometry x="0.05" y="-3" relative="1" as="geometry">
+            <mxPoint x="3" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-1" value="Server Projeto Pluviômetro" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="280" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-2" value="Banco de Dados" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="280" y="80" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;strokeColor=#000000;" parent="1" source="QLTdcfm45pftR2-Uuxbt-3" target="QLTdcfm45pftR2-Uuxbt-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-16" value="Dados solar" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#000000;" parent="QLTdcfm45pftR2-Uuxbt-9" vertex="1" connectable="0">
+          <mxGeometry x="-0.035" relative="1" as="geometry">
+            <mxPoint x="40" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="QLTdcfm45pftR2-Uuxbt-3" target="QLTdcfm45pftR2-Uuxbt-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-15" value="Dados Pluviômetro" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="QLTdcfm45pftR2-Uuxbt-10" vertex="1" connectable="0">
+          <mxGeometry x="0.015" y="-1" relative="1" as="geometry">
+            <mxPoint x="-51" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-3" value="Broker MQTT" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="280" y="400" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-4" value="Site Pluviômetro:&lt;br&gt;Seção de monitoramento solar&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="40" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#0000FF;" parent="1" source="QLTdcfm45pftR2-Uuxbt-5" target="QLTdcfm45pftR2-Uuxbt-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-22" value="Se inscreve no tópico&lt;br&gt;&quot;Solar + MAC&quot; e&lt;br&gt;manda os dados" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#0000FF;" parent="QLTdcfm45pftR2-Uuxbt-11" vertex="1" connectable="0">
+          <mxGeometry x="-0.065" y="-3" relative="1" as="geometry">
+            <mxPoint x="57" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#0000FF;" parent="1" source="QLTdcfm45pftR2-Uuxbt-5" target="QLTdcfm45pftR2-Uuxbt-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-23" value="Envia os dados&lt;br&gt;localmente&lt;br&gt;por bluetooth" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#0000FF;" parent="QLTdcfm45pftR2-Uuxbt-12" vertex="1" connectable="0">
+          <mxGeometry x="-0.1583" y="-1" relative="1" as="geometry">
+            <mxPoint x="10" y="29" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XlfHXmNk1PxRkzXjPQIo-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;strokeColor=#0000FF;" parent="1" source="QLTdcfm45pftR2-Uuxbt-5" target="t6Zoh4gIp90GDyeD-r3_-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-5" value="ESP-32" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="280" y="560" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-6" value="App Mobile para os dados da placa solar" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="520" y="560" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-24" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;strokeColor=#0000FF;fontColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="410" y="80" width="20" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-25" value="- Criar os datamodels para cada variável que&lt;br&gt;vamos analisar no SUNCHASER" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="420" y="75" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-26" value="- Cadastrar&amp;nbsp; o ESP-32 como embarcado autorizado" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="416" y="110" width="300" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-27" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;strokeColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="404" y="240" width="20" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-35" value="&lt;div&gt;- Verificar a lógica de alerta:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;se possível, adicionar firebase&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;para acionar o alerta como notificação no App&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="410" y="250" width="340" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XlfHXmNk1PxRkzXjPQIo-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeColor=#0000FF;" parent="1" source="t6Zoh4gIp90GDyeD-r3_-1" target="QLTdcfm45pftR2-Uuxbt-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t6Zoh4gIp90GDyeD-r3_-1" value="Placa de Controle PWM, PV, Bateria e Sensores" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="-10" y="560" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XlfHXmNk1PxRkzXjPQIo-5" value="Sinal PWM" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="180" y="540" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XlfHXmNk1PxRkzXjPQIo-6" value="Valores de tensão&lt;br&gt;e corrente" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#0000FF;" parent="1" vertex="1">
+          <mxGeometry x="160" y="610" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="OoIU61nuX3Uy_6G8Epdn-1" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="640" y="550" width="330" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-32" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;strokeColor=#0000FF;" parent="OoIU61nuX3Uy_6G8Epdn-1" vertex="1">
+          <mxGeometry width="20" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-33" value="- Pode ficar lendo em tempo real ou colocar&lt;br&gt;um botão para a fazer a leitura" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#0000FF;" parent="OoIU61nuX3Uy_6G8Epdn-1" vertex="1">
+          <mxGeometry x="20" y="5" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QLTdcfm45pftR2-Uuxbt-34" value="- Se o ESP mostrar memoria de N últimos registro, eles&lt;br&gt;podem ser mostrados no APP como gráficos e ter&lt;br&gt;o ultimo registro discriminado com o tempo" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#0000FF;" parent="OoIU61nuX3Uy_6G8Epdn-1" vertex="1">
+          <mxGeometry x="10" y="30" width="320" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

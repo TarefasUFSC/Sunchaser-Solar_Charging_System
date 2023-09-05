@@ -1,0 +1,96 @@
+<mxfile host="app.diagrams.net" modified="2023-08-15T14:28:35.353Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="x6UZYwnU0449Y0X4rDdS" version="21.6.3" type="device">
+  <diagram name="Página-1" id="HCWsE-VoyWmIq8wBALeM">
+    <mxGraphModel dx="1075" dy="452" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="SWh8k15m9vPml-PDWSpa-5" value="MQTT - Infos de Carregamento (1x por dia)&lt;br&gt;Fica guardando as coisas em um CACHE até conseguir enviar. &lt;br&gt;Quando Envia exclui o cache" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.005;exitY=0.209;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="SWh8k15m9vPml-PDWSpa-1">
+          <mxGeometry x="-0.0665" y="27" relative="1" as="geometry">
+            <mxPoint x="610" y="117" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.015;exitY=0.647;exitDx=0;exitDy=0;entryX=0;entryY=0.647;entryDx=0;entryDy=0;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="SWh8k15m9vPml-PDWSpa-1" target="SWh8k15m9vPml-PDWSpa-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-7" value="MQTT - Alerta de Bateria Baixa&lt;br&gt;Tá Safe" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="SWh8k15m9vPml-PDWSpa-6">
+          <mxGeometry x="-0.1112" y="1" relative="1" as="geometry">
+            <mxPoint y="-18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.999;exitY=0.799;exitDx=0;exitDy=0;entryX=0.001;entryY=0.798;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="SWh8k15m9vPml-PDWSpa-1" target="SWh8k15m9vPml-PDWSpa-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-9" value="MQTT - Alerta de Baixa Geração de Energia e Bateria Baixa&lt;br&gt;Não Tá Safe" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="SWh8k15m9vPml-PDWSpa-8">
+          <mxGeometry x="0.134" y="1" relative="1" as="geometry">
+            <mxPoint x="-24" y="17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-1" value="Sistema de Carregamento&lt;br&gt;(Mantém dados de T-30 dias Localmente no SD Card)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="90" width="180" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="698" y="220" as="sourcePoint" />
+            <mxPoint x="540" y="340" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="698" y="320" />
+              <mxPoint x="540" y="320" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-16" value="WEBSOCKET(?) - Alertas" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="SWh8k15m9vPml-PDWSpa-15">
+          <mxGeometry x="0.103" y="-1" relative="1" as="geometry">
+            <mxPoint x="-32" y="-9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-2" value="Servidor API" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="90" width="220" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="SWh8k15m9vPml-PDWSpa-3" target="SWh8k15m9vPml-PDWSpa-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="362" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-14" value="HTTP GET - Pega as Infos da Bateria (Remoto)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="SWh8k15m9vPml-PDWSpa-11">
+          <mxGeometry x="-0.4052" y="2" relative="1" as="geometry">
+            <mxPoint x="39" y="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" target="SWh8k15m9vPml-PDWSpa-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="414" y="405" as="sourcePoint" />
+            <mxPoint x="160" y="240" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="160" y="405" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-19" value="HTTP GET(?) - Pegar as infos da bateria (Localmente)&lt;br&gt;Ele envia 2 listas temporais: Infos que estão na memóra e o CACHE que estava para ser enviado&lt;br&gt;(ESP) Manda o que esta no CACHE para o SD Card e limpa ele para coletar mais dados" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="SWh8k15m9vPml-PDWSpa-18">
+          <mxGeometry x="-0.7278" relative="1" as="geometry">
+            <mxPoint x="-104" y="35" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="SWh8k15m9vPml-PDWSpa-3" target="SWh8k15m9vPml-PDWSpa-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="497" y="460" />
+              <mxPoint x="860" y="460" />
+              <mxPoint x="860" y="155" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-26" value="HTTP POST - Envia o CACHE que pegou do ESP Localmente&lt;br&gt;Para atualizar o Servidor no Lugar do ESP" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="SWh8k15m9vPml-PDWSpa-25">
+          <mxGeometry x="-0.514" y="2" relative="1" as="geometry">
+            <mxPoint x="34" y="22" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SWh8k15m9vPml-PDWSpa-3" value="App Mobile" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="414" y="340" width="166" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
