@@ -1,10 +1,11 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './src/pages/home';
 import Settings from './src/pages/settings';
 import Graph from './src/pages/graph';
+import { RoundButtom } from './src/components/components';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,11 +17,21 @@ function App() {
           name="Home"
           component={Home}
           options={{
+            headerTitle: "Leitura Mais Recente",
+            labeled:'false',
             tabBarLabel: 'Home',
             tabBarIcon: ({ color, size }) => (
               <Image
-                source={require('./assets/home.png')}
+                source={require('./src/assets/home.png')}
                 style={{ width: size, height: size, tintColor: color}}
+              />
+            ),
+            headerRight: () => (
+              <Button
+                style={styles.homeButton}
+                onPress={() => alert('This is a button!')}
+                title="Nova Leitura"
+                color="#4B9460"
               />
             ),
           }}
@@ -32,7 +43,7 @@ function App() {
             tabBarLabel: 'Settings',
             tabBarIcon: ({ color, size }) => (
               <Image
-                source={require('./assets/setting.png')}
+                source={require('./src/assets/setting.png')}
                 style={{ width: size, height: size, tintColor: color}}
               />
             ),
@@ -45,7 +56,7 @@ function App() {
             tabBarLabel: 'Graph',
             tabBarIcon: ({ color, size }) => (
               <Image
-                source={require('./assets/graph.png')}
+                source={require('./src/assets/graph.png')}
                 style={{ width: size, height: size, tintColor: color}}
               />
             ),
@@ -56,4 +67,10 @@ function App() {
   );
 }
 
+const styles = StyleSheet.create({
+  homeButton:{
+    marginRight: 15
+  }
+});
+  
 export default App;
