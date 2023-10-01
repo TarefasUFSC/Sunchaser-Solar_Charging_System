@@ -1,25 +1,58 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-export const HorizontalList = ({Variavel, Valor}) => {
+export const HorizontalLisdt = ({Variavel, Valor, Input}) => {
   return (
     <View style={styles.container}>
-      <View style={styles.circle}></View>
-      <View style={styles.leftContent}>
-        <Text style={styles.boldText}>{Variavel}</Text>
-      </View>
-      <View>
-        <Text>{Valor}</Text>
-      </View>
+        <View style={styles.leftContent}>
+            <View style={styles.circle}></View>
+            <Text style={styles.boldText}>{Variavel}</Text>
+        </View>
+        <View><Text>{Valor}</Text></View>
     </View>
   );
 };
 
-export const HR = () => {
-    return(
-        <View style={styles.hr}></View>
+export const HorizontalList = ({Variavel, Valor, Input}) => {
+    const [text, setText] = useState('');
+    const handleTextChange = (newText) => {
+        const numericText = newText.replace(/[^0-9]/g, '');
+        setText(numericText);
+    };
+    return (
+        <View>{Input ?(
+            <View style={styles.container}>
+                <View style={styles.leftContent}>
+                    <View style={styles.circle}></View>
+                    <Text style={styles.boldText}>{Variavel}</Text>    
+                </View>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={[styles.input,{textAlign: 'center'}]}
+                        value={text}
+                        onChangeText={handleTextChange}
+                        keyboardType="numeric"
+                    />
+                    <Text>{Valor}</Text>
+                </View>
+            </View>
+        ):(
+            <View style={styles.container}>
+                <View style={styles.leftContent}>
+                    <View style={styles.circle}></View>
+                    <Text style={styles.boldText}>{Variavel}</Text>
+                </View>
+                <Text>{Valor}</Text>
+            </View>
+        )}
+        </View>
     );
 };
+
+export const HR = () => {
+    return(<View style={styles.hr}></View>);
+};
+
 /*
 export const RoundButtom = ({conteudo, navigation}) => {
     return(
@@ -39,8 +72,9 @@ RoundButtom.navigationOptions = ({ navigation }) => {
         </TouchableOpacity>
       ),
     };
-  };
+};
 */
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -51,17 +85,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10, 
     backgroundColor: 'white', 
   },
-  image: {
-    width: 24, 
-    height: 24, 
-    marginRight: 10, 
-  },
   leftContent: {
     flexDirection: 'row', 
     alignItems: 'center', 
   },
   boldText: {
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
   },
   circle: {
     width: 18, 
@@ -70,12 +99,25 @@ const styles = StyleSheet.create({
     borderRadius: 18 / 1, 
     borderColor: 'darkgray', 
     borderWidth: 1, 
+    marginRight: 10,
   },
   hr:{
-    width: '90%', 
+    width: '95%', 
     height: 1, 
     backgroundColor: 'black', 
     alignSelf: 'center', 
+  },
+  inputContainer:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 70
+  },
+  input: {
+    width:30,
+    borderWidth: 1,
+    borderColor: 'gray',
+    padding: 1,
+    fontSize: 18,
   },
   /*roundButtom: {
     marginRight: 15,

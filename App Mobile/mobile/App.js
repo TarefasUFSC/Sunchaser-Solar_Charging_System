@@ -18,7 +18,6 @@ function App() {
           component={Home}
           options={{
             headerTitle: "Leitura Mais Recente",
-            labeled:'false',
             tabBarLabel: 'Home',
             tabBarIcon: ({ color, size }) => (
               <Image
@@ -28,23 +27,9 @@ function App() {
             ),
             headerRight: () => (
               <Button
-                style={styles.homeButton}
                 onPress={() => alert('This is a button!')}
                 title="Nova Leitura"
                 color="#4B9460"
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            tabBarLabel: 'Settings',
-            tabBarIcon: ({ color, size }) => (
-              <Image
-                source={require('./src/assets/setting.png')}
-                style={{ width: size, height: size, tintColor: color}}
               />
             ),
           }}
@@ -56,7 +41,21 @@ function App() {
             tabBarLabel: 'Graph',
             tabBarIcon: ({ color, size }) => (
               <Image
-                source={require('./src/assets/graph.png')}
+              source={require('./src/assets/graph.png')}
+                style={{ width: size, height: size, tintColor: color}}
+                />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            headerTitle: "Configurações do ESP",
+            tabBarLabel: 'Settings',
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={require('./src/assets/setting.png')}
                 style={{ width: size, height: size, tintColor: color}}
               />
             ),
@@ -67,10 +66,6 @@ function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  homeButton:{
-    marginRight: 15
-  }
-});
+const styles = StyleSheet.create({});
   
 export default App;
