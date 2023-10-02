@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './src/pages/home';
 import Settings from './src/pages/settings';
 import Graph from './src/pages/graph';
-import { RoundButtom } from './src/components/components';
+import { RoundButton } from './src/components/components';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,11 +26,7 @@ function App() {
               />
             ),
             headerRight: () => (
-              <Button
-                onPress={() => alert('This is a button!')}
-                title="Nova Leitura"
-                color="#4B9460"
-              />
+         		<RoundButton palavra='Nova Leitura' page='home'/>
             ),
           }}
         />
