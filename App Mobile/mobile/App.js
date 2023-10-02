@@ -18,7 +18,7 @@ function App() {
           component={Home}
           options={{
             headerTitle: "Leitura Mais Recente",
-            tabBarLabel: 'Home',
+            tabBarLabel: 'Medições',
             tabBarIcon: ({ color, size }) => (
               <Image
                 source={require('./src/assets/home.png')}
@@ -38,7 +38,8 @@ function App() {
           name="Graph"
           component={Graph}
           options={{
-            tabBarLabel: 'Graph',
+            headerTitle: "Gráficos",
+            tabBarLabel: 'Gráficos',
             tabBarIcon: ({ color, size }) => (
               <Image
               source={require('./src/assets/graph.png')}
@@ -52,7 +53,7 @@ function App() {
           component={Settings}
           options={{
             headerTitle: "Configurações do ESP",
-            tabBarLabel: 'Settings',
+            tabBarLabel: 'Configurações',
             tabBarIcon: ({ color, size }) => (
               <Image
                 source={require('./src/assets/setting.png')}

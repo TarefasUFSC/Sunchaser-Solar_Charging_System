@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, ScrollView, Text, Button } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Button } from 'react-native';
 
-import {HorizontalList, HR} from '../components/components';
+import {HorizontalList, HR, RoundButton} from '../components/components';
 
 function Settings({ navigation }) {
   return (
@@ -9,8 +9,13 @@ function Settings({ navigation }) {
         <View><HorizontalList Variavel="Intervalo entre leituras" Valor=" minutos" Input={true}/><HR/></View>
         <View><HorizontalList Variavel="Intervalo entre envios" Valor=" horas" Input={true}/><HR/></View>
         <View><HorizontalList Variavel="Dias estocados na memoria" Valor=" dias" Input={true}/></View>
+        <RoundButton palavra='salvar'/>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create(
+
+)
 
 export default Settings;
