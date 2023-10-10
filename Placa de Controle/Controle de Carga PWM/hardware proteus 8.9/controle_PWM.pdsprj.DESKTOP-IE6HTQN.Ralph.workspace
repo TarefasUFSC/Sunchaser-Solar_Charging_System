@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
- <FRAME activewindow="3">
+ <FRAME activewindow="1">
   <PLACEMENT>2c0000000200000003000000ffffffffffffffffffffffffffffffff900000003b0000009e0500000f040000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
   <WINDOW type="default" module="ARES"/>
@@ -9,7 +9,7 @@
    <camera>
     <position x="38487512" y="-28126152" z="-24016782"/>
     <focus x="31647360" y="-32271396" z="-21428950"/>
-    <up x="-246111" y="-187542" z="-950927"/>
+    <up x="-246110" y="-187541" z="-950924"/>
    </camera>
   </WINDOW>
   <WINDOW type="device" module="LIBMAN"/>
