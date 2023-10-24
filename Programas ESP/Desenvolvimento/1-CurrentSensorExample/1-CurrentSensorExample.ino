@@ -3,7 +3,7 @@
 
 Adafruit_INA219 ina219;
 
-float read_current{
+float read_current(){
   float current_mA = 0;
   int mean_number = 100;
 
