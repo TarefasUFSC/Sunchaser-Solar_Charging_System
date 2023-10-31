@@ -2,7 +2,7 @@
 
 extern Adafruit_INA219 ina219; // Sensor de corrente declarado no arquivo principal
 
-void INA_init(Adafruit_INA219 sensor){ // Initialize current sensor
+void INA_init(Adafruit_INA219 &sensor){ // Initialize current sensor
   if (! sensor.begin()) {
     Serial.println("Failed to find INA219 chip");
     while (1) { delay(10); }
@@ -11,7 +11,7 @@ void INA_init(Adafruit_INA219 sensor){ // Initialize current sensor
   sensor.setCalibration_16V_400mA(); // Current sensor calibration
 }
 
-float read_current(Adafruit_INA219 sensor){
+float read_current(Adafruit_INA219 &sensor){
   float current_mA = 0;
   int mean_number = 10;
 

@@ -7,7 +7,7 @@
 
 #define VOLTAGE_PIN 35
 
-float read_current(Adafruit_INA219 sensor);
+float read_current(Adafruit_INA219 &sensor);
 float read_voltage();
 
 #endif

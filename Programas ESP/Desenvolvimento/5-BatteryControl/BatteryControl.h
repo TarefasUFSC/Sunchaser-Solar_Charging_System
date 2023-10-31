@@ -6,7 +6,7 @@
 
 // setting PWM properties
 const int PWM_Pin = 16;  // 16 corresponds to GPIO16
-const int freq = 300; // in Hz
+const int freq = 5000; // in Hz
 const int PWM_Channel = 0;
 const int resolution = 8; // 8 bit resolution - value from 0 to 255
 

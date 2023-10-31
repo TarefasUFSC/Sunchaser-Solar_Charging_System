@@ -1,6 +1,8 @@
 #include "Sensors.h"
 
-float read_current(Adafruit_INA219 sensor){
+extern Adafruit_INA219 ina219; // Sensor de corrente declarado no arquivo principal
+
+float read_current(Adafruit_INA219 &sensor){
   float current_mA = 0;
   int mean_number = 10;
 
@@ -11,8 +13,6 @@ float read_current(Adafruit_INA219 sensor){
 
   if(current_mA<=0) current_mA = 0;
 
-  Serial.print("Current: ");
-  Serial.println(current_mA);
   return current_mA;
 }
 

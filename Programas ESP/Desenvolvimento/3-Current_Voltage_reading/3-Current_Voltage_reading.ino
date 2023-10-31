@@ -22,5 +22,10 @@ void loop() {
   current = read_current(ina219);
   voltage = read_voltage();
 
+  Serial.print("Current: ");
+  Serial.print(current);
+  Serial.print("    Voltage: ");
+  Serial.println(voltage);
+
   delay(1000);
 }

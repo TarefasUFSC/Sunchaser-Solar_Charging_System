@@ -7,8 +7,8 @@
 
 #define VOLTAGE_PIN 35
 
-void INA_init(Adafruit_INA219 sensor);
-float read_current(Adafruit_INA219 sensor);
+void INA_init(Adafruit_INA219 &sensor);
+float read_current(Adafruit_INA219 &sensor);
 float read_voltage();
 
 #endif

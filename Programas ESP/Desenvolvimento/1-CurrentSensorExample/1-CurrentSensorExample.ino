@@ -37,6 +37,8 @@ void setup() {
 void loop() {
   float corrente;
   corrente = read_current();
+  Serial.print("corrente: ");
+  Serial.println(corrente);
 
   delay(1000);
 }

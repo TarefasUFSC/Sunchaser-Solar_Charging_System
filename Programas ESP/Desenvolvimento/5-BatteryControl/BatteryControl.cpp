@@ -28,10 +28,7 @@ Condição para conexão da carga em S2:
 
 #include "BatteryControl.h"
 
-float ShortCircuitCurrent;
-
 extern Adafruit_INA219 ina219; // Sensor de corrente declarado no arquivo principal
-
 
 void PWM_init(){
   ledcSetup(PWM_Channel, freq, resolution); // Configure PWM functionalitites
@@ -42,18 +39,16 @@ void bulk_stage(){
   ledcWrite(PWM_Channel, 255); // Corrente máxima Isc, duty cycle = 1 (255)
 }
 
-void absorption_stage(){
-  float BatteryCurrent = read_current(ina219);
-  float error = TC - BatteryCurrent;
+void absorption_stage(){ // tentar igualar a tensão lida com AV
+  float BatteryVoltage = read_voltage();
+  float error = AV - BatteryVoltage;
 
-  int TC_dutyCycle = (int) 255*TC/ShortCircuitCurrent;
-  int dutyCycle = constrain(map(BatteryCurrent, TC, ShortCircuitCurrent, TC_dutyCycle, 255), 0, 255); // Mapeia a corrente da bateria para o duty cycle
-  
+  int dutyCycle = (int) 255*BatteryVoltage/AV; // Mapeia a tensão do banco de baterias para o duty cycle
   if(error > 0.1){
-    dutyCycle --; // Diminui o duty cycle em 1 para diminuir a corrente de recarga
+    dutyCycle ++; // Aumenta o duty cycle em 1 para aumentar a corrente de recarga
   }
   else if(error < -0.1){
-    dutyCycle ++; // Aumenta o duty cycle em 1 para aumentar a corrente de recarga
+    dutyCycle --; // Diminui o duty cycle em 1 para diminuir a corrente de recarga
   }
 
   ledcWrite(PWM_Channel, dutyCycle);  
