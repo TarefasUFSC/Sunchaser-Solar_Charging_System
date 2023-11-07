@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { RoundButton } from '../components/components';
+import { BackHandler } from 'react-native';
 
 function Disconnected({ navigation }) {
   // Lógica para a página de conexão Bluetooth
@@ -20,7 +20,7 @@ function Disconnected({ navigation }) {
                 <TouchableOpacity style={[styles.roundButton, {backgroundColor: '#5DB075'}]} onPress={() => { alert('CONECTA AE ONEGAI') }}>
                     <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20}}>Tentar conexão</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.roundButton, {backgroundColor: 'white'}]} onPress={() => { alert('FECHA ESSA POHA') }}>
+                <TouchableOpacity style={[styles.roundButton, {backgroundColor: 'white'}]} onPress={() => {BackHandler.exitApp();}}>
                     <Text style={{color: '#5DB075', fontWeight: 'bold', fontSize: 20}}>Fechar aplicativo</Text>
                 </TouchableOpacity>
             </View>
