@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
-import dados from '../../dados.json';
+import dados from '../../dataTest/dados15.json';
 
 let color = '#4B9460';
 
@@ -40,13 +40,13 @@ export const HorizontalList = ({ Variavel, Valor, Input }) => {
           <Text>{Valor}</Text>
         </View>
       )}
-	  <View style={styles.hr}></View>
+      <View style={styles.hr}></View>
     </View>
-	
+
   );
 };
 
-export const Chart = () => {
+export const Chart = (opt) => {
   const data = {
     labels: dados.map((item) => item.label),
     datasets: [{ data: dados.map((item) => item.value) }]
@@ -56,7 +56,8 @@ export const Chart = () => {
     transform: [{ rotate: '90deg' }],
     marginLeft: 20,
   };
-
+  const days = [7, 12, 15, 30, 60];
+  let percentage = 10.5 / days[opt.opt];
   return (
     <View>
       <BarChart
@@ -70,9 +71,9 @@ export const Chart = () => {
           decimalPlaces: 0,
           color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          barPercentage: 0.5,
+          barPercentage: percentage,
           propsForLabels: {
-            fontSize: 12,
+            fontSize: 8,
           },
         }}
       />
@@ -98,15 +99,20 @@ export const RoundButton = ({ palavra, page }) => {
   );
 };
 
+export const Disconnected = () =>{
+  return(<View><Text>TESTE FUNCIONOU</Text></View>)
+}
+
 export const Dropdown = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Opção 1');
   const handleOptionChange = (itemValue) => {
     setSelectedOption(itemValue);
     toggleDropdown();
+    console.log(selectedOption);
   };
-  const toggleDropdown = () => {setIsDropdownVisible(!isDropdownVisible);};
-  
+  const toggleDropdown = () => { setIsDropdownVisible(!isDropdownVisible); };
+
   return (
     <View style={styles.dropdownContainer}>
       <TouchableOpacity
@@ -123,7 +129,7 @@ export const Dropdown = () => {
         onRequestClose={toggleDropdown}
       >
         <View style={styles.modalContainer}>
-          {['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4', 'Opção 5', 'Opção 6'].map((option) => (
+          {['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4', 'Opção 5'].map((option) => (
             <TouchableOpacity
               key={option}
               style={styles.dropdownOption}
@@ -202,7 +208,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     maxWidth: 150,
-	paddingVertical: 10
+    paddingVertical: 10
   },
   picker: {
     borderRadius: 10,

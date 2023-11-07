@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './src/pages/home';
 import Settings from './src/pages/settings';
 import Graph from './src/pages/graph';
-import { RoundButton } from './src/components/components';
+import { Disconnected, RoundButton, Teste } from './src/components/components';
 
 const Tab = createBottomTabNavigator();
-
 function App() {
-  return (
+  const [isConnected, setIsConnected] = useState(false);
+  if(isConnected){ return (
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen
@@ -26,7 +26,7 @@ function App() {
               />
             ),
             headerRight: () => (
-         		<RoundButton palavra='Nova Leitura' page='home'/>
+              <RoundButton palavra='Nova Leitura' page='home'/>
             ),
           }}
         />
@@ -38,9 +38,9 @@ function App() {
             tabBarLabel: 'Gráficos',
             tabBarIcon: ({ color, size }) => (
               <Image
-              source={require('./src/assets/graph.png')}
+                source={require('./src/assets/graph.png')}
                 style={{ width: size, height: size, tintColor: color}}
-                />
+              />
             ),
           }}
         />
@@ -60,9 +60,10 @@ function App() {
         />
       </Tab.Navigator>
     </NavigationContainer>
-  );
+  );} 
+  else{return(<Disconnected/>)}
 }
 
 const styles = StyleSheet.create({});
-  
+
 export default App;

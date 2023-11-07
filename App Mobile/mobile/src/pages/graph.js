@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, Button } from 'react-native';
+
 import { Chart, Dropdown } from '../components/components';
 
 function Graph({ navigation }) {
@@ -9,7 +10,7 @@ function Graph({ navigation }) {
 				<View style={styles.leftContent}/>
 				<Dropdown/>
 			</View>
-			<View style={styles.chartContainer}><Chart/></View>
+			<View style={styles.chartContainer}><Chart opt='1'/></View>
 		</View></View>
 
 	);
