@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	bleHomeContainer: {
-		backgroundColor: '#4B9460',
+		backgroundColor: '#5DB075',
 		flex: 1,
 		flexDirection: 'column',
 	},
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	Button:{
-		backgroundColor: '#4B9460',
+		backgroundColor: '#5DB075',
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,

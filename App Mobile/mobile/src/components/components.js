@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'reac
 import { BarChart } from 'react-native-chart-kit';
 import dados from '../../dataTest/dados15.json';
 
-let color = '#4B9460';
+let color = '#5DB075';
 
 export const HorizontalList = ({ Variavel, Valor, Input }) => {
   const [text, setText] = useState('');
@@ -81,27 +81,22 @@ export const Chart = (opt) => {
   );
 };
 
-export const RoundButton = ({ palavra, page }) => {
+export const RoundButton = ({ palavra, page, color, tColor }) => {
   let string = '';
+  const buttonColor = {backgroundColor: color};
+  const textColor = {color: tColor, fontWeight: 'bold'}
   if (page == 'home') string = 'Leitura feita (sqn)';
   else if (page == 'settings') string = 'Configs salvas (sqn)';
 
   return (
     <View style={styles.roundButtonContainer}>
       <View style={styles.leftContent} />
-      <TouchableOpacity
-        style={styles.roundButton}
-        onPress={() => { alert(string) }}
-      >
-        <Text style={styles.textRoundButton}>{palavra}</Text>
+      <TouchableOpacity style={[styles.roundButton, buttonColor]} onPress={() => { alert(string) }}>
+        <Text style={textColor}>{palavra}</Text>
       </TouchableOpacity>
     </View>
   );
 };
-
-export const Disconnected = () =>{
-  return(<View><Text>TESTE FUNCIONOU</Text></View>)
-}
 
 export const Dropdown = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -193,15 +188,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   roundButton: {
-    backgroundColor: '#4B9460',
-    borderRadius: 10,
+    borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginTop: 20,
-  },
-  textRoundButton: {
-    color: 'white',
-    fontWeight: 'bold',
   },
   dropdownContainer: {
     flex: 1,
