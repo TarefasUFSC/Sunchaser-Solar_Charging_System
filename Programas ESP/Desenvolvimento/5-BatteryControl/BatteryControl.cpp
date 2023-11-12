@@ -40,7 +40,7 @@ void bulk_stage(){
 }
 
 void absorption_stage(){ // tentar igualar a tensão lida com AV
-  float BatteryVoltage = read_voltage();
+  float BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
   float error = AV - BatteryVoltage;
 
   int dutyCycle = (int) 255*BatteryVoltage/AV; // Mapeia a tensão do banco de baterias para o duty cycle
@@ -56,7 +56,7 @@ void absorption_stage(){ // tentar igualar a tensão lida com AV
 
 // Tensão do banco de baterias é reduzida e mantida regulada no patamar da tensão de flutuação (FV)
 void float_stage(){
-  float BatteryVoltage = read_voltage();
+  float BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
   float error = FV - BatteryVoltage;
 
   int FV_dutyCycle = (int) 255*FV/AV;
@@ -74,7 +74,7 @@ void float_stage(){
 void charging_control(){
   float BatteryCurrent, BatteryVoltage;
   BatteryCurrent = read_current(ina219);
-  BatteryVoltage = read_voltage();
+  BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
 
   if(BatteryVoltage < AV && BatteryCurrent > TC){
     bulk_stage();
@@ -88,7 +88,7 @@ void charging_control(){
 }
 
 void load_connection(){
-  float BatteryVoltage = read_voltage();
+  float BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
 
   if(BatteryVoltage < LDV){
     digitalWrite(S2_Pin, HIGH); // Corta a alimentação da carga em S2
