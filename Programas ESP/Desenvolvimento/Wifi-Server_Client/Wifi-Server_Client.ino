@@ -1,85 +1,64 @@
 #include <WiFi.h>
-#include <WebServer.h>
 #include <HTTPClient.h>
 
-// Substitua com suas credenciais de WiFi
-const char *connect_ssid = "RFS-S21FE";
-const char *connect_password = "23011306";
+const char *ssid = "RFS-21FE";
+const char *password = "23011306";
 
-// Configurações do servidor AP
-const char *ap_ssid = "ESP_SUNCHASER";
-const char *ap_password = NULL; // Sem senha
+HTTPClient http;
 
-WebServer server(80);
-
-// Variáveis de controle
-bool isAPMode = false;
-int interruptPin = 33;
-
-void setupWiFiClient()
-{
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(connect_ssid, connect_password);
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(500);
-    }
-}
-
-void setupWiFiAP()
-{
-    WiFi.mode(WIFI_AP);
-    WiFi.softAP(ap_ssid, ap_password);
-}
-
-void handleRoot()
-{
-    // envia "{leituras: [1,2,3,4,5]}" em json
-    server.send(200, "application/json", "{leituras: [1,2,3,4,5]}");
-}
-
-void setupServer()
-{
-    server.on("/leituras", handleRoot);
-    server.begin();
-}
+const int interruptPin = 33; // Pino de interrupção
+volatile bool riseFlag = false;
+volatile bool fallFlag = false;
 
 void IRAM_ATTR handleInterrupt()
 {
-    isAPMode = !isAPMode;
-    if (isAPMode)
+    static unsigned long lastInterruptTime = 0;
+    unsigned long interruptTime = millis();
+
+    // Somente aceita a interrupção se o tempo decorrido desde a última for maior que um limite (por exemplo, 200ms)
+    if (interruptTime - lastInterruptTime > 200)
     {
-        setupWiFiAP();
-        setupServer();
+        if (digitalRead(interruptPin) == HIGH)
+        {
+            riseFlag = true;
+            fallFlag = false;
+        }
+        else
+        {
+            fallFlag = true;
+            riseFlag = false;
+        }
     }
-    else
+    lastInterruptTime = interruptTime;
+}
+
+void setup_wifi_client()
+{
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED)
     {
-        setupWiFiClient();
+        delay(500);
+        Serial.print(".");
     }
+    Serial.println("Conectado à rede Wi-Fi");
 }
 
 void setup()
 {
     Serial.begin(115200);
+    setup_wifi_client();
+
     pinMode(interruptPin, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(interruptPin), handleInterrupt, CHANGE);
-
-    setupWiFiClient();
 }
 
-void loop()
+void get_time_from_http()
 {
-    if (isAPMode)
+    if (WiFi.status() == WL_CONNECTED)
     {
-        server.handleClient();
-    }
-    else
-    {
-        // pega a hora da internet e printa na tela
-        String url = "http://worldtimeapi.org/api/timezone/America/Sao_Paulo";
-        HTTPClient http;
-        http.begin(url);
+        http.begin("http://worldtimeapi.org/api/timezone/America/Sao_Paulo");
         int httpCode = http.GET();
+
         if (httpCode > 0)
         {
             String payload = http.getString();
@@ -87,9 +66,31 @@ void loop()
         }
         else
         {
-            Serial.println("ERRO HTTP");
+            Serial.println("Erro na requisição HTTP");
         }
+
         http.end();
-        delay(1000);
     }
+    else
+    {
+        Serial.println("Erro de conexão Wi-Fi");
+    }
+}
+
+void loop()
+{
+    if (riseFlag)
+    {
+        Serial.println("Interrupção por borda de subida detectada");
+        riseFlag = false;
+    }
+
+    if (fallFlag)
+    {
+        Serial.println("Interrupção por borda de descida detectada");
+        fallFlag = false;
+    }
+
+    get_time_from_http();
+    delay(1000); // Esperar 1 segundos para a próxima requisição
 }
