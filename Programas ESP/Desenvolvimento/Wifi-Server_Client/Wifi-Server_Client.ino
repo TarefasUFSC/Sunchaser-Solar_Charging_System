@@ -1,21 +1,68 @@
 #include <WiFi.h>
+#include <WebServer.h>
 #include <HTTPClient.h>
 
 const char *ssid = "RFS-21FE";
 const char *password = "23011306";
 
-HTTPClient http;
+// Configurações do servidor AP
+const char *ap_ssid = "ESP_SUNCHASER";
+const char *ap_password = NULL; // Sem senha
 
-const int interruptPin = 33; // Pino de interrupção
+HTTPClient http;
+WebServer server(80); // Servidor na porta 80
+
+const int interruptPin = 33;
 volatile bool riseFlag = false;
 volatile bool fallFlag = false;
+bool isServer = false;
+
+void handleRoot()
+{
+    server.send(200, "application/json", "{\"leituras\":[1,2,3,4,5]}");
+}
+void setupWiFiAP()
+{
+    WiFi.mode(WIFI_AP);
+
+    // Definir configurações de IP estático
+    IPAddress local_IP(192, 168, 1, 1); // IP do ponto de acesso
+    IPAddress gateway(192, 168, 1, 1);  // Gateway (geralmente o mesmo que o IP do AP)
+    IPAddress subnet(255, 255, 255, 0); // Máscara de sub-rede
+
+    // Configurar o ponto de acesso com IP estático
+    if (!WiFi.softAPConfig(local_IP, gateway, subnet))
+    {
+        Serial.println("Falha ao configurar o IP estático");
+        return;
+    }
+
+    if (WiFi.softAP(ap_ssid, ap_password))
+    {
+        Serial.println("Ponto de acesso configurado com sucesso");
+    }
+    else
+    {
+        Serial.println("Falha ao configurar o ponto de acesso");
+        return;
+    }
+
+    Serial.print("Endereço IP do AP: ");
+    Serial.println(WiFi.softAPIP());
+}
+
+void setup_wifi_server()
+{
+    setupWiFiAP();
+    server.on("/dados", HTTP_GET, handleRoot);
+    server.begin();
+}
 
 void IRAM_ATTR handleInterrupt()
 {
     static unsigned long lastInterruptTime = 0;
     unsigned long interruptTime = millis();
 
-    // Somente aceita a interrupção se o tempo decorrido desde a última for maior que um limite (por exemplo, 200ms)
     if (interruptTime - lastInterruptTime > 200)
     {
         if (digitalRead(interruptPin) == HIGH)
@@ -81,16 +128,29 @@ void loop()
 {
     if (riseFlag)
     {
-        Serial.println("Interrupção por borda de subida detectada");
+        Serial.println("Configurando como servidor");
+        setup_wifi_server(); // Configurar como servidor
         riseFlag = false;
+        isServer = true;
     }
 
     if (fallFlag)
     {
-        Serial.println("Interrupção por borda de descida detectada");
+        Serial.println("Reconfigurando como cliente");
+        WiFi.disconnect();
+        setup_wifi_client(); // Reconectar como cliente
         fallFlag = false;
+        isServer = false;
     }
 
-    get_time_from_http();
-    delay(1000); // Esperar 1 segundos para a próxima requisição
+    if (WiFi.status() == WL_CONNECTED && !isServer)
+    {
+        get_time_from_http();
+    }
+    else
+    {
+        server.handleClient();
+    }
+
+    delay(1000);
 }
