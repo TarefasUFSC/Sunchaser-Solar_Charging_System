@@ -1,19 +1,13 @@
 #include <WiFi.h>
-#include <NTPClient.h>
-#include <WiFiUdp.h>
+#include <HTTPClient.h>
 
-// Substitua com as credenciais da sua rede Wi-Fi
 const char *ssid = "RFS-21FE";
 const char *password = "23011306";
 
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
+HTTPClient http;
 
-void setup()
+void setup_wifi_client()
 {
-    Serial.begin(115200);
-
-    // Conectar à rede Wi-Fi
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED)
     {
@@ -21,20 +15,45 @@ void setup()
         Serial.print(".");
     }
     Serial.println("Conectado à rede Wi-Fi");
+}
 
-    // Iniciar cliente NTP
-    timeClient.begin();
-    // Definir fuso horário em horas (exemplo para GMT+1)
-    // Altere conforme necessário
-    timeClient.setTimeOffset(3600);
+void setup()
+{
+    Serial.begin(115200);
+
+    // Conectar à rede Wi-Fi
+    setup_wifi_client();
+}
+
+void get_time_from_http()
+{
+    if (WiFi.status() == WL_CONNECTED)
+    {
+        http.begin("http://worldtimeapi.org/api/timezone/America/Sao_Paulo"); // Iniciar conexão com a URL
+        int httpCode = http.GET();                                            // Fazer requisição HTTP GET
+
+        if (httpCode > 0)
+        {                                      // Verificar se a resposta é válida
+            String payload = http.getString(); // Pegar a resposta
+            Serial.println(payload);
+        }
+        else
+        {
+            Serial.println("Erro na requisição HTTP");
+        }
+
+        http.end(); // Encerrar conexão
+    }
+    else
+    {
+        Serial.println("Erro de conexão Wi-Fi");
+    }
 }
 
 void loop()
 {
-    timeClient.update();
 
-    // Obter a hora formatada
-    Serial.println(timeClient.getFormattedTime());
+    get_time_from_http();
 
-    delay(1000);
+    delay(10000); // Esperar 10 segundos para a próxima requisição
 }
