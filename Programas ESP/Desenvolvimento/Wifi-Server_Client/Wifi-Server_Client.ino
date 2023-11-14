@@ -81,6 +81,15 @@ void IRAM_ATTR handleInterrupt()
 
 void setup_wifi_client()
 {
+    // Desligar o servidor e o Wi-Fi antes de mudar o modo
+    server.close();
+    WiFi.mode(WIFI_OFF);
+
+    // Aguarde um pouco para que o Wi-Fi desligue completamente
+    delay(1000);
+
+    // Iniciar o Wi-Fi no modo cliente
+    WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED)
     {
@@ -88,6 +97,16 @@ void setup_wifi_client()
         Serial.print(".");
     }
     Serial.println("Conectado à rede Wi-Fi");
+}
+
+void stopAP()
+{
+    // Desconectar e desativar o AP
+    // WiFi.softAPdisconnect(true);
+    WiFi.mode(WIFI_OFF);
+
+    // Parar o servidor
+    server.close();
 }
 
 void setup()
@@ -126,7 +145,7 @@ void get_time_from_http()
 
 void loop()
 {
-    if (riseFlag)
+    if (riseFlag && !isServer)
     {
         Serial.println("Configurando como servidor");
         setup_wifi_server(); // Configurar como servidor
@@ -134,10 +153,10 @@ void loop()
         isServer = true;
     }
 
-    if (fallFlag)
+    if (fallFlag && isServer)
     {
         Serial.println("Reconfigurando como cliente");
-        WiFi.disconnect();
+        stopAP();
         setup_wifi_client(); // Reconectar como cliente
         fallFlag = false;
         isServer = false;
