@@ -85,8 +85,9 @@ void loop()
             String payload = http.getString();
             Serial.println(payload);
         }
-        else{
-          Serial.println("ERRO HTTP");
+        else
+        {
+            Serial.println("ERRO HTTP");
         }
         http.end();
         delay(1000);
