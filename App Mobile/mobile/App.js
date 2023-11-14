@@ -1,57 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, Platform, PermissionsAndroid } from 'react-native';
+import React from 'react';
+import { Image, StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from './src/pages/home';
 import Graph from './src/pages/graph';
 import Settings from './src/pages/settings';
-import Disconnected from './src/pages/disconnected';
 import { RoundButton } from './src/components/components';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
-
-const requestBluetoothPermission = async () => {
-  if (Platform.OS === 'android' && PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION) {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-    );
-    return granted === PermissionsAndroid.RESULTS.GRANTED;
-  }
-  showErrorToast('Permission has not been granted');
-  return false;
-};
 
 const App = () => {
-  const [permissionGranted, setPermissionGranted] = useState(false);
-
-  useEffect(() => {
-    const checkBluetooth = async () => {
-      const permissionGranted = await requestBluetoothPermission();
-      setPermissionGranted(permissionGranted);
-      
-    };
-
-    checkBluetooth();
-  }, []);
-
-  const forceUpdate = () => setPermissionGranted((prev) => !prev);
-
-  if (!permissionGranted) {
-    return (
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Disconnected">
-          <Stack.Screen
-            name="Disconnected"
-            component={Disconnected}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  }
   return (
     <NavigationContainer>
       <Tab.Navigator>
