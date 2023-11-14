@@ -3,8 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { BackHandler } from 'react-native';
 
 function Disconnected({ navigation }) {
-  // Lógica para a página de conexão Bluetooth
-
   return (
     <View style={styles.disconnectedContainer}>
         <View style={styles.container}>
