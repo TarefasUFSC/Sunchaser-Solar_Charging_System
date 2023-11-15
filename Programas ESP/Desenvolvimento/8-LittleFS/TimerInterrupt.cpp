@@ -1,12 +1,5 @@
 #include "TimerInterrupt.h"
 
-//create a array of structs and an index to keep track of the readings
-#define NUM_READINGS 24
-SensorsData Readings[NUM_READINGS];
-int ArrayIndex = 0;
-
-extern Adafruit_INA219 ina219; // Sensor de corrente declarado no arquivo principal
-
 //Initialize the static variables
 volatile SemaphoreHandle_t TimerInterrupt::timerSemaphore = xSemaphoreCreateBinary();
 
@@ -33,20 +26,28 @@ void TimerInterrupt::timer_init(){
 }
 
 void TimerInterrupt::timer_interruption(){ // If Timer has fired
+  float time, BatteryCurrent, BatteryVoltage, PVCurrent, PVVoltage;
   if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE){
-    Serial.print("entering timer interrupt at index: ");
-    Serial.println(ArrayIndex);
+    Serial.println("entering timer interrupt");
     // Read the sensors
-    // Readings[ArrayIndex].BatteryCurrent = read_current(ina219);
-    // Readings[ArrayIndex].BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
-    // Readings[ArrayIndex].PVCurrent = read_current(ina219);
-    // Readings[ArrayIndex].PVVoltage = read_voltage(PV_VOLTAGE_PIN);
+    time = random(100);
+    BatteryCurrent = random(100);
+    BatteryVoltage = random(100);
+    PVCurrent = random(100);
+    PVVoltage = random(100);
 
-    ArrayIndex++;
-    if (ArrayIndex >= NUM_READINGS){
-      ArrayIndex = 0;
-      // Call storage function
-    }
+    // Save the readings to flash
+    String JSON = createJSON("BatteryCurrent", BatteryCurrent, time);
+    appendFile(LittleFS, "/readings/data.json", JSON);
+    JSON = createJSON("BatteryVoltage", BatteryVoltage, time);
+    appendFile(LittleFS, "/readings/data.json", JSON);
+    JSON = createJSON("PVCurrent", PVCurrent, time);
+    appendFile(LittleFS, "/readings/data.json", JSON);
+    JSON = createJSON("PVVoltage", PVVoltage, time);
+    appendFile(LittleFS, "/readings/data.json", JSON);
+
+    // Read the file
+    readFile(LittleFS, "/readings/data.json");
   }
 }
 
