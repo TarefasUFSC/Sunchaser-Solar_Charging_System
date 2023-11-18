@@ -23,15 +23,13 @@ private:
     volatile bool _rise_flag = false;
     volatile bool _fall_flag = false;
 
-    volatile bool _last_switch_state = false;
-
 public:
     Communicator();
     void init();
-    // void attach_interruption();
-    void verify_switch();
+    void attach_interruption();
+    void interrupt_handler();
     void check_flags();
-    // static void IRAM_ATTR on_interruption();
+    static void IRAM_ATTR on_interruption();
     void run_server();
     void check_connection();
     void get_date_from_http();

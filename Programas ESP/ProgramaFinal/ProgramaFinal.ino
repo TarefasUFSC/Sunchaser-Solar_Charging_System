@@ -33,14 +33,12 @@ void setup()
 void loop()
 {
 
-      bool pinState = digitalRead(communicator.interrupt_pin);
-      Serial.println(pinState ? "High" : "Low");
-
     // chama a função de verificar flags do comunicador
-    communicator.verify_switch();
+    communicator.interrupt_handler();
 
     if (communicator.is_server)
     {
+        //   Serial.println("é server");
         communicator.run_server();
     }
 

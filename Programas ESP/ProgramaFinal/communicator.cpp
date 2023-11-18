@@ -1,5 +1,9 @@
 #include "communicator.h"
 
+// volatile SemaphoreHandle_t Communicator::_interruption_semaphore = xSemaphoreCre/ateBinary();
+volatile bool interruption_flag = false;
+volatile unsigned long last_interruption_time = 0;
+
 Communicator::Communicator() : _web_server(80) // Changed: Initialize _web_server here
 {
 }
@@ -8,13 +12,14 @@ void Communicator::init()
 {
 
     this->_setup_wifi_client();
-       pinMode(this->interrupt_pin, INPUT);
-
-    this->_last_switch_state = digitalRead(this->interrupt_pin);
-    // this->attach_interruption();
+    this->attach_interruption();
 }
 
-
+void Communicator::attach_interruption()
+{
+    pinMode(this->interrupt_pin, INPUT);
+    attachInterrupt(digitalPinToInterrupt(this->interrupt_pin), &Communicator::on_interruption, CHANGE);
+}
 void Communicator::_stop_ap()
 {
     // WiFi.softAPdisconnect(true); // por algum motivo deixar isso faz com que ele não feche o server e a rede continua aparecendo
@@ -62,7 +67,7 @@ void Communicator::_wifi_ap_config()
         return;
     }
 
-    if (WiFi.softAP(_ssid_wifi_ap, _password_wifi_ap))
+    if (WiFi.softAP(this->_ssid_wifi_ap, this->_password_wifi_ap))
     {
         Serial.println("AP configurado com sucesso");
     }
@@ -74,6 +79,9 @@ void Communicator::_wifi_ap_config()
 
     Serial.print("IP do AP: ");
     Serial.println(WiFi.softAPIP());
+    // printa o endereço mac
+    Serial.print("MAC do AP: ");
+    Serial.println(WiFi.softAPmacAddress());
 }
 
 void Communicator::_handle_root()
@@ -81,7 +89,7 @@ void Communicator::_handle_root()
     // retorna uma pagina web com as informações do projeto
     // Nome: Sunchaser - COntrole de Carga de Bateria de Chumbo com Placa solares
     // Membros: Lucas Eduardo, Manoella ROckembach e Rodrigo Ferraz
-
+    Serial.println("ROOT");
     this->_web_server.send(200, "text/html", "<h1>Sunchaser</h1><p>Controle de Carga de Bateria de Chumbo com Placa solares</p><p>Membros: Lucas Eduardo, Manoella ROckembach e Rodrigo Ferraz</p>");
 }
 
@@ -100,6 +108,7 @@ void Communicator::_setup_wifi_ap()
     // cache
     this->_web_server.on("/cache", HTTP_GET, std::bind(&Communicator::_handle_get_cache, this));
 
+    this->_web_server.begin();
     this->is_server = true;
 }
 void Communicator::_notify_rise_edge()
@@ -114,25 +123,33 @@ void Communicator::_notify_fall_edge()
     this->_fall_flag = true;
     this->_rise_flag = false;
 }
-void Communicator::verify_switch()
+void Communicator::interrupt_handler()
 {
-    bool sw_state = digitalRead(this->interrupt_pin);
-    if (sw_state != this->_last_switch_state)
+    if (interruption_flag)
     {
-        this->_last_switch_state = sw_state;
-        if (sw_state)
+        interruption_flag = false;
+        unsigned long interruption_time = millis();
+        if (interruption_time - last_interruption_time > 200)
         {
-            this->_notify_rise_edge();
-        }
-        else
-        {
-            this->_notify_fall_edge();
+            last_interruption_time = interruption_time;
+            if (digitalRead(this->interrupt_pin) == HIGH)
+            {
+                this->_notify_rise_edge();
+            }
+            else
+            {
+                this->_notify_fall_edge();
+            }
         }
     }
 
     this->check_flags();
 }
 
+void IRAM_ATTR Communicator::on_interruption()
+{
+    interruption_flag = true;
+}
 
 void Communicator::check_flags()
 {
@@ -152,10 +169,7 @@ void Communicator::check_flags()
 
 void Communicator::run_server()
 {
-    if (WiFi.status() == WL_CONNECTED && this->is_server)
-    {
-        this->_web_server.handleClient();
-    }
+    this->_web_server.handleClient();
 }
 void Communicator::check_connection()
 {
