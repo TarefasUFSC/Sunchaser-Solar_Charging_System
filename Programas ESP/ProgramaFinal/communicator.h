@@ -4,7 +4,7 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include <HTTPClient.h>
-
+#include "PubSubClient.h"
 class Communicator
 {
 public:
@@ -23,6 +23,11 @@ private:
     volatile bool _rise_flag = false;
     volatile bool _fall_flag = false;
 
+    const char *mqtt_server = "your_mqtt_broker_address";
+    const int mqtt_port = 1883; // Default MQTT port
+    WiFiClient _esp_client;
+    PubSubClient _mqtt_client;
+
 public:
     Communicator();
     void init();
@@ -33,8 +38,13 @@ public:
     void run_server();
     void check_connection();
     void get_date_from_http();
+    void mqtt_reconnect();
+    void mqtt_subscribe(const char *topic);
+    void mqtt_publish(const char *topic, const char *message);
+    void mqtt_callback(char *topic, byte *payload, unsigned int length);
 
 private:
+    void _setup_mqtt();
     void _notify_rise_edge();
     void _notify_fall_edge();
     void _setup_wifi_client();
