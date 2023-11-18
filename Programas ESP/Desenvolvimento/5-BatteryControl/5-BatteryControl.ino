@@ -1,30 +1,22 @@
 #include "Sensors.h"
 #include "BatteryControl.h"
 
-#define WIFI_LOOP 1
-#define CONTROL_LOOP 2
-int loop_selection = CONTROL_LOOP;
-
-Adafruit_INA219 ina219; // Current sensor declaration
+Adafruit_INA219 battery_ina219(0x40);
+Adafruit_INA219 pv_ina219(0x44);
+Sensors sensors(battery_ina219, pv_ina219);
+BatteryControl battery_controller(&sensors);
 
 void setup() {
   // Open serial communications and wait for port to open:
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial) {
     ; // Wait for serial port to connect. Needed for native USB port only
   }
 
-  INA_init(ina219);
-  PWM_init();
+  sensors.INA_init();
+  battery_controller.PWM_init();
 }
 
 void loop() {
-  switch(loop_selection){
-    case WIFI_LOOP:
-      // wifi_loop();
-      break;
-    case CONTROL_LOOP:
-      battery_loop();
-      break;
-  }
+  battery_controller.battery_loop();
 }

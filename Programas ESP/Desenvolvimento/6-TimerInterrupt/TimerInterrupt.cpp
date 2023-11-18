@@ -1,18 +1,12 @@
 #include "TimerInterrupt.h"
 
-//create a array of structs and an index to keep track of the readings
-#define NUM_READINGS 24
-SensorsData Readings[NUM_READINGS];
-int ArrayIndex = 0;
-
-extern Adafruit_INA219 ina219; // Sensor de corrente declarado no arquivo principal
-
 //Initialize the static variables
 volatile SemaphoreHandle_t TimerInterrupt::timerSemaphore = xSemaphoreCreateBinary();
 
 TimerInterrupt::TimerInterrupt(){
   timer = NULL;
-  SetMinutes = 60;  // Default time is 60 minutes
+  QtdMinutes = 60;  // Default time is 60 minutes
+  CacheSize = 24;  // Default cache size is 24
 }
 
 void IRAM_ATTR TimerInterrupt::onTimer(){ // It is safe to use digitalRead/Write here if you want to toggle an output
@@ -26,30 +20,42 @@ void TimerInterrupt::timer_init(){
 
   timerAttachInterrupt(timer, &TimerInterrupt::onTimer, true); // Attach onTimer function to our timer.
 
-  int SetTime = SetMinutes*60*1000000; // Set alarm to call onTimer function every SetMinutes
-  timerAlarmWrite(timer, 60000000, true); // Repeat the alarm (third parameter)
+  int SetTime = QtdMinutes*60*1000000; // Set alarm to call onTimer function every QtdMinutes
+  timerAlarmWrite(timer, SetTime, true); // Repeat the alarm (third parameter)
   
   timerAlarmEnable(timer); // Start an alarm
 }
 
 void TimerInterrupt::timer_interruption(){ // If Timer has fired
+  float time, BatteryCurrent, BatteryVoltage, PVCurrent, PVVoltage;
   if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE){
-    Serial.print("entering timer interrupt at index: ");
-    Serial.println(ArrayIndex);
+    Serial.println("entering timer interrupt");
     // Read the sensors
-    // Readings[ArrayIndex].BatteryCurrent = read_current(ina219);
-    // Readings[ArrayIndex].BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
-    // Readings[ArrayIndex].PVCurrent = read_current(ina219);
-    // Readings[ArrayIndex].PVVoltage = read_voltage(PV_VOLTAGE_PIN);
+    time = random(100);
+    BatteryCurrent = random(100);
+    BatteryVoltage = random(100);
+    PVCurrent = random(100);
+    PVVoltage = random(100);
 
-    ArrayIndex++;
-    if (ArrayIndex >= NUM_READINGS){
-      ArrayIndex = 0;
-      // Call storage function
-    }
+    // Save the readings to flash
+    String JSON = createJSON("BatteryCurrent", BatteryCurrent, time);
+    appendFile(LittleFS, "/readings/data.dt", JSON);
+    JSON = createJSON("BatteryVoltage", BatteryVoltage, time);
+    appendFile(LittleFS, "/readings/data.json", JSON);
+    JSON = createJSON("PVCurrent", PVCurrent, time);
+    appendFile(LittleFS, "/readings/data.json", JSON);
+    JSON = createJSON("PVVoltage", PVVoltage, time);
+    appendFile(LittleFS, "/readings/data.json", JSON);
+
+    // Read the file
+    readFile(LittleFS, "/readings/data.json");
   }
 }
 
-void TimerInterrupt::set_time(int newTime){
-  SetMinutes = newTime;
+void TimerInterrupt::set_newtime(int newTime){
+  QtdMinutes = newTime;
+}
+
+void TimerInterrupt::set_newcachesize(int newSize){
+  CacheSize = newSize;
 }

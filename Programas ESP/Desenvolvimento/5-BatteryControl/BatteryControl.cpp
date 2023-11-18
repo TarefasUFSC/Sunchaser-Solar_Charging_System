@@ -28,19 +28,23 @@ Condição para conexão da carga em S2:
 
 #include "BatteryControl.h"
 
-extern Adafruit_INA219 ina219; // Sensor de corrente declarado no arquivo principal
+BatteryControl::BatteryControl(Sensors* sensors){
+  read_sensors = sensors;
+}
 
-void PWM_init(){
+void BatteryControl::PWM_init(){
+  pinMode(S2_Pin, OUTPUT);
+  
   ledcSetup(PWM_Channel, freq, resolution); // Configure PWM functionalitites
   ledcAttachPin(PWM_Pin, PWM_Channel); // Attach the channel to the GPIO to be controlled
 }
 
-void bulk_stage(){
+void BatteryControl::bulk_stage(){
   ledcWrite(PWM_Channel, 255); // Corrente máxima Isc, duty cycle = 1 (255)
 }
 
-void absorption_stage(){ // tentar igualar a tensão lida com AV
-  float BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
+void BatteryControl::absorption_stage(){ // tentar igualar a tensão lida com AV
+  float BatteryVoltage = read_sensors->battery_voltage();
   float error = AV - BatteryVoltage;
 
   int dutyCycle = (int) 255*BatteryVoltage/AV; // Mapeia a tensão do banco de baterias para o duty cycle
@@ -55,8 +59,8 @@ void absorption_stage(){ // tentar igualar a tensão lida com AV
 }
 
 // Tensão do banco de baterias é reduzida e mantida regulada no patamar da tensão de flutuação (FV)
-void float_stage(){
-  float BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
+void BatteryControl::float_stage(){
+  float BatteryVoltage = read_sensors->battery_voltage();
   float error = FV - BatteryVoltage;
 
   int FV_dutyCycle = (int) 255*FV/AV;
@@ -71,10 +75,10 @@ void float_stage(){
   ledcWrite(PWM_Channel, dutyCycle);
 }
 
-void charging_control(){
+void BatteryControl::charging_control(){
   float BatteryCurrent, BatteryVoltage;
-  BatteryCurrent = read_current(ina219);
-  BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
+  BatteryCurrent = read_sensors->battery_current();
+  BatteryVoltage = read_sensors->battery_voltage();
 
   if(BatteryVoltage < AV && BatteryCurrent > TC){
     bulk_stage();
@@ -87,8 +91,8 @@ void charging_control(){
   }
 }
 
-void load_connection(){
-  float BatteryVoltage = read_voltage(BAT_VOLTAGE_PIN);
+void BatteryControl::load_connection(){
+  float BatteryVoltage = read_sensors->battery_voltage();
 
   if(BatteryVoltage < LDV){
     digitalWrite(S2_Pin, HIGH); // Corta a alimentação da carga em S2
@@ -98,7 +102,7 @@ void load_connection(){
   }
 }
 
-void battery_loop(){
+void BatteryControl::battery_loop(){
   charging_control();
   load_connection();
 }
