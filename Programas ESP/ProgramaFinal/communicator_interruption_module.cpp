@@ -9,7 +9,10 @@ void Communicator::attach_interruption()
     pinMode(this->interrupt_pin, INPUT);
     attachInterrupt(digitalPinToInterrupt(this->interrupt_pin), &Communicator::on_interruption, CHANGE);
 }
-
+bool Communicator::check_interruption_flag()
+{
+    return interruption_flag;
+}
 void Communicator::_notify_rise_edge()
 {
     Serial.println("Rise");
@@ -25,7 +28,7 @@ void Communicator::_notify_fall_edge()
 
 void Communicator::interrupt_handler()
 {
-    if (interruption_flag)
+    if (this->check_interruption_flag())
     {
         interruption_flag = false;
         unsigned long interruption_time = millis();

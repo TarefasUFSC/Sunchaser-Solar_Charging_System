@@ -43,6 +43,11 @@ void loop()
         //   Serial.println("é server");
         communicator.run_server();
     }
+    else
+    {
+        communicator.mqtt_reconnect();
+        communicator.mqtt_loop();
+    }
 
     // if( not comunidaor.isServer)
     // verifica o counter do TimerInterrupt e faz as chamadas

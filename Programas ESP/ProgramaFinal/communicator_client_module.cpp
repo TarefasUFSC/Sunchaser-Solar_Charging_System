@@ -34,17 +34,17 @@ void Communicator::check_connection()
     }
 }
 
-
-void Communicator::setup_datetime() {
+void Communicator::setup_datetime()
+{
     // Setup this after WiFi is connected
-    DateTime.setServer("pool.ntp.org");  // Usando um servidor NTP genérico
-    DateTime.setTimeZone("UTC+3");       // Configurando para o fuso horário de Brasília (os caras inverteram + com - na lib)
+    DateTime.setServer("pool.ntp.org"); // Usando um servidor NTP genérico
+    DateTime.setTimeZone("UTC+3");      // Configurando para o fuso horário de Brasília (os caras inverteram + com - na lib)
     DateTime.begin();
 
-    while(!DateTime.isTimeValid()) {
+    while (!DateTime.isTimeValid())
+    {
         Serial.println("Falha ao obter o horário do servidor NTP.");
-    } 
-        Serial.printf("Data e hora atuais: %s\n", DateTime.toISOString().c_str());
-        Serial.printf("Timestamp Unix: %ld\n", DateTime.now());
-    
+    }
+    Serial.printf("Data e hora atuais: %s\n", DateTime.toISOString().c_str());
+    Serial.printf("Timestamp Unix: %ld\n", DateTime.now());
 }
