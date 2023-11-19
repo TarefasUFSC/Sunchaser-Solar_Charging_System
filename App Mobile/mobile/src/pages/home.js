@@ -1,23 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, BackHandler } from 'react-native';
-import { BleManager } from 'react-native-ble-plx';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { HorizontalList  } from '../components/components';
+import { reading } from '../routes/routes';
+import staticData from "../../dataTest/data1.json"
+import alternativeData from "../../dataTest/data2.json"
 
-import { HorizontalList, Teste } from '../components/components';
+function Home({ navigation, onDataChange }) {//	Descomentar quando para usar o back-end efetivamente
+	// const [data, setData] = useState(reading());
+	const [data, setData] = useState(staticData);
 
-function Home({ navigation }) {
-	return (
-		<View style={styles.baseHomeContainer}><ScrollView >
-			<View><HorizontalList Variavel="Data" Valor="02/09/2023" Input={false}/></View>
-			<View><HorizontalList Variavel="Hora" Valor="18:05:23" Input={false}/></View>
-			<View><HorizontalList Variavel="Corrente Painel" Valor="3 mA" Input={false}/></View>
-			<View><HorizontalList Variavel="Corrente B" Valor="2.7 mA" Input={false}/></View>
-			<View><HorizontalList Variavel="Corrente C" Valor="2.6 mA" Input={false}/></View>
-			<View><HorizontalList Variavel="Tensão Painel" Valor="5.7 V" Input={false}/></View>
-			<View><HorizontalList Variavel="Tensão Bateria" Valor="6.3 V" Input={false}/></View>
-			<View><HorizontalList Variavel="Temperatura Painel" Valor="73°C" Input={false}/></View>
-			<View><HorizontalList Variavel="Temperatura Bateria" Valor="45°C" Input={false}/></View>
-		</ScrollView></View>
-	);
+	let dataHora = data[0].datetime.split(' ');
+  return (
+    <ScrollView>
+      {data.map((item, index) => (
+        <View key={index}>
+          {index === 0 && (
+						<View>
+              <HorizontalList Variavel="Data" Valor={dataHora[0]} Input={false} />
+              <HorizontalList Variavel="Hora" Valor={dataHora[1]} Input={false} />
+            </View>
+          )}
+					<HorizontalList Variavel={item.type} Valor={item.value} Input={false} />
+        </View>
+      ))}
+      <View style={styles.roundButtonContainer}>
+        <View style={styles.leftContent} />
+        <TouchableOpacity style={styles.roundButton} onPress={() => setData(alternativeData)}>
+          <Text style={styles.textContent}>{'Nova Leitura'}</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -25,24 +38,34 @@ const styles = StyleSheet.create({
 		backgroundColor: '#FFFFFF',
 		flex: 1,
 	},
-	bleHomeContainer: {
-		backgroundColor: '#5DB075',
-		flex: 1,
-		flexDirection: 'column',
-	},
-	bleHomeTextContainer: {
-		backgroundColor: '#FFFFFF',
-	},
-	bleHomeButtons: {
-		marginTop: 20,
-		flexDirection: 'row'
-	},
 	Button:{
 		backgroundColor: '#5DB075',
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginTop: 20,
+	},
+	roundButtonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
+  roundButton: {
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 20,
+		backgroundColor:'#5DB075'
+  },
+	leftContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+	textContent:{
+		color: 'white', 
+		fontWeight: 'bold'
 	}
 });
 
