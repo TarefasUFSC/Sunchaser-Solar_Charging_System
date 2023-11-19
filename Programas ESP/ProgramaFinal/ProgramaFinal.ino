@@ -62,7 +62,7 @@ void loop()
             }
             else
             {
-                Serial.println("Não foi enviado, chama o reconect de novo pq eu perdi a conexão");
+                Serial.println("Não foi enviado, se o erro foi de conexão, chama o reconnect_client() e tenta de novo");
             }
         }
     }

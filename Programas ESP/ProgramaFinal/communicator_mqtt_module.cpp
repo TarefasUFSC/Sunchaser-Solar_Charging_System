@@ -1,4 +1,5 @@
 #include "communicator.h"
+String possible_mqtt_types[3] = {JSON_BATTERY_VOLTAGE_TYPE, JSON_SOLAR_BAT_CURRENT, JSON_BAT_LOAD_CURRENT};
 
 void Communicator::_setup_mqtt()
 {
@@ -78,6 +79,22 @@ void Communicator::_mqtt_callback(char *topic, byte *payload, unsigned int lengt
 
 bool Communicator::send_data_to_server(String type, float value, String datetime_measurement)
 {
+    // verifica se o type ta no possible_mqtt_types
+    bool type_is_valid = false;
+    for (int i = 0; i < 3; i++)
+    {
+        if (type == possible_mqtt_types[i])
+        {
+            type_is_valid = true;
+            break;
+        }
+    }
+    if (!type_is_valid)
+    {
+        Serial.println("O type não é válido, não vou enviar");
+        return false;
+    }
+
     // cria o json no formato que o servidor espera
     // {"version":4, "<type>":<value>, "datetime":"<datetime_measurement>"}
     String json = "{\"version\":4, \"" + type + "\":" + value + ", \"datetime\":\"" + datetime_measurement + "\"}";
