@@ -5,14 +5,14 @@ void Communicator::_setup_mqtt()
     // Initialize MQTT
     this->_mqtt_client.setServer(this->mqtt_server, this->mqtt_port);
     this->_mqtt_client.setCallback([this](char *topic, byte *payload, unsigned int length)
-                                   { this->mqtt_callback(topic, payload, length); });
+                                   { this->_mqtt_callback(topic, payload, length); });
 }
-void Communicator::mqtt_loop()
+void Communicator::_mqtt_loop()
 {
     this->_mqtt_client.loop();
 }
 
-void Communicator::mqtt_reconnect()
+void Communicator::_mqtt_reconnect()
 {
     // Loop until we're reconnected
     while (!this->_mqtt_client.connected())
@@ -29,7 +29,7 @@ void Communicator::mqtt_reconnect()
         {
             Serial.println("connected");
             // Subscribe to topics here
-            this->mqtt_subscribe("your/topic");
+            this->_mqtt_subscribe("your/topic");
         }
         else
         {
@@ -42,12 +42,12 @@ void Communicator::mqtt_reconnect()
     }
 }
 
-void Communicator::mqtt_subscribe(const char *topic)
+void Communicator::_mqtt_subscribe(const char *topic)
 {
     this->_mqtt_client.subscribe(topic);
 }
 
-bool Communicator::mqtt_publish(const char *topic, const char *message)
+bool Communicator::_mqtt_publish(const char *topic, const char *message)
 {
     Serial.print("Enviando: ");
     Serial.println(message);
@@ -63,7 +63,7 @@ bool Communicator::mqtt_publish(const char *topic, const char *message)
     return true;
 }
 
-void Communicator::mqtt_callback(char *topic, byte *payload, unsigned int length)
+void Communicator::_mqtt_callback(char *topic, byte *payload, unsigned int length)
 {
     // Handle incoming messages
     Serial.print("Message arrived [");
@@ -85,5 +85,5 @@ bool Communicator::send_data_to_server(String type, float value, String datetime
     // envia o json para o servidor
     String topic = "sensor/" + this->mac_address + "/out";
     Serial.println(topic);
-    return this->mqtt_publish(topic.c_str(), json.c_str()); // verificar qos pra verificar se conseguiu enviar ou não
+    return this->_mqtt_publish(topic.c_str(), json.c_str()); // verificar qos pra verificar se conseguiu enviar ou não
 }

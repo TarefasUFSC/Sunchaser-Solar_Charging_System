@@ -30,9 +30,10 @@ void setup()
     Serial.println("Verificando o tempo da rede");
     communicator.setup_datetime();
     Serial.println(DateTime.toString());
+    communicator.sleep(); // chama isso pra botar pra dormir -> isso aqui desliga o AP tb, então cuidado
 }
 
-bool envio = true;
+bool envio = true; // flag pra teste, pode excluir
 
 void loop()
 {
@@ -46,10 +47,10 @@ void loop()
         communicator.run_server();
         envio = true;
     }
-    else
+    else // esse else inteiro aqui pode ser excluido, é só pra teste
     {
 
-        if (envio)
+        if (envio) // flag pra teste
         {
 
             communicator.reconnect_client(); // chama isso pra acordar o cliente e reconectar com o broker -> só funciona se o esp estiver em modo client
@@ -61,16 +62,15 @@ void loop()
             }
             else
             {
-                Serial.println("Não foi enviado");
+                Serial.println("Não foi enviado, chama o reconect de novo pq eu perdi a conexão");
             }
         }
     }
 
-    // if( not comunidaor.isServer)
     // verifica o counter do TimerInterrupt e faz as chamadas
     // timer_interruption(fileSystem, Sensors, comunicator) // -> faz as verificações de tempo e levanta as flags de processos
 
-    // chama a função de controle da bateria
+    // chama a função de controle da bateria -> talvez fosse ineressante parar de carregar a bateria quando o esp for um server. pq tipo vai que a pessoa foi la justamente pra verificar medições estranhas que podem danificar a bateria. seria bom deixar o pwm em 0% nessas horas
     // battery_loop(sensors)
     delay(500);
 }

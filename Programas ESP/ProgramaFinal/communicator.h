@@ -45,15 +45,9 @@ public:
     void check_flags();
     static void IRAM_ATTR on_interruption();
     void run_server();
-    void check_connection();
-    void mqtt_reconnect();
-    void mqtt_subscribe(const char *topic);
-    bool mqtt_publish(const char *topic, const char *message);
-    void mqtt_callback(char *topic, byte *payload, unsigned int length);
+
     void setup_datetime();
-    void mqtt_loop();
     bool check_interruption_flag();
-    void reconnect_wifi();
     void reconnect_client();
     void sleep();
     bool send_data_to_server(String type, float value, String datetime_measurement);
@@ -68,6 +62,13 @@ private:
     void _wifi_ap_config();
     void _handle_root();
     void _handle_get_cache();
+
+    void _mqtt_reconnect();
+    void _mqtt_subscribe(const char *topic);
+    bool _mqtt_publish(const char *topic, const char *message);
+    void _mqtt_callback(char *topic, byte *payload, unsigned int length);
+    void _mqtt_loop();
+    void _reconnect_wifi();
     ;
 };
 

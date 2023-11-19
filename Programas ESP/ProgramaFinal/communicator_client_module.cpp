@@ -14,12 +14,13 @@ void Communicator::reconnect_client()
     else
     {
         this->_setup_wifi_client();
-        this->reconnect_wifi();
-        this->mqtt_reconnect();
-        this->mqtt_loop();
+        delay(100);
+        this->_mqtt_reconnect();
+        delay(100);
+        this->_mqtt_loop();
     }
 }
-void Communicator::reconnect_wifi()
+void Communicator::_reconnect_wifi()
 {
     if (this->is_server)
     {
@@ -61,20 +62,11 @@ void Communicator::_setup_wifi_client()
     WiFi.mode(WIFI_STA);
     WiFi.begin(_ssid_wifi_to_connect, _password_wifi_to_connect);
 
-    this->reconnect_wifi();
+    this->_reconnect_wifi();
 
     this->is_server = false;
 
     this->_setup_mqtt();
-}
-
-void Communicator::check_connection()
-{
-    if (WiFi.status() != WL_CONNECTED && !this->is_server)
-    {
-        Serial.println("Desconectado do WiFi, tentando reconectar");
-        this->_setup_wifi_client();
-    }
 }
 
 void Communicator::setup_datetime()
