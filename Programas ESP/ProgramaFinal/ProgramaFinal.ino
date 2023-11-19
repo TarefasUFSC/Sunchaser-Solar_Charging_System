@@ -53,8 +53,11 @@ void loop()
 
         if (envio)
         {
-            communicator.send_data_to_server(JSON_SOLAR_BAT_CURRENT, 1.44, DateTime.toISOString());
-            envio = false;
+            if (communicator.send_data_to_server(JSON_SOLAR_BAT_CURRENT, 40.44, DateTime.toISOString()))
+            {
+                Serial.println("Enviado com sucesso");
+                envio = false;
+            }
         }
     }
 

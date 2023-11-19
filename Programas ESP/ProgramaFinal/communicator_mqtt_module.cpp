@@ -47,13 +47,20 @@ void Communicator::mqtt_subscribe(const char *topic)
     this->_mqtt_client.subscribe(topic);
 }
 
-void Communicator::mqtt_publish(const char *topic, const char *message)
+bool Communicator::mqtt_publish(const char *topic, const char *message)
 {
     Serial.print("Enviando: ");
     Serial.println(message);
     Serial.print("Para: ");
     Serial.println(topic);
+    // verifica se tem conexão
+    if (!this->_mqtt_client.connected())
+    {
+        Serial.println("Não tem conexão com o broker, nem vou tentar enviar pq não vou conseguir. tente de novo mais tarde!");
+        return false;
+    }
     this->_mqtt_client.publish(topic, message);
+    return true;
 }
 
 void Communicator::mqtt_callback(char *topic, byte *payload, unsigned int length)
@@ -78,6 +85,5 @@ bool Communicator::send_data_to_server(String type, float value, String datetime
     // envia o json para o servidor
     String topic = "sensor/" + this->mac_address + "/out";
     Serial.println(topic);
-    this->mqtt_publish(topic.c_str(), json.c_str()); //verificar qos pra verificar se conseguiu enviar ou não
-    return true;
+    return this->mqtt_publish(topic.c_str(), json.c_str()); // verificar qos pra verificar se conseguiu enviar ou não
 }

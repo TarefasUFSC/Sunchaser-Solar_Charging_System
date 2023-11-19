@@ -13,7 +13,6 @@
 #define JSON_SOLAR_BAT_CURRENT "sol_bat_amp"
 #define JSON_BAT_LOAD_CURRENT "bat_load_amp"
 
-
 class Communicator
 {
 public:
@@ -34,7 +33,7 @@ private:
     volatile bool _fall_flag = false;
 
     const char *mqtt_server = "150.162.235.160";
-    const int mqtt_port = 8004; // Default MQTT port
+    const int mqtt_port = 8004; 
     WiFiClient _esp_client;
     PubSubClient _mqtt_client;
 
@@ -49,7 +48,7 @@ public:
     void check_connection();
     void mqtt_reconnect();
     void mqtt_subscribe(const char *topic);
-    void mqtt_publish(const char *topic, const char *message);
+    bool mqtt_publish(const char *topic, const char *message);
     void mqtt_callback(char *topic, byte *payload, unsigned int length);
     void setup_datetime();
     void mqtt_loop();
