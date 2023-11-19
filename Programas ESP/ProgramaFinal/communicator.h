@@ -33,7 +33,7 @@ private:
     volatile bool _fall_flag = false;
 
     const char *mqtt_server = "150.162.235.160";
-    const int mqtt_port = 8004; 
+    const int mqtt_port = 8004;
     WiFiClient _esp_client;
     PubSubClient _mqtt_client;
 
@@ -53,6 +53,7 @@ public:
     void setup_datetime();
     void mqtt_loop();
     bool check_interruption_flag();
+    void reconnect_wifi();
     bool send_data_to_server(String type, float value, String datetime_measurement);
 
 private:

@@ -48,6 +48,7 @@ void loop()
     }
     else
     {
+        communicator.reconnect_wifi();
         communicator.mqtt_reconnect();
         communicator.mqtt_loop();
 
@@ -57,6 +58,10 @@ void loop()
             {
                 Serial.println("Enviado com sucesso");
                 envio = false;
+            }
+            else
+            {
+                Serial.println("Não foi enviado");
             }
         }
     }

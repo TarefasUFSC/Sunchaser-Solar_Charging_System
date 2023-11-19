@@ -1,4 +1,32 @@
 #include "communicator.h"
+void Communicator::reconnect_wifi()
+{
+    if (this->is_server)
+    {
+        Serial.println("Vc é um server, não vou reconectar o wifi");
+    }
+    else
+    {
+        if (WiFi.status() == WL_CONNECTED)
+        {
+            return;
+        }
+        while (WiFi.status() != WL_CONNECTED)
+        {
+            delay(500);
+            Serial.print(".");
+        }
+        Serial.println("\nConectado!");
+
+        Serial.print("IP: ");
+        Serial.println(WiFi.localIP());
+        // mac
+        Serial.print("MAC: ");
+        Serial.println(WiFi.macAddress());
+
+        this->mac_address = WiFi.macAddress();
+    }
+}
 void Communicator::_setup_wifi_client()
 {
     if (this->is_server)
@@ -13,21 +41,7 @@ void Communicator::_setup_wifi_client()
     WiFi.mode(WIFI_STA);
     WiFi.begin(_ssid_wifi_to_connect, _password_wifi_to_connect);
 
-    Serial.print("Conectando ao WiFi");
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(500);
-        Serial.print(".");
-    }
-    Serial.println("\nConectado!");
-
-    Serial.print("IP: ");
-    Serial.println(WiFi.localIP());
-    // mac
-    Serial.print("MAC: ");
-    Serial.println(WiFi.macAddress());
-
-    this->mac_address = WiFi.macAddress();
+    this->reconnect_wifi();
 
     this->is_server = false;
 
