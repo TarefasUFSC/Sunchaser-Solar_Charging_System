@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
-import { BarChart } from 'react-native-chart-kit';
+import { View, Dimensions, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
 import { reading } from '../routes/routes';
 
 let color = '#5DB075';
@@ -35,7 +35,7 @@ export const HorizontalList = ({ Variavel, Valor, Unidade, Input }) => {
         <View style={styles.container}>
           <View style={styles.leftContent}>
             <View style={styles.circle}></View>
-            <Text style={{fontWeight: 'bold'}}>{Variavel}</Text>
+            <Text style={{ fontWeight: 'bold' }}>{Variavel}</Text>
           </View>
           <Text>{Unidade}</Text>
         </View>
@@ -46,35 +46,45 @@ export const HorizontalList = ({ Variavel, Valor, Unidade, Input }) => {
   );
 };
 
-export const Chart = ({data}) => {
-  // const data = {
-  //   labels: dados.map((item) => item.label),
-  //   datasets: [{ data: dados.map((item) => item.value) }]
-  // };
+export const Chart = ({ data }) => {
+  const chartData = {
+    labels: data.map((item) => item.label),
+    datasets: [{ data: data.map((item) => item.value) }]
+  };
   const xAxisStyle = {
     fontSize: 12,
-    transform: [{ rotate: '90deg' }],
+    transform: [{ rotate: '-45deg' }],
     marginLeft: 20,
   };
-  const days = [7, 12, 15, 30, 60];
-  // let percentage = 10.5 / days[data.opt];
   return (
     <View>
-      <BarChart
-        data={data}
-        width={400}
-        height={200}
-        yAxisLabel=""
+      <Text>Bezier Line Chart</Text>
+      <LineChart
+        data={chartData}
+        width={Dimensions.get("window").width-10} // from react-native
+        height={220}
+        yAxisSuffix="V"
         chartConfig={{
-          backgroundGradientFrom: 'white',
-          backgroundGradientTo: 'white',
-          decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          barPercentage: 0.20,
-          propsForLabels: {
-            fontSize: 8,
+          backgroundColor: "#e26a00",
+          backgroundGradientFrom: color,
+          backgroundGradientTo: "#7abd90",
+          decimalPlaces: 1, // optional, defaults to 2dp
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          style: {
+            borderRadius: 16
           },
+          propsForDots: {
+            r: "6",
+            strokeWidth: "2",
+            stroke: "#7abd90"
+          }
+        }}
+        bezier
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+          marginHorizontal: 5
         }}
       />
     </View>
@@ -82,8 +92,8 @@ export const Chart = ({data}) => {
 };
 
 export const RoundButton = ({ palavra, color, tColor, onPressFunction }) => {
-  const buttonColor = {backgroundColor: color};
-  const textColor = {color: tColor, fontWeight: 'bold'}
+  const buttonColor = { backgroundColor: color };
+  const textColor = { color: tColor, fontWeight: 'bold' }
   return (
     <View style={styles.roundButtonContainer}>
       <View style={styles.leftContent} />
@@ -91,8 +101,8 @@ export const RoundButton = ({ palavra, color, tColor, onPressFunction }) => {
         <Text style={textColor}>{palavra}</Text>
       </TouchableOpacity>
     </View>
-    );
-  };
+  );
+};
 
 export const Dropdown = ({ onOptionChange }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
