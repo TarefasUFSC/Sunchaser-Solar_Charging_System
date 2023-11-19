@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
-import dados from '../../dataTest/dados15.json';
+import { reading } from '../routes/routes';
 
 let color = '#5DB075';
 
-export const HorizontalList = ({ Variavel, Valor, Input }) => {
+export const HorizontalList = ({ Variavel, Valor, Unidade, Input }) => {
   const [text, setText] = useState('');
   const handleTextChange = (newText) => {
     const numericText = newText.replace(/[^0-9]/g, '');
@@ -25,10 +25,10 @@ export const HorizontalList = ({ Variavel, Valor, Input }) => {
               style={[styles.input, { textAlign: 'center' }]}
               value={text}
               onChangeText={handleTextChange}
-              placeholder='1'
+              placeholder={Valor.toString()}
               keyboardType="numeric"
             />
-            <Text>{Valor}</Text>
+            <Text>{Unidade}</Text>
           </View>
         </View>
       ) : (
@@ -37,7 +37,7 @@ export const HorizontalList = ({ Variavel, Valor, Input }) => {
             <View style={styles.circle}></View>
             <Text style={{fontWeight: 'bold'}}>{Variavel}</Text>
           </View>
-          <Text>{Valor}</Text>
+          <Text>{Unidade}</Text>
         </View>
       )}
       <View style={styles.hr}></View>
@@ -46,18 +46,18 @@ export const HorizontalList = ({ Variavel, Valor, Input }) => {
   );
 };
 
-export const Chart = (opt) => {
-  const data = {
-    labels: dados.map((item) => item.label),
-    datasets: [{ data: dados.map((item) => item.value) }]
-  };
+export const Chart = ({data}) => {
+  // const data = {
+  //   labels: dados.map((item) => item.label),
+  //   datasets: [{ data: dados.map((item) => item.value) }]
+  // };
   const xAxisStyle = {
     fontSize: 12,
     transform: [{ rotate: '90deg' }],
     marginLeft: 20,
   };
   const days = [7, 12, 15, 30, 60];
-  let percentage = 10.5 / days[opt.opt];
+  // let percentage = 10.5 / days[data.opt];
   return (
     <View>
       <BarChart
@@ -71,7 +71,7 @@ export const Chart = (opt) => {
           decimalPlaces: 0,
           color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          barPercentage: percentage,
+          barPercentage: 0.20,
           propsForLabels: {
             fontSize: 8,
           },
@@ -81,30 +81,26 @@ export const Chart = (opt) => {
   );
 };
 
-export const RoundButton = ({ palavra, page, color, tColor }) => {
-  let string = '';
+export const RoundButton = ({ palavra, color, tColor, onPressFunction }) => {
   const buttonColor = {backgroundColor: color};
   const textColor = {color: tColor, fontWeight: 'bold'}
-  if (page == 'home') string = 'Leitura feita (sqn)';
-  else if (page == 'settings') string = 'Configs salvas (sqn)';
-
   return (
     <View style={styles.roundButtonContainer}>
       <View style={styles.leftContent} />
-      <TouchableOpacity style={[styles.roundButton, buttonColor]} onPress={() => { alert(string) }}>
+      <TouchableOpacity style={[styles.roundButton, buttonColor]} onPress={onPressFunction}>
         <Text style={textColor}>{palavra}</Text>
       </TouchableOpacity>
     </View>
-  );
-};
+    );
+  };
 
-export const Dropdown = () => {
+export const Dropdown = ({ onOptionChange }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Opção 1');
   const handleOptionChange = (itemValue) => {
     setSelectedOption(itemValue);
     toggleDropdown();
-    console.log(selectedOption);
+    onOptionChange(itemValue); // Adicionando esta linha para notificar a alteração da opção
   };
   const toggleDropdown = () => { setIsDropdownVisible(!isDropdownVisible); };
 
