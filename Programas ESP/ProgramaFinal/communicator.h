@@ -54,6 +54,8 @@ public:
     void mqtt_loop();
     bool check_interruption_flag();
     void reconnect_wifi();
+    void reconnect_client();
+    void sleep();
     bool send_data_to_server(String type, float value, String datetime_measurement);
 
 private:

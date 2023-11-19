@@ -1,4 +1,24 @@
 #include "communicator.h"
+void Communicator::sleep()
+{
+    // desliga o wifi para economizar energia
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_OFF);
+}
+void Communicator::reconnect_client()
+{
+    if (this->is_server)
+    {
+        Serial.println("Vc é um server, não vou reconectar o client");
+    }
+    else
+    {
+        this->_setup_wifi_client();
+        this->reconnect_wifi();
+        this->mqtt_reconnect();
+        this->mqtt_loop();
+    }
+}
 void Communicator::reconnect_wifi()
 {
     if (this->is_server)

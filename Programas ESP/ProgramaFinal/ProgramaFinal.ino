@@ -48,16 +48,16 @@ void loop()
     }
     else
     {
-        communicator.reconnect_wifi();
-        communicator.mqtt_reconnect();
-        communicator.mqtt_loop();
 
         if (envio)
         {
+
+            communicator.reconnect_client(); // chama isso pra acordar o cliente e reconectar com o broker -> só funciona se o esp estiver em modo client
             if (communicator.send_data_to_server(JSON_SOLAR_BAT_CURRENT, 40.44, DateTime.toISOString()))
             {
                 Serial.println("Enviado com sucesso");
                 envio = false;
+                communicator.sleep(); // chama isso pra botar pra dormir -> isso aqui desliga o AP tb, então cuidado
             }
             else
             {
