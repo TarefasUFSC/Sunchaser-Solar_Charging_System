@@ -8,11 +8,18 @@
 #include <ArduinoJson.h>
 #include <DateTime.h>
 #include <ESPDateTime.h>
+
+#define JSON_BATTERY_VOLTAGE_TYPE "bat_volt"
+#define JSON_SOLAR_BAT_CURRENT "sol_bat_amp"
+#define JSON_BAT_LOAD_CURRENT "bat_load_amp"
+
+
 class Communicator
 {
 public:
     volatile bool is_server = false;
     const int interrupt_pin = 33;
+    String mac_address;
 
 private:
     const char *_ssid_wifi_to_connect = "RFS-S21FE";
@@ -26,8 +33,8 @@ private:
     volatile bool _rise_flag = false;
     volatile bool _fall_flag = false;
 
-    const char *mqtt_server = "your_mqtt_broker_address";
-    const int mqtt_port = 1883; // Default MQTT port
+    const char *mqtt_server = "150.162.235.160";
+    const int mqtt_port = 8004; // Default MQTT port
     WiFiClient _esp_client;
     PubSubClient _mqtt_client;
 
@@ -47,6 +54,7 @@ public:
     void setup_datetime();
     void mqtt_loop();
     bool check_interruption_flag();
+    bool send_data_to_server(String type, float value, String datetime_measurement);
 
 private:
     void _setup_mqtt();

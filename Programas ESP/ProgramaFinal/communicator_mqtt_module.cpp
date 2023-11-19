@@ -49,6 +49,10 @@ void Communicator::mqtt_subscribe(const char *topic)
 
 void Communicator::mqtt_publish(const char *topic, const char *message)
 {
+    Serial.print("Enviando: ");
+    Serial.println(message);
+    Serial.print("Para: ");
+    Serial.println(topic);
     this->_mqtt_client.publish(topic, message);
 }
 
@@ -63,4 +67,17 @@ void Communicator::mqtt_callback(char *topic, byte *payload, unsigned int length
         Serial.print((char)payload[i]);
     }
     Serial.println();
+}
+
+bool Communicator::send_data_to_server(String type, float value, String datetime_measurement)
+{
+    // cria o json no formato que o servidor espera
+    // {"version":4, "<type>":<value>, "datetime":"<datetime_measurement>"}
+    String json = "{\"version\":4, \"" + type + "\":" + value + ", \"datetime\":\"" + datetime_measurement + "\"}";
+    Serial.println(json);
+    // envia o json para o servidor
+    String topic = "sensor/" + this->mac_address + "/out";
+    Serial.println(topic);
+    this->mqtt_publish(topic.c_str(), json.c_str()); //verificar qos pra verificar se conseguiu enviar ou não
+    return true;
 }

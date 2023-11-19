@@ -20,6 +20,15 @@ void Communicator::_setup_wifi_client()
         Serial.print(".");
     }
     Serial.println("\nConectado!");
+
+    Serial.print("IP: ");
+    Serial.println(WiFi.localIP());
+    // mac
+    Serial.print("MAC: ");
+    Serial.println(WiFi.macAddress());
+
+    this->mac_address = WiFi.macAddress();
+
     this->is_server = false;
 
     this->_setup_mqtt();

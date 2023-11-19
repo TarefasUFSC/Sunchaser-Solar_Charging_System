@@ -32,6 +32,8 @@ void setup()
     Serial.println(DateTime.toString());
 }
 
+bool envio = true;
+
 void loop()
 {
 
@@ -42,11 +44,18 @@ void loop()
     {
         //   Serial.println("é server");
         communicator.run_server();
+        envio = true;
     }
     else
     {
         communicator.mqtt_reconnect();
         communicator.mqtt_loop();
+
+        if (envio)
+        {
+            communicator.send_data_to_server(JSON_SOLAR_BAT_CURRENT, 1.44, DateTime.toISOString());
+            envio = false;
+        }
     }
 
     // if( not comunidaor.isServer)
