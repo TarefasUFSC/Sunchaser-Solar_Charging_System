@@ -5,6 +5,9 @@
 #include <WebServer.h>
 #include <HTTPClient.h>
 #include "PubSubClient.h"
+#include <ArduinoJson.h>
+#include <DateTime.h>
+#include <ESPDateTime.h>
 class Communicator
 {
 public:
@@ -37,13 +40,14 @@ public:
     static void IRAM_ATTR on_interruption();
     void run_server();
     void check_connection();
-    void get_date_from_http();
     void mqtt_reconnect();
     void mqtt_subscribe(const char *topic);
     void mqtt_publish(const char *topic, const char *message);
     void mqtt_callback(char *topic, byte *payload, unsigned int length);
+    void setup_datetime();
 
 private:
+
     void _setup_mqtt();
     void _notify_rise_edge();
     void _notify_fall_edge();
@@ -52,7 +56,7 @@ private:
     void _stop_ap();
     void _wifi_ap_config();
     void _handle_root();
-    void _handle_get_cache();
+    void _handle_get_cache();;
 };
 
 #endif // COMMUNICATOR_H

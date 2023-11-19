@@ -27,7 +27,9 @@ void setup()
 
     // verifica o tempo da rede (fica travado aqui até ele conseguir pegar o tempo inicial pra fazer as coisas)
     // ou seja, antes daqui tando o PWM quanto o switch do Load tem que estar abertos para não dar problema, pq o esp vai ficar travado aqui
-    communicator.get_date_from_http();
+    Serial.println("Verificando o tempo da rede");
+    communicator.setup_datetime();
+    Serial.println(DateTime.toString());
 }
 
 void loop()

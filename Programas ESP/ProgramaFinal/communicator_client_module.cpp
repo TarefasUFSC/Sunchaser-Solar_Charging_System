@@ -33,32 +33,18 @@ void Communicator::check_connection()
         this->_setup_wifi_client();
     }
 }
-void Communicator::get_date_from_http()
-{
-    if (this->is_server)
-    {
-        Serial.println("Você não pode fazer requisições HTTP em modo AP");
-        return;
-    }
 
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        Serial.println("Você não pode fazer requisições HTTP sem estar conectado a uma rede");
-        return;
-    }
 
-    this->_http_client.begin(_esp_client, "http://worldtimeapi.org/api/timezone/America/Sao_Paulo");
-    int http_code = this->_http_client.GET();
+void Communicator::setup_datetime() {
+    // Setup this after WiFi is connected
+    DateTime.setServer("pool.ntp.org");  // Usando um servidor NTP genérico
+    DateTime.setTimeZone("UTC+3");       // Configurando para o fuso horário de Brasília (os caras inverteram + com - na lib)
+    DateTime.begin();
 
-    if (http_code > 0)
-    {
-        String payload = this->_http_client.getString();
-        Serial.println(payload);
-    }
-    else
-    {
-        Serial.println("Falha ao fazer a requisição HTTP");
-    }
-
-    this->_http_client.end();
+    while(!DateTime.isTimeValid()) {
+        Serial.println("Falha ao obter o horário do servidor NTP.");
+    } 
+        Serial.printf("Data e hora atuais: %s\n", DateTime.toISOString().c_str());
+        Serial.printf("Timestamp Unix: %ld\n", DateTime.now());
+    
 }
