@@ -53,22 +53,28 @@ public:
     bool send_data_to_server(String type, float value, String datetime_measurement);
 
 private:
-    void _setup_mqtt();
     void _notify_rise_edge();
     void _notify_fall_edge();
+
+    void _reconnect_wifi();
     void _setup_wifi_client();
     void _setup_wifi_ap();
     void _stop_ap();
     void _wifi_ap_config();
+
     void _handle_root();
     void _handle_get_cache();
+    void _handle_get_ltm();
+    void _handle_get_settings();
+    void _handle_post_request_new_reading();
+    void _handle_put_change_settings();
 
     void _mqtt_reconnect();
+    void _setup_mqtt();
     void _mqtt_subscribe(const char *topic);
     bool _mqtt_publish(const char *topic, const char *message);
     void _mqtt_callback(char *topic, byte *payload, unsigned int length);
     void _mqtt_loop();
-    void _reconnect_wifi();
     ;
 };
 
