@@ -80,9 +80,10 @@ void Communicator::_handle_get_cache()
 {
     String message = "";
     if (this->_web_server.hasArg("page"))
-    {                                 // Verifica se o argumento "page" existe
+    {                                            // Verifica se o argumento "page" existe
         message = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
+        // TODO - CACHE: ver com a manu como que eu vou pegar essas informações
         this->_web_server.send(200, "application/json", "{\"leituras\":[1,2,3,4,5]}");
         return;
     }
@@ -96,9 +97,10 @@ void Communicator::_handle_get_ltm()
 {
     String message = "";
     if (this->_web_server.hasArg("page"))
-    {                                 // Verifica se o argumento "page" existe
+    {                                            // Verifica se o argumento "page" existe
         message = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
+        // TODO - LTM: ver com a manu como que eu vou pegar essas informações
         this->_web_server.send(200, "application/json", "{\"leituras\":[1,2,3,4,5]}");
         return;
     }
@@ -109,7 +111,7 @@ void Communicator::_handle_get_ltm()
 }
 void Communicator::_handle_get_settings()
 {
-
+    // TODO - SETTINGS: ver com a manu como que eu vou pegar essas informações
     this->_web_server.send(200, "application/json", "{\"settings\":{\"config1\":1,\"config2\":2,\"config3\":3,\"config4\":4,\"config5\":5}}");
 }
 void Communicator::_handle_post_request_new_reading()
