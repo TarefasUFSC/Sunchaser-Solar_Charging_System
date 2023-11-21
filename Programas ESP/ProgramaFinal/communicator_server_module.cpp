@@ -115,7 +115,8 @@ void Communicator::_handle_get_cache()
         String return_data = "{";
 
         return_data = return_data + "\"page\":" + page + ",";
-        return_data = return_data + "\"total\":" + 20 + ",";
+        return_data = return_data + "\"total\":" + 5 + ",";
+        return_data = return_data + "\"qtd_per_page\":" + 10 + ",";
 
         return_data = append_reading_to_return_json("bat_load_amp", bat_load_amp_values, bat_load_amp_dat, return_data);
         return_data += ",";
@@ -144,7 +145,8 @@ void Communicator::_handle_get_ltm()
         String return_data = "{";
 
         return_data = return_data + "\"page\":" + page + ",";
-        return_data = return_data + "\"total\":" + 20 + ",";
+        return_data = return_data + "\"total\":" + 5 + ",";
+        return_data = return_data + "\"qtd_per_page\":" + 10 + ",";
 
         return_data = append_reading_to_return_json("bat_load_amp", bat_load_amp_values, bat_load_amp_dat, return_data);
         return_data += ",";
@@ -166,7 +168,7 @@ void Communicator::_handle_get_ltm()
 void Communicator::_handle_get_settings()
 {
     // TODO - SETTINGS: ver com a manu como que eu vou pegar essas informações
-    this->_web_server.send(200, "application/json", "{\"settings\":{\"config1\":1,\"config2\":2,\"config3\":3,\"config4\":4,\"config5\":5}}");
+    this->_web_server.send(200, "application/json", "{\"readingInterval\":1,\"sendingInterval\":2,\"daysBackup\":3}");
 }
 void Communicator::_handle_post_request_new_reading()
 {
