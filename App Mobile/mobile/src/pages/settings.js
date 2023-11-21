@@ -6,7 +6,7 @@ import {HorizontalList, RoundButton} from '../components/components';
 import { getSettings, setSettings } from '../routes/routes';
 
 function Settings({ navigation }) {
-  data = /*getSettings()*/ [1, 2, 3]; 
+  data = /*getSettings().settings*/ [1, 2, 3]; 
   const [readingInterval, setReadingInterval] = useState(data[0]);
   const [sendingInterval, setSendingInterval] = useState(data[1]);
   const [daysBackup, setDaysBackup] = useState(data[2]);

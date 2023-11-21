@@ -1,29 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { HorizontalList, RoundButton  } from '../components/components';
-import { reading } from '../routes/routes';
-import staticData from "../../dataTest/data1.json"
-import alternativeData from "../../dataTest/data2.json"
+import { HorizontalList, RoundButton } from '../components/components';
+import { getCache, getLTM } from '../routes/routes';
+import staticData from "../../dataTest/data1.json";
+import alternativeData from "../../dataTest/data2.json";
 
-function Home({ navigation, onDataChange }) {//	Descomentar quando para usar o back-end efetivamente
-	// const [data, setData] = useState(reading());
-	const [data, setData] = useState(staticData);
+function Home({ navigation, onDataChange }) {
+  const [batVolt, setBatVolt] = useState([1,1]);
+  const [solarBatAmp, setSolarBatAmp] = useState([]);
+  const [batLoadAmp, setBatLoadAmp] = useState([]);
 
-	let dataHora = data[0].datetime.split(' ');
+  useEffect(() => {
+    console.log("PORRRAAAA")
+    let cache = getCache();
+      let ltm = getLTM();
+
+      console.log(cache);
+    
+  }, []);
+
+  let dataHora = [1, 1];
   return (
     <ScrollView>
-      {data.map((item, index) => (
-        <View key={index}>
-          {index === 0 && (
-						<View>
-              <HorizontalList Variavel="Data" Unidade={dataHora[0]} Input={false} />
-              <HorizontalList Variavel="Hora" Unidade={dataHora[1]} Input={false} />
-            </View>
-          )}
-					<HorizontalList Variavel={item.type} Unidade={item.value} Input={false} />
-        </View>
-      ))}
-      <RoundButton palavra='Nova Leitura' page='home' color = '#5DB075' tColor='white' onPressFunction={()=>setData(alternativeData)}/>
+      {batVolt ? (
+        batVolt.map((item, index) => (
+          <View key={index}>
+             {/* { {index === 0 && (
+              <View>
+                <HorizontalList Variavel="Data" Unidade={item.datetime} Input={false} />
+                <HorizontalList Variavel="Hora" Unidade={item.datetime} Input={false} />
+              </View>
+            )}
+            <HorizontalList Variavel={item.datetime} Unidade={item.value} Input={false} /> */} 
+            <Text>oi</Text>
+          </View>
+        ))
+      ) : (
+        <></>
+      )}
+      <RoundButton palavra='Nova Leitura' page='home' color='#5DB075' tColor='white' onPressFunction={() => setBatVolt(getCache())} />
+      {/* <RoundButton palavra='Nova Leitura' page='home' color='#5DB075' tColor='white' onPressFunction={() => setBatVolt(alternativeData)} /> */}
     </ScrollView>
   );
 }

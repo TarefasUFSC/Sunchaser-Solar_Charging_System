@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { View, Dimensions, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, ScrollView, Dimensions, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { reading } from '../routes/routes';
 
 let color = '#5DB075';
+
+function setWidth(size,screenSize){
+  const width = 40*size;
+  if(width<screenSize) return screenSize-10;
+  else return width
+}
 
 export const HorizontalList = ({ Variavel, Valor, Unidade, Input }) => {
   const [text, setText] = useState('');
@@ -51,17 +57,13 @@ export const Chart = ({ data }) => {
     labels: data.map((item) => item.label),
     datasets: [{ data: data.map((item) => item.value) }]
   };
-  const xAxisStyle = {
-    fontSize: 12,
-    transform: [{ rotate: '-45deg' }],
-    marginLeft: 20,
-  };
+  const size = chartData.datasets[0].data.length;
   return (
     <View>
       <Text>Bezier Line Chart</Text>
       <LineChart
         data={chartData}
-        width={Dimensions.get("window").width-10} // from react-native
+        width={setWidth(size,Dimensions.get("window").width)}
         height={220}
         yAxisSuffix="V"
         chartConfig={{
@@ -78,6 +80,9 @@ export const Chart = ({ data }) => {
             r: "6",
             strokeWidth: "2",
             stroke: "#7abd90"
+          },
+          propsForLabels:{
+            transform: [{ rotate: '-45deg' }],
           }
         }}
         bezier
@@ -110,7 +115,7 @@ export const Dropdown = ({ onOptionChange }) => {
   const handleOptionChange = (itemValue) => {
     setSelectedOption(itemValue);
     toggleDropdown();
-    onOptionChange(itemValue); // Adicionando esta linha para notificar a alteração da opção
+    onOptionChange(itemValue);
   };
   const toggleDropdown = () => { setIsDropdownVisible(!isDropdownVisible); };
 

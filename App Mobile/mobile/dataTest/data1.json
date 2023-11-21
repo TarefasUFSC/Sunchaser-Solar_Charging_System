@@ -1,0 +1,17 @@
+[
+    {
+        "type": "Corrente Bat-eria",
+        "value": "0.7 mA",
+        "datetime": "16/10/2023 17h47"
+    },
+    {
+        "type": "Corrente Painel",
+        "value": "15 mA",
+        "datetime": "11/10/2023 15h45"
+    },
+    {
+        "type": "Tensão Bat-eria",
+        "value": "25 V",
+        "datetime": "11/10/2023 15h45"
+    }
+]
