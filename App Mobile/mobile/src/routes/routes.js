@@ -44,16 +44,7 @@ export function getSettings() {
 	return data;
 }
 
-export function getCache() {
-	axios.get('http://192.168.1.1/cache?page=1')
-		.then(response => {
-			return (response.data);
-		})
-		.catch(error => {
-			console.error('Erro na chamada GET: ', error.data);
-			return {}
-		});
-}
+
 
 export function getLTM() {
 	axios.get('http://192.168.1.1/ltm?page=1')
@@ -62,6 +53,6 @@ export function getLTM() {
 		})
 		.catch(error => {
 			console.error('Erro na chamada GET: ', error);
-			return {}
+			return { "error": error }
 		});
 }
