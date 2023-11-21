@@ -9,7 +9,7 @@
 #include <DateTime.h>
 #include <ESPDateTime.h>
 
-#define JSON_BATTERY_VOLTAGE_TYPE "bat_volt"
+#define JSON_BATTERY_VOLTAGE "bat_volt"
 #define JSON_SOLAR_BAT_CURRENT "sol_bat_amp"
 #define JSON_BAT_LOAD_CURRENT "bat_load_amp"
 

@@ -1,5 +1,5 @@
 #include "communicator.h"
-String possible_mqtt_types[3] = {JSON_BATTERY_VOLTAGE_TYPE, JSON_SOLAR_BAT_CURRENT, JSON_BAT_LOAD_CURRENT};
+String possible_mqtt_types[3] = {JSON_BATTERY_VOLTAGE, JSON_SOLAR_BAT_CURRENT, JSON_BAT_LOAD_CURRENT};
 
 void Communicator::_setup_mqtt()
 {

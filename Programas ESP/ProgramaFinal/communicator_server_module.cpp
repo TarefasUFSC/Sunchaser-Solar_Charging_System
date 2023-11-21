@@ -76,21 +76,6 @@ void Communicator::run_server()
     this->_web_server.handleClient();
 }
 
-String append_reading_to_return_json(String key, float *values_list, String *dates_list, String return_data)
-{
-    return_data += "\"" + key + "\":[";
-    for (int i = 0; i < 5; i++)
-    {
-        return_data += "{\"datetime\":\"" + dates_list[i] + "\",\"value\":" + String(values_list[i]) + "}";
-        if (i < 4)
-        {
-            return_data += ",";
-        }
-    }
-    return_data += "]";
-    return return_data;
-}
-
 // TODO - Remover depois que eu conseguir as funções pra pegar os dados da manu
 float bat_load_amp_values[5] = {1, 2, 3, 4, 5};
 String bat_load_amp_dat[5] = {"2021-05-01T00:00:00-0300", "2021-05-01T00:00:01-0300", "2021-05-01T00:00:02-0300", "2021-05-01T00:00:03-0300", "2021-05-01T00:00:04-0300"};
@@ -109,21 +94,26 @@ void Communicator::_handle_get_cache()
         page = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
         // TODO - CACHE: ver com a manu como que eu vou pegar essas informações
-        // retorna um json com 3 listas de objetos JSON_BAT_LOAD_CURRENT JSON_BATTERY_VOLTAGE_TYPE JSON_SOLAR_BAT_CURRENT
+        // retorna um json com 3 listas de objetos JSON_BAT_LOAD_CURRENT JSON_BATTERY_VOLTAGE JSON_SOLAR_BAT_CURRENT
         // cada uma é uma lista de objetos que possuem um datetime do tipo string e um value float
 
-        String return_data = "{";
+        DynamicJsonDocument doc(1024);
+        doc["page"] = page;
+        doc["total"] = 5;
+        doc["qtd_per_page"] = 10;
 
-        return_data = return_data + "\"page\":" + page + ",";
-        return_data = return_data + "\"total\":" + 5 + ",";
-        return_data = return_data + "\"qtd_per_page\":" + 10 + ",";
+        for (int i = 0; i < 5; i++)
+        {
+            doc[JSON_BAT_LOAD_CURRENT][i]["datetime"] = bat_load_amp_dat[i];
+            doc[JSON_BAT_LOAD_CURRENT][i]["value"] = bat_load_amp_values[i];
+            doc[JSON_BATTERY_VOLTAGE][i]["datetime"] = bat_volt_dat[i];
+            doc[JSON_BATTERY_VOLTAGE][i]["value"] = bat_volt_values[i];
+            doc[JSON_SOLAR_BAT_CURRENT][i]["datetime"] = solar_bat_amp_dat[i];
+            doc[JSON_SOLAR_BAT_CURRENT][i]["value"] = solar_bat_amp_values[i];
+        }
 
-        return_data = append_reading_to_return_json("bat_load_amp", bat_load_amp_values, bat_load_amp_dat, return_data);
-        return_data += ",";
-        return_data = append_reading_to_return_json("bat_volt", bat_volt_values, bat_volt_dat, return_data);
-        return_data += ",";
-        return_data = append_reading_to_return_json("solar_bat_amp", solar_bat_amp_values, solar_bat_amp_dat, return_data);
-
+        String return_data;
+        serializeJson(doc, return_data);
         this->_web_server.send(200, "application/json", return_data);
         return;
     }
@@ -142,20 +132,23 @@ void Communicator::_handle_get_ltm()
 
         // TODO - LTM: ver com a manu como que eu vou pegar essas informações
 
-        String return_data = "{";
+        DynamicJsonDocument doc(1024);
+        doc["page"] = page;
+        doc["total"] = 5;
+        doc["qtd_per_page"] = 10;
 
-        return_data = return_data + "\"page\":" + page + ",";
-        return_data = return_data + "\"total\":" + 5 + ",";
-        return_data = return_data + "\"qtd_per_page\":" + 10 + ",";
+        for (int i = 0; i < 5; i++)
+        {
+            doc[JSON_BAT_LOAD_CURRENT][i]["datetime"] = bat_load_amp_dat[i];
+            doc[JSON_BAT_LOAD_CURRENT][i]["value"] = bat_load_amp_values[i];
+            doc[JSON_BATTERY_VOLTAGE][i]["datetime"] = bat_volt_dat[i];
+            doc[JSON_BATTERY_VOLTAGE][i]["value"] = bat_volt_values[i];
+            doc[JSON_SOLAR_BAT_CURRENT][i]["datetime"] = solar_bat_amp_dat[i];
+            doc[JSON_SOLAR_BAT_CURRENT][i]["value"] = solar_bat_amp_values[i];
+        }
 
-        return_data = append_reading_to_return_json("bat_load_amp", bat_load_amp_values, bat_load_amp_dat, return_data);
-        return_data += ",";
-        return_data = append_reading_to_return_json("bat_volt", bat_volt_values, bat_volt_dat, return_data);
-        return_data += ",";
-        return_data = append_reading_to_return_json("solar_bat_amp", solar_bat_amp_values, solar_bat_amp_dat, return_data);
-
-        return_data = return_data + "}";
-
+        String return_data;
+        serializeJson(doc, return_data);
         this->_web_server.send(200, "application/json", return_data);
 
         return;
@@ -168,7 +161,13 @@ void Communicator::_handle_get_ltm()
 void Communicator::_handle_get_settings()
 {
     // TODO - SETTINGS: ver com a manu como que eu vou pegar essas informações
-    this->_web_server.send(200, "application/json", "{\"readingInterval\":1,\"sendingInterval\":2,\"daysBackup\":3}");
+    DynamicJsonDocument doc(1024);
+    doc["readingInterval"] = 1;
+    doc["sendingInterval"] = 1;
+    doc["daysBackup"] = 1;
+    String output;
+    serializeJson(doc, output);
+    this->_web_server.send(200, "application/json", output);
 }
 void Communicator::_handle_post_request_new_reading()
 {
@@ -192,7 +191,11 @@ void Communicator::_handle_put_change_settings()
     // TODO - VERIFICAR COM A MANU COMO QUE ELA TA SALVANDO ESSAS CONFIGS
 
     // pega a configo do json
-    String config1 = message.substring(message.indexOf("config1") + 9, message.indexOf("config2") - 3);
+    DynamicJsonDocument settings_json_doc(1024);
+    deserializeJson(settings_json_doc, message);
+    JsonObject obj = settings_json_doc.as<JsonObject>();
 
-    this->_web_server.send(200, "application/json", "{\"settings\":{\"config1\":" + config1 + "}");
+    Serial.println(obj["daysBackup"].as<String>());
+
+    this->_web_server.send(200, "text/plain", "OK");
 }
