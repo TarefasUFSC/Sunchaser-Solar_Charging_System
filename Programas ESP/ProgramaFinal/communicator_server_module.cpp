@@ -76,18 +76,54 @@ void Communicator::run_server()
     this->_web_server.handleClient();
 }
 
+String append_reading_to_return_json(String key, float *values_list, String *dates_list, String return_data)
+{
+    return_data += "\"" + key + "\":[";
+    for (int i = 0; i < 5; i++)
+    {
+        return_data += "{\"datetime\":\"" + dates_list[i] + "\",\"value\":" + String(values_list[i]) + "}";
+        if (i < 4)
+        {
+            return_data += ",";
+        }
+    }
+    return_data += "]";
+    return return_data;
+}
+
+// TODO - Remover depois que eu conseguir as funções pra pegar os dados da manu
+float bat_load_amp_values[5] = {1, 2, 3, 4, 5};
+String bat_load_amp_dat[5] = {"2021-05-01T00:00:00-0300", "2021-05-01T00:00:01-0300", "2021-05-01T00:00:02-0300", "2021-05-01T00:00:03-0300", "2021-05-01T00:00:04-0300"};
+
+float bat_volt_values[5] = {1, 2, 3, 4, 5};
+String bat_volt_dat[5] = {"2021-05-01T00:00:00-0300", "2021-05-01T00:00:01-0300", "2021-05-01T00:00:02-0300", "2021-05-01T00:00:03-0300", "2021-05-01T00:00:04-0300"};
+
+float solar_bat_amp_values[5] = {1, 2, 3, 4, 5};
+String solar_bat_amp_dat[5] = {"2021-05-01T00:00:00-0300", "2021-05-01T00:00:01-0300", "2021-05-01T00:00:02-0300", "2021-05-01T00:00:03-0300", "2021-05-01T00:00:04-0300"};
+
 void Communicator::_handle_get_cache()
 {
-    String message = "";
+    String page = "";
     if (this->_web_server.hasArg("page"))
-    {                                            // Verifica se o argumento "page" existe
-        message = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
+    {                                         // Verifica se o argumento "page" existe
+        page = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
         // TODO - CACHE: ver com a manu como que eu vou pegar essas informações
         // retorna um json com 3 listas de objetos JSON_BAT_LOAD_CURRENT JSON_BATTERY_VOLTAGE_TYPE JSON_SOLAR_BAT_CURRENT
         // cada uma é uma lista de objetos que possuem um datetime do tipo string e um value float
 
-        this->_web_server.send(200, "application/json", "{\"leituras\":[1,2,3,4,5]}");
+        String return_data = "{";
+
+        return_data = return_data + "\"page\":" + page + ",";
+        return_data = return_data + "\"total\":" + 20 + ",";
+
+        return_data = append_reading_to_return_json("bat_load_amp", bat_load_amp_values, bat_load_amp_dat, return_data);
+        return_data += ",";
+        return_data = append_reading_to_return_json("bat_volt", bat_volt_values, bat_volt_dat, return_data);
+        return_data += ",";
+        return_data = append_reading_to_return_json("solar_bat_amp", solar_bat_amp_values, solar_bat_amp_dat, return_data);
+
+        this->_web_server.send(200, "application/json", return_data);
         return;
     }
     else
@@ -98,13 +134,28 @@ void Communicator::_handle_get_cache()
 
 void Communicator::_handle_get_ltm()
 {
-    String message = "";
+    String page = "";
     if (this->_web_server.hasArg("page"))
-    {                                            // Verifica se o argumento "page" existe
-        message = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
+    {                                         // Verifica se o argumento "page" existe
+        page = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
         // TODO - LTM: ver com a manu como que eu vou pegar essas informações
-        this->_web_server.send(200, "application/json", "{\"leituras\":[1,2,3,4,5]}");
+
+        String return_data = "{";
+
+        return_data = return_data + "\"page\":" + page + ",";
+        return_data = return_data + "\"total\":" + 20 + ",";
+
+        return_data = append_reading_to_return_json("bat_load_amp", bat_load_amp_values, bat_load_amp_dat, return_data);
+        return_data += ",";
+        return_data = append_reading_to_return_json("bat_volt", bat_volt_values, bat_volt_dat, return_data);
+        return_data += ",";
+        return_data = append_reading_to_return_json("solar_bat_amp", solar_bat_amp_values, solar_bat_amp_dat, return_data);
+
+        return_data = return_data + "}";
+
+        this->_web_server.send(200, "application/json", return_data);
+
         return;
     }
     else
