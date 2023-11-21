@@ -84,6 +84,9 @@ void Communicator::_handle_get_cache()
         message = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
         // TODO - CACHE: ver com a manu como que eu vou pegar essas informações
+        // retorna um json com 3 listas de objetos JSON_BAT_LOAD_CURRENT JSON_BATTERY_VOLTAGE_TYPE JSON_SOLAR_BAT_CURRENT
+        // cada uma é uma lista de objetos que possuem um datetime do tipo string e um value float
+
         this->_web_server.send(200, "application/json", "{\"leituras\":[1,2,3,4,5]}");
         return;
     }
