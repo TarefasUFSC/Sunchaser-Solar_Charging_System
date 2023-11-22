@@ -5,9 +5,9 @@ import { reading } from '../routes/routes';
 
 let color = '#5DB075';
 
-function setWidth(size,screenSize){
-  const width = 40*size;
-  if(width<screenSize) return screenSize-10;
+function setWidth(size, screenSize) {
+  const width = 40 * size;
+  if (width < screenSize) return screenSize - 10;
   else return width
 }
 
@@ -63,9 +63,9 @@ export const Chart = ({ data }) => {
       <Text>Bezier Line Chart</Text>
       <LineChart
         data={chartData}
-        width={setWidth(size,Dimensions.get("window").width)}
+        width={setWidth(size, Dimensions.get("window").width)}
         height={220}
-        yAxisSuffix="V"
+        yAxisSuffix={data[0].unit}
         chartConfig={{
           backgroundColor: "#e26a00",
           backgroundGradientFrom: color,
@@ -81,7 +81,7 @@ export const Chart = ({ data }) => {
             strokeWidth: "2",
             stroke: "#7abd90"
           },
-          propsForLabels:{
+          propsForLabels: {
             transform: [{ rotate: '-45deg' }],
           }
         }}
@@ -111,7 +111,7 @@ export const RoundButton = ({ palavra, color, tColor, onPressFunction }) => {
 
 export const Dropdown = ({ onOptionChange }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('Opção 1');
+  const [selectedOption, setSelectedOption] = useState('tensão na Bateria');
   const handleOptionChange = (itemValue) => {
     setSelectedOption(itemValue);
     toggleDropdown();
@@ -125,7 +125,7 @@ export const Dropdown = ({ onOptionChange }) => {
         style={styles.picker}
         onPress={toggleDropdown}
       >
-        <Text style={styles.itemStyle}>{selectedOption}</Text>
+        <Text style={styles.itemStyle}>Trocar dados do Gráfico</Text>
       </TouchableOpacity>
 
       <Modal
@@ -135,7 +135,7 @@ export const Dropdown = ({ onOptionChange }) => {
         onRequestClose={toggleDropdown}
       >
         <View style={styles.modalContainer}>
-          {['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4', 'Opção 5'].map((option) => (
+          {['Tensão na Bateria', 'Corrente entre o Painel e a Bateria', 'Corrente entre a Bateria e a Carga'].map((option) => (
             <TouchableOpacity
               key={option}
               style={styles.dropdownOption}

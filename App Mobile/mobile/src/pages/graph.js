@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+
 import { View, ScrollView, StyleSheet, Text, Button } from 'react-native';
 import dados1 from '../../dataTest/dados7.json';
 import dados2 from '../../dataTest/dados12.json';
@@ -7,30 +8,50 @@ import dados4 from '../../dataTest/dados30.json';
 import dados5 from '../../dataTest/dados60.json';
 import { Chart, Dropdown } from '../components/components';
 
-function Graph({ navigation }) {
-	const [selectedOption, setSelectedOption] = useState('Opção 1');
-	const [chartData, setChartData] = useState(dados1);
+import { ESP32Context } from '../../App'; // Importar o contexto
+function Graph() {
+
+
+	const { batVolt, solarBatAmp, batLoadAmp, reloadData } = useContext(ESP32Context);
+
+	const [selectedOption, setSelectedOption] = useState('Tensão na Bateria');
+	const [chartData, setChartData] = useState(null);
+
+	useEffect(() => {
+
+		changeChartData(batVolt, 'V')
+	}, []);
+
+	function changeChartData(data_list, unit) {
+		let newChartData = data_list.map(it => {
+			const date = it['datetime'].split('T')[0].replaceAll('-', '/').substr(2, it.length).split('/')
+			let dt = {
+				'value': it['value'],
+				'label': + date[1] + '/' + date[0],
+				'unit': unit
+			}
+			return dt;
+		})
+		console.log(newChartData);
+		setChartData(newChartData)
+
+	}
 
 	const handleOptionChange = (option) => {
+		console.log(batVolt);
 		setSelectedOption(option);
 		switch (option) {
-			case 'Opção 1':
-				setChartData(dados1);
+			case 'Tensão na Bateria':
+				changeChartData(batVolt, 'V')
 				break;
-			case 'Opção 2':
-				setChartData(dados2);
+			case 'Corrente entre o Painel e a Bateria':
+				changeChartData(solarBatAmp, 'A')
 				break;
-			case 'Opção 3':
-				setChartData(dados3);
-				break;
-			case 'Opção 4':
-				setChartData(dados4);
-				break;
-			case 'Opção 5':
-				setChartData(dados5);
+			case 'Corrente entre a Bateria e a Carga':
+				changeChartData(batLoadAmp, 'A')
 				break;
 			default:
-				setChartData(dados1);
+				changeChartData(batVolt, 'V')
 		}
 	};
 	return (
@@ -40,11 +61,11 @@ function Graph({ navigation }) {
 					<View style={styles.leftContent} />
 					<Dropdown onOptionChange={handleOptionChange} />
 				</View>
-				<View style={styles.chartContainer}>
-					<ScrollView horizontal><Chart data={chartData} /></ScrollView>
-					<ScrollView horizontal><Chart data={chartData} /></ScrollView>
-					<ScrollView horizontal><Chart data={chartData} /></ScrollView>
-				</View>
+				{chartData ?
+					<View style={styles.chartContainer}>
+						<ScrollView horizontal><Chart data={chartData} /></ScrollView>
+					</View> :
+					<Text>Sem Dados</Text>}
 			</View>
 		</ScrollView>
 
@@ -64,7 +85,6 @@ const styles = StyleSheet.create({
 	leftContent: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		width: 300,
 	},
 	chartContainer: {
 		backgroundColor: 'white',
