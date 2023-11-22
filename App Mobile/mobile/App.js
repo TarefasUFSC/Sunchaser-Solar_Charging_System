@@ -17,17 +17,21 @@ const App = () => {
   const [solarBatAmp, setSolarBatAmp] = useState([]);
   const [batLoadAmp, setBatLoadAmp] = useState([]);
   const [reloadDataFlag, setReloadDataFlag] = useState(false)
+  const [isBootingUp, setIsBootingUp] = useState(true);
 
   useEffect(() => {
     reloadData()
+    setIsBootingUp(false)
   }, []);
 
 
   // Este useEffect será executado após a atualização dos estados
   useEffect(() => {
-    console.log("Estados atualizados", { batLoadAmp, batVolt, solarBatAmp });
+    if (!isBootingUp) {
+      console.log("Estados atualizados", { batLoadAmp, batVolt, solarBatAmp });
 
-    getData();
+      getData();
+    }
   }, [reloadDataFlag]);
 
   function reloadData() {
