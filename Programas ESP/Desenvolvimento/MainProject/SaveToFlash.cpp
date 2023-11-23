@@ -13,6 +13,19 @@ void SaveToFlash::mountLittleFS()
         Serial.println("LittleFS Mount Failed");
         return;
     }
+    // checa se o diretorio /cache existe, se não existir, cria
+    if (!LittleFS.exists("/cache"))
+    {
+        Serial.println("Creating /cache directory");
+        createDir(LittleFS, "/cache");
+    }
+    if (WIPE_ON_INITIALIZE)
+    {
+        Serial.println("Wiping /cache directory");
+        deleteFile(LittleFS, "/cache/BatCurrent.dt");
+        deleteFile(LittleFS, "/cache/BatVoltage.dt");
+        deleteFile(LittleFS, "/cache/PVCurrent.dt");
+    }
 }
 
 void SaveToFlash::listDir(fs::FS &fs, const char *dirname, uint8_t levels)
@@ -80,25 +93,44 @@ void SaveToFlash::removeDir(fs::FS &fs, const char *path)
     }
 }
 
-String SaveToFlash::readFile(fs::FS &fs, const char *path)
+String SaveToFlash::readFilePage(fs::FS &fs, const char *path, int page)
 {
-    String FileContent = "";
-    Serial.printf("Reading file: %s\r\n", path);
+    DynamicJsonDocument doc(1024);
+    Serial.printf("Reading file: %s page: %d\r\n", path, page);
 
     File file = fs.open(path);
-    if (!file || file.isDirectory())
+    if (!file)
     {
         Serial.println("- failed to open file for reading");
-        return String("");
+        return "";
     }
 
-    Serial.println("- read from file:");
-    while (file.available())
+    int first_line = page * NUM_READINGS;
+    int last_line = first_line + NUM_READINGS;
+
+    int i = 0;
+    if (!file.available())
     {
-        FileContent += (char)file.read();
-        Serial.write(file.read());
+        Serial.println("File is empty");
+        return "";
+    }
+    while (file.available() && i <= last_line)
+    {
+        // read a line and increment the counter
+        // if the counter is in the range of the lines to be read, save the line
+        String line = file.readStringUntil('\n');
+        i++;
+        if (i >= first_line && i <= last_line)
+        {
+            //            Serial.print("Line: ");
+            //            Serial.println(line);
+            doc["content"][i - first_line - 1] = line;
+            //            Serial.printf("Colocado no JS/ON na linha %d\n", (i - first_line - 1));
+        }
     }
     file.close();
+    String FileContent;
+    serializeJson(doc, FileContent);
     return FileContent;
 }
 
@@ -133,7 +165,7 @@ void SaveToFlash::appendFile(fs::FS &fs, const char *path, String message)
         Serial.println("- failed to open file for appending");
         return;
     }
-    if (file.print(message))
+    if (file.println(message))
     {
         Serial.println("- message appended");
     }
@@ -175,7 +207,7 @@ String SaveToFlash::createJSON(String type, float value, float time)
     StaticJsonDocument<200> doc;
     doc["type"] = type;
     doc["value"] = value;
-    doc["DateTime"] = time;
+    doc["datetime"] = time;
 
     String Serial = "";
     serializeJson(doc, Serial);
@@ -213,91 +245,114 @@ void SaveToFlash::saveToCache()
 
 void SaveToFlash::saveToLongTerm()
 {
-    // If the long term memory is full, delete the oldest 24 hours of readings
-    if (n_longterm_saves >= long_term_size)
-    {
-        String LT_BatCurrent = readFile(LittleFS, "/longterm/BatCurrent.dt");
-        String LT_BatVoltage = readFile(LittleFS, "/longterm/BatVoltage.dt");
-        String LT_PVCurrent = readFile(LittleFS, "/longterm/PVCurrent.dt");
 
-        // Delete the oldest n_cache_saves hours of readings
-        for (int i = 0; i < n_cache_saves; i++)
-        {
-            LT_BatCurrent.remove(0, LT_BatCurrent.indexOf("}") + 1);
-            LT_BatVoltage.remove(0, LT_BatVoltage.indexOf("}") + 1);
-            LT_PVCurrent.remove(0, LT_PVCurrent.indexOf("}") + 1);
-        }
+    // // Read the cache files
+    // String BatCurrent = readFile(LittleFS, "/cache/BatCurrent.dt");
+    // String BatVoltage = readFile(LittleFS, "/cache/BatVoltage.dt");
+    // String PVCurrent = readFile(LittleFS, "/cache/PVCurrent.dt");
 
-        // Save the remaining readings to the long term memory
-        writeFile(LittleFS, "/longterm/BatCurrent.dt", LT_BatCurrent);
-        writeFile(LittleFS, "/longterm/BatVoltage.dt", LT_BatVoltage);
-        writeFile(LittleFS, "/longterm/PVCurrent.dt", LT_PVCurrent);
+    // // Save the cache files to long term memory
+    // appendFile(LittleFS, "/longterm/BatCurrent.dt", BatCurrent);
+    // appendFile(LittleFS, "/longterm/BatVoltage.dt", BatVoltage);
+    // appendFile(LittleFS, "/longterm/PVCurrent.dt", PVCurrent);
 
-        n_longterm_saves--;
-    }
+    // n_longterm_saves++;
 
-    // Read the cache files
-    String BatCurrent = readFile(LittleFS, "/cache/BatCurrent.dt");
-    String BatVoltage = readFile(LittleFS, "/cache/BatVoltage.dt");
-    String PVCurrent = readFile(LittleFS, "/cache/PVCurrent.dt");
+    // // Empties the cache files
+    // writeFile(LittleFS, "/cache/BatCurrent.dt", "");
+    // writeFile(LittleFS, "/cache/BatVoltage.dt", "");
+    // writeFile(LittleFS, "/cache/PVCurrent.dt", "");
 
-    // Save the cache files to long term memory
-    appendFile(LittleFS, "/longterm/BatCurrent.dt", BatCurrent);
-    appendFile(LittleFS, "/longterm/BatVoltage.dt", BatVoltage);
-    appendFile(LittleFS, "/longterm/PVCurrent.dt", PVCurrent);
+    // n_cache_saves = 0;
 
-    n_longterm_saves++;
+    // // If the long term memory is full, delete the oldest 24 hours of readings
+    // if (n_longterm_saves >= long_term_size)
+    // {
+    //     String LT_BatCurrent = readFile(LittleFS, "/longterm/BatCurrent.dt");
+    //     String LT_BatVoltage = readFile(LittleFS, "/longterm/BatVoltage.dt");
+    //     String LT_PVCurrent = readFile(LittleFS, "/longterm/PVCurrent.dt");
 
-    // Empties the cache files
-    writeFile(LittleFS, "/cache/BatCurrent.dt", "");
-    writeFile(LittleFS, "/cache/BatVoltage.dt", "");
-    writeFile(LittleFS, "/cache/PVCurrent.dt", "");
+    //     // Delete the oldest n_cache_saves hours of readings
+    //     for (int i = 0; i < n_cache_saves; i++)
+    //     {
+    //         LT_BatCurrent.remove(0, LT_BatCurrent.indexOf("}") + 1);
+    //         LT_BatVoltage.remove(0, LT_BatVoltage.indexOf("}") + 1);
+    //         LT_PVCurrent.remove(0, LT_PVCurrent.indexOf("}") + 1);
+    //     }
 
-    n_cache_saves = 0;
+    //     // Save the remaining readings to the long term memory
+    //     writeFile(LittleFS, "/longterm/BatCurrent.dt", LT_BatCurrent);
+    //     writeFile(LittleFS, "/longterm/BatVoltage.dt", LT_BatVoltage);
+    //     writeFile(LittleFS, "/longterm/PVCurrent.dt", LT_PVCurrent);
+
+    //     n_longterm_saves--;
+    // }
 }
 
-Readings_Lists SaveToFlash::get_readings_from_cache(int step)
+Readings_Lists SaveToFlash::convertReadingJSONToStruct(String batteryLoadCurrent, String batteryVoltage, String pvBatteryCurrent)
 {
-    int start = NUM_READINGS * step;
-    int end = NUM_READINGS * (step + 1);
+
+    Readings_Lists readings{0};
+    // Serial.println("\n" + battery_load_current + "\n");
+    DynamicJsonDocument battery_load_current_doc(1024);
+    deserializeJson(battery_load_current_doc, batteryLoadCurrent);
+    JsonObject battery_load_current_obj_list = battery_load_current_doc.as<JsonObject>();
+
+    DynamicJsonDocument battery_voltage_doc(1024);
+    deserializeJson(battery_voltage_doc, batteryVoltage);
+    JsonObject battery_voltage_obj_list = battery_voltage_doc.as<JsonObject>();
+
+    DynamicJsonDocument pv_battery_current_doc(1024);
+    deserializeJson(pv_battery_current_doc, pvBatteryCurrent);
+    JsonObject pv_battery_current_obj_list = pv_battery_current_doc.as<JsonObject>();
+
+    for (int i = 0; i < NUM_READINGS; i++)
+    {
+
+        DynamicJsonDocument bat_load_current_reading_doc(200);
+        // Serial.println(obj_list["content"][i].as<String>());
+        deserializeJson(bat_load_current_reading_doc, battery_load_current_obj_list["content"][i].as<String>());
+        JsonObject bat_load_current_reading_obj = bat_load_current_reading_doc.as<JsonObject>();
+        // Serial.println(obj["value"].as<float>());
+        readings.BatteryLoadCurrent[i].value = bat_load_current_reading_obj["value"].as<float>();
+        readings.BatteryLoadCurrent[i].datetime = bat_load_current_reading_obj["datetime"].as<String>();
+
+        DynamicJsonDocument bat_voltage_reading_doc(200);
+        deserializeJson(bat_voltage_reading_doc, battery_voltage_obj_list["content"][i].as<String>());
+        JsonObject bat_voltage_reading_obj = bat_voltage_reading_doc.as<JsonObject>();
+        readings.BatteryVoltage[i].value = bat_voltage_reading_obj["value"].as<float>();
+        readings.BatteryVoltage[i].datetime = bat_voltage_reading_obj["datetime"].as<String>();
+
+        DynamicJsonDocument pv_current_reading_doc(200);
+        deserializeJson(pv_current_reading_doc, pv_battery_current_obj_list["content"][i].as<String>());
+        JsonObject pv_current_reading_obj = pv_current_reading_doc.as<JsonObject>();
+        readings.PVBatteryCurrent[i].value = pv_current_reading_obj["value"].as<float>();
+        readings.PVBatteryCurrent[i].datetime = pv_current_reading_obj["datetime"].as<String>();
+    }
+    return readings;
+}
+Readings_Lists SaveToFlash::get_readings_from_cache(int page)
+{
     Readings_Lists readings;
 
-    String BatCurrent = readFile(LittleFS, "/cache/BatCurrent.dt");
-    String BatVoltage = readFile(LittleFS, "/cache/BatVoltage.dt");
-    String PVCurrent = readFile(LittleFS, "/cache/PVCurrent.dt");
+    String battery_load_current = readFilePage(LittleFS, "/cache/BatCurrent.dt", page);
+    String battery_voltage = readFilePage(LittleFS, "/cache/BatVoltage.dt", page);
+    String pv_battery_current = readFilePage(LittleFS, "/cache/PVCurrent.dt", page);
 
-    for (int i = start; i < end; i++)
-    {
-        readings.BatteryCurrent[i] = BatCurrent.substring(BatCurrent.indexOf("value") + 7, BatCurrent.indexOf("DateTime") - 3).toFloat();
-        BatCurrent.remove(0, BatCurrent.indexOf("}") + 1);
-        readings.BatteryVoltage[i] = BatVoltage.substring(BatVoltage.indexOf("value") + 7, BatVoltage.indexOf("DateTime") - 3).toFloat();
-        BatVoltage.remove(0, BatVoltage.indexOf("}") + 1);
-        readings.PVCurrent[i] = PVCurrent.substring(PVCurrent.indexOf("value") + 7, PVCurrent.indexOf("DateTime") - 3).toFloat();
-        PVCurrent.remove(0, PVCurrent.indexOf("}") + 1);
-    }
+    readings = convertReadingJSONToStruct(battery_load_current, battery_voltage, pv_battery_current);
 
     return readings;
 }
 
-Readings_Lists SaveToFlash::get_readings_from_longterm(int step)
+Readings_Lists SaveToFlash::get_readings_from_longterm(int page)
 {
-    int start = NUM_READINGS * step;
-    int end = NUM_READINGS * (step + 1);
     Readings_Lists readings;
 
-    String BatCurrent = readFile(LittleFS, "/longterm/BatCurrent.dt");
-    String BatVoltage = readFile(LittleFS, "/longterm/BatVoltage.dt");
-    String PVCurrent = readFile(LittleFS, "/longterm/PVCurrent.dt");
+    String battery_load_current = readFilePage(LittleFS, "/longterm/BatCurrent.dt", page);
+    String battery_voltage = readFilePage(LittleFS, "/longterm/BatVoltage.dt", page);
+    String pv_battery_current = readFilePage(LittleFS, "/longterm/PVCurrent.dt", page);
 
-    for (int i = start; i < end; i++)
-    {
-        readings.BatteryCurrent[i] = BatCurrent.substring(BatCurrent.indexOf("value") + 7, BatCurrent.indexOf("DateTime") - 3).toFloat();
-        BatCurrent.remove(0, BatCurrent.indexOf("}") + 1);
-        readings.BatteryVoltage[i] = BatVoltage.substring(BatVoltage.indexOf("value") + 7, BatVoltage.indexOf("DateTime") - 3).toFloat();
-        BatVoltage.remove(0, BatVoltage.indexOf("}") + 1);
-        readings.PVCurrent[i] = PVCurrent.substring(PVCurrent.indexOf("value") + 7, PVCurrent.indexOf("DateTime") - 3).toFloat();
-        PVCurrent.remove(0, PVCurrent.indexOf("}") + 1);
-    }
+    readings = convertReadingJSONToStruct(battery_load_current, battery_voltage, pv_battery_current);
 
     return readings;
 }

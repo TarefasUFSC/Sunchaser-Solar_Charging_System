@@ -11,14 +11,20 @@
    https://github.com/lorol/arduino-esp32littlefs-plugin */
 
 #define FORMAT_LITTLEFS_IF_FAILED true
-
+#define WIPE_ON_INITIALIZE false
 #define NUM_READINGS 10
+
+struct Reading
+{
+  float value;
+  String datetime;
+};
 
 struct Readings_Lists
 {
-  float BatteryCurrent[NUM_READINGS];
-  float BatteryVoltage[NUM_READINGS];
-  float PVCurrent[NUM_READINGS];
+  Reading BatteryLoadCurrent[NUM_READINGS];
+  Reading BatteryVoltage[NUM_READINGS];
+  Reading PVBatteryCurrent[NUM_READINGS];
 };
 
 class SaveToFlash
@@ -32,13 +38,14 @@ private:
   void listDir(fs::FS &fs, const char *dirname, uint8_t levels);
   void createDir(fs::FS &fs, const char *path);
   void removeDir(fs::FS &fs, const char *path);
-  String readFile(fs::FS &fs, const char *path);
+  String readFilePage(fs::FS &fs, const char *path, int page);
   void writeFile(fs::FS &fs, const char *path, String message);
   void appendFile(fs::FS &fs, const char *path, String message);
   void renameFile(fs::FS &fs, const char *path1, const char *path2);
   void deleteFile(fs::FS &fs, const char *path);
 
   String createJSON(String type, float value, float time);
+  Readings_Lists convertReadingJSONToStruct(String batteryLoadCurrent, String batteryVoltage, String pvBatteryCurrent);
 
 public:
   SaveToFlash(); // Constructor
@@ -47,8 +54,8 @@ public:
   int getNCacheSaves();
   void saveToCache();
   void saveToLongTerm();
-  Readings_Lists get_readings_from_cache(int step);
-  Readings_Lists get_readings_from_longterm(int step);
+  Readings_Lists get_readings_from_cache(int page);
+  Readings_Lists get_readings_from_longterm(int page);
   void set_newcachesize(int newSize);
   void set_newlongterm(int newLongTerm);
 };
