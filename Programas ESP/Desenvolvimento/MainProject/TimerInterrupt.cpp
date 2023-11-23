@@ -30,7 +30,12 @@ void TimerInterrupt::timer_interruption(){ // If Timer has fired
   float time, BatteryCurrent, BatteryVoltage, PVCurrent, PVVoltage;
   if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE){
     Serial.println("entering timer interrupt");
-    fileSystem.saveToCache();
+    int n_cache_saves = fileSystem.getNCacheSaves();
+    int cache_size = fileSystem.getCachesize();
+    // If the cache is full, save it to the long term memory
+    if (n_cache_saves >= cache_size){
+      fileSystem.saveToLongTerm();
+    }
   }
 }
 

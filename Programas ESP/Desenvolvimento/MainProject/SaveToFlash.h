@@ -14,17 +14,11 @@
 
 #define NUM_READINGS 10
 
-struct Reading
-{
-  float value;
-  String datetime;
-};
-
 struct Readings_Lists
 {
-  Reading BatteryCurrent[NUM_READINGS];
-  Reading BatteryVoltage[NUM_READINGS];
-  Reading PVCurrent[NUM_READINGS];
+  float BatteryCurrent[NUM_READINGS];
+  float BatteryVoltage[NUM_READINGS];
+  float PVCurrent[NUM_READINGS];
 };
 
 class SaveToFlash
@@ -49,6 +43,8 @@ private:
 public:
   SaveToFlash(); // Constructor
   void mountLittleFS();
+  int getCachesize();
+  int getNCacheSaves();
   void saveToCache();
   void saveToLongTerm();
   Readings_Lists get_readings_from_cache(int step);
