@@ -2,7 +2,7 @@
 #include "BatteryControl.h"
 
 Adafruit_INA219 battery_ina219(0x40);
-Adafruit_INA219 pv_ina219(0x44);
+Adafruit_INA219 pv_ina219(0x41);
 Sensors sensors(battery_ina219, pv_ina219);
 BatteryControl battery_controller(&sensors);
 
