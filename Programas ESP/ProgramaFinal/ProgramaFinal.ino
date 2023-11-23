@@ -1,20 +1,6 @@
 
 #include "communicator.h"
-// class Sensors
-// {
-// };
-
-// class BatteryController
-// {
-// };
-
-// class FileSystem
-// {
-// };
-
-// class TimerInterrupt
-// {
-// };
+#include "SaveToFlash.h"
 
 // Cria as instancias globais das classes
 Communicator communicator;

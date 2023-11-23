@@ -77,6 +77,26 @@ void Communicator::_mqtt_callback(char *topic, byte *payload, unsigned int lengt
     Serial.println();
 }
 
+bool Communicator::send_data_to_server(Readings_Lists readings)
+{
+    for (int i = 0; i < NUM_READINGS; i++)
+    {
+        if (!this->send_data_to_server(JSON_BATTERY_VOLTAGE, readings.BatteryVoltage[i].value, readings.BatteryVoltage[i].datetime))
+        {
+            return false;
+        }
+        if (!this->send_data_to_server(JSON_SOLAR_BAT_CURRENT, readings.PVBatteryCurrent[i].value, readings.PVBatteryCurrent[i].datetime))
+        {
+            return false;
+        }
+        if (!this->send_data_to_server(JSON_BAT_LOAD_CURRENT, readings.BatteryLoadCurrent[i].value, readings.BatteryLoadCurrent[i].datetime))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool Communicator::send_data_to_server(String type, float value, String datetime_measurement)
 {
     // verifica se o type ta no possible_mqtt_types
