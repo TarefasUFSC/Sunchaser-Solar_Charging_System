@@ -12,24 +12,40 @@
 
 #define FORMAT_LITTLEFS_IF_FAILED true
 
-//create a struct to hold the data
-struct SensorsData {
-  float BatteryCurrent;
-  float BatteryVoltage;
-  float PVCurrent;
-  float PVVoltage;
+#define NUM_READINGS 10
+
+struct Readings{
+  float BatteryCurrent[NUM_READINGS];
+  float BatteryVoltage[NUM_READINGS];
+  float PVCurrent[NUM_READINGS];
 };
 
-void mountLittleFS();
-void listDir(fs::FS &fs, const char * dirname, uint8_t levels);
-void createDir(fs::FS &fs, const char * path);
-void removeDir(fs::FS &fs, const char * path);
-void readFile(fs::FS &fs, const char * path);
-void writeFile(fs::FS &fs, const char * path, String message);
-void appendFile(fs::FS &fs, const char * path, String message);
-void renameFile(fs::FS &fs, const char * path1, const char * path2);
-void deleteFile(fs::FS &fs, const char * path);
+class SaveToFlash{
+  private:
+    int n_cache_saves;
+    int n_longterm_saves;
+    int cache_size = 24; // 1 day of readings every hour
+    int long_term_size = 720; // 30 days of readings every hour
 
-String createJSON(String type, float value, float time);
+    void listDir(fs::FS &fs, const char * dirname, uint8_t levels);
+    void createDir(fs::FS &fs, const char * path);
+    void removeDir(fs::FS &fs, const char * path);
+    String readFile(fs::FS &fs, const char * path);
+    void writeFile(fs::FS &fs, const char * path, String message);
+    void appendFile(fs::FS &fs, const char * path, String message);
+    void renameFile(fs::FS &fs, const char * path1, const char * path2);
+    void deleteFile(fs::FS &fs, const char * path);
+
+    String createJSON(String type, float value, float time);
+  public:
+    SaveToFlash(); // Constructor
+    void mountLittleFS();
+    void saveToCache();
+    void saveToLongTerm();
+    Readings get_readings_from_cache(int step);
+    Readings get_readings_from_longterm(int step);
+    void set_newcachesize(int newSize);
+    void set_newlongterm(int newLongTerm);
+};
 
 #endif
