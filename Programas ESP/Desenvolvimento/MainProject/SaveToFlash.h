@@ -22,9 +22,9 @@ struct Reading
 
 struct Readings_Lists
 {
-  float BatteryCurrent[NUM_READINGS];
-  float BatteryVoltage[NUM_READINGS];
-  float PVCurrent[NUM_READINGS];
+  Reading BatteryCurrent[NUM_READINGS];
+  Reading BatteryVoltage[NUM_READINGS];
+  Reading PVCurrent[NUM_READINGS];
 };
 
 class SaveToFlash
