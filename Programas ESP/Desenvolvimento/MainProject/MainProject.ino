@@ -10,7 +10,7 @@
 // BatteryControl battery_controller(&sensors);
 
 SaveToFlash fileSystem;
-TimerInterrupt timerInterrupt(fileSystem);
+TimerInterrupt timerInterrupt(&fileSystem);
 
 void setup()
 {

@@ -3,7 +3,7 @@
 // Initialize the static variables
 volatile SemaphoreHandle_t TimerInterrupt::timerSemaphore = xSemaphoreCreateBinary();
 
-TimerInterrupt::TimerInterrupt(SaveToFlash &files)
+TimerInterrupt::TimerInterrupt(SaveToFlash *files)
 {
   timer = NULL;
   QtdMinutes = 1; // Default time is 60 minutes
@@ -35,27 +35,16 @@ void TimerInterrupt::timer_interruption()
   if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
   {
     Serial.println("entering timer interrupt");
-    int n_cache_saves = fileSystem.getNCacheSaves();
-    int cache_size = fileSystem.getCachesize();
-    fileSystem.saveToCache();
+    fileSystem->saveToCache();
+    int n_cache_saves = fileSystem->getNCacheSaves();
+    int cache_size = fileSystem->getCachesize();
     // If the cache is full, save it to the long term memory
+    Serial.printf("n_cache: %d | cache_size: %d\n", n_cache_saves, cache_size);
     if (n_cache_saves >= cache_size)
     {
-      fileSystem.saveToLongTerm();
+      fileSystem->saveToLongTerm();
     }
-    Readings_Lists readings = fileSystem.get_readings_from_cache(0);
-    // printa os valores lidos
-    Serial.println();
-    for (int i = 0; i < NUM_READINGS; i++)
-    {
-      Serial.print("BatteryLoadCurrent: ");
-      Serial.println(readings.BatteryLoadCurrent[i].value);
-      Serial.print("BatteryVoltage: ");
-      Serial.println(readings.BatteryVoltage[i].value);
-      Serial.print("PVBatteryCurrent: ");
-      Serial.println(readings.PVBatteryCurrent[i].value);
-      Serial.println("----");
-    }
+//    Readings_Lists readings = fileSystem->get_readings_/from_cache(0);
   }
 }
 

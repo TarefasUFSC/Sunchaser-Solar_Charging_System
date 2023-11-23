@@ -18,6 +18,7 @@ struct Reading
 {
   float value;
   String datetime;
+  int isValid;
 };
 
 struct Readings_Lists
@@ -32,8 +33,11 @@ class SaveToFlash
 private:
   int n_cache_saves;
   int n_longterm_saves;
-  int cache_size = 24;      // 1 day of readings every hour
-  int long_term_size = 720; // 30 days of readings every hour
+
+  int cache_size = 2;      // 1 day of readings every hour
+  
+  // esse aqui TEM que ser multiplo de NUM_READINGS pq se não a conta fica muito dificil e não quero fazer ela
+  int long_term_size = 5; 
 
   void listDir(fs::FS &fs, const char *dirname, uint8_t levels);
   void createDir(fs::FS &fs, const char *path);
@@ -44,7 +48,7 @@ private:
   void renameFile(fs::FS &fs, const char *path1, const char *path2);
   void deleteFile(fs::FS &fs, const char *path);
 
-  String createJSON(String type, float value, float time);
+  String createJSON(String type, float value, String datetime, int isValid);
   Readings_Lists convertReadingJSONToStruct(String batteryLoadCurrent, String batteryVoltage, String pvBatteryCurrent);
 
 public:
