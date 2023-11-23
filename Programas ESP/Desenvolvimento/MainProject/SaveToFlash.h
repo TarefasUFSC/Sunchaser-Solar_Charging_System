@@ -14,6 +14,12 @@
 
 #define NUM_READINGS 10
 
+struct Reading
+{
+  float value;
+  String datetime;
+};
+
 struct Readings_Lists
 {
   float BatteryCurrent[NUM_READINGS];
