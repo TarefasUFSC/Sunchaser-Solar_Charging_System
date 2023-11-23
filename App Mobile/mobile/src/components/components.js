@@ -11,11 +11,11 @@ function setWidth(size, screenSize) {
   else return width
 }
 
-export const HorizontalList = ({ Variavel, Valor, Unidade, Input }) => {
-  const [text, setText] = useState('');
+export const HorizontalList = ({ Variavel, Valor, Unidade, Input, setValor }) => {
   const handleTextChange = (newText) => {
     const numericText = newText.replace(/[^0-9]/g, '');
-    setText(numericText);
+    console.log("new text", numericText);
+    setValor(numericText);
   };
 
   return (
@@ -29,7 +29,7 @@ export const HorizontalList = ({ Variavel, Valor, Unidade, Input }) => {
           <View style={styles.inputContainer}>
             <TextInput
               style={[styles.input, { textAlign: 'center' }]}
-              value={text}
+              value={Valor.toString()}
               onChangeText={handleTextChange}
               placeholder={Valor.toString()}
               keyboardType="numeric"
