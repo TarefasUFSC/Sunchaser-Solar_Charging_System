@@ -18,7 +18,6 @@ void setup() {
   while (!Serial) {
     ; // Wait for serial port to connect. Needed for native USB port only
   }
-  mountLittleFS();
 
   sensors.INA_init();
   battery_controller.PWM_init();
