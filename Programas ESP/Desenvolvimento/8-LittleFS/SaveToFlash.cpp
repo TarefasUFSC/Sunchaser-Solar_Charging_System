@@ -256,10 +256,10 @@ void SaveToFlash::saveToLongTerm()
     n_cache_saves = 0;
 }
 
-Readings_Lists SaveToFlash::get_readings_from_cache(int step)
+Readings_Lists SaveToFlash::get_readings_from_cache(int page)
 {
-    int start = NUM_READINGS * step;
-    int end = NUM_READINGS * (step + 1);
+    int start = NUM_READINGS * page;
+    int end = NUM_READINGS * (page + 1);
     Readings_Lists readings;
 
     String BatCurrent = readFile(LittleFS, "/cache/BatCurrent.dt");
@@ -279,10 +279,10 @@ Readings_Lists SaveToFlash::get_readings_from_cache(int step)
     return readings;
 }
 
-Readings_Lists SaveToFlash::get_readings_from_longterm(int step)
+Readings_Lists SaveToFlash::get_readings_from_longterm(int page)
 {
-    int start = NUM_READINGS * step;
-    int end = NUM_READINGS * (step + 1);
+    int start = NUM_READINGS * page;
+    int end = NUM_READINGS * (page + 1);
     Readings_Lists readings;
 
     String BatCurrent = readFile(LittleFS, "/longterm/BatCurrent.dt");
