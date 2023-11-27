@@ -21,7 +21,7 @@ public:
     volatile bool is_server = false;
     const int interrupt_pin = 33;
     String mac_address;
-
+    
 private:
     const char *_ssid_wifi_to_connect = "RFS-S21FE";
     const char *_password_wifi_to_connect = "23011306";
@@ -38,10 +38,11 @@ private:
     const int mqtt_port = 8004;
     WiFiClient _esp_client;
     PubSubClient _mqtt_client;
+    SaveToFlash* _files;
 
 public:
     Communicator();
-    void init();
+    void init(SaveToFlash *files);
     void attach_interruption();
     void interrupt_handler();
     void check_flags();

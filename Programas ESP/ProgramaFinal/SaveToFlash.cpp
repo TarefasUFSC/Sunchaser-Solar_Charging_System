@@ -138,7 +138,7 @@ void SaveToFlash::removeDir(fs::FS &fs, const char *path)
 
 String SaveToFlash::readFilePage(fs::FS &fs, const char *path, int page)
 {
-    DynamicJsonDocument doc(1024);
+    DynamicJsonDocument doc(2048);
 
     File file = fs.open(path);
     if (!file)
@@ -149,16 +149,18 @@ String SaveToFlash::readFilePage(fs::FS &fs, const char *path, int page)
     }
 
     int first_line = page * NUM_READINGS;
-    int last_line = first_line + NUM_READINGS;
-
-    int i = 0;
+    int last_line = first_line + NUM_READINGS -1;
+    Serial.print("FL: "); Serial.println(first_line);
+    Serial.print("LL: "); Serial.println(last_line);
+    int i = first_line;
     if (!file.available())
     {
         Serial.println("File is empty");
         return "";
     }
-    while (file.available() && i <= last_line)
+    while (file.available() )
     {
+        Serial.print(i);
         // read a line and increment the counter
         // if the counter is in the range of the lines to be read, save the line
         String line = file.readStringUntil('\n');
@@ -170,7 +172,11 @@ String SaveToFlash::readFilePage(fs::FS &fs, const char *path, int page)
             doc["content"][i - first_line - 1] = line;
             //            Serial.printf("Colocado no JS/ON na linha %d\n", (i - first_line - 1));
         }
+        else{
+          break;
+        }
     }
+    Serial.println("Arquivo lido");
     file.close();
     String FileContent;
     serializeJson(doc, FileContent);
@@ -369,22 +375,23 @@ Readings_Lists SaveToFlash::convertReadingJSONToStruct(String batteryLoadCurrent
 
     Readings_Lists readings{0};
     // Serial.println("\n" + battery_load_current + "\n");
-    DynamicJsonDocument battery_load_current_doc(1024);
+    DynamicJsonDocument battery_load_current_doc(2048);
     deserializeJson(battery_load_current_doc, batteryLoadCurrent);
     JsonObject battery_load_current_obj_list = battery_load_current_doc.as<JsonObject>();
 
-    DynamicJsonDocument battery_voltage_doc(1024);
+    DynamicJsonDocument battery_voltage_doc(2048);
     deserializeJson(battery_voltage_doc, batteryVoltage);
     JsonObject battery_voltage_obj_list = battery_voltage_doc.as<JsonObject>();
 
-    DynamicJsonDocument pv_battery_current_doc(1024);
+    DynamicJsonDocument pv_battery_current_doc(2048);
     deserializeJson(pv_battery_current_doc, pvBatteryCurrent);
     JsonObject pv_battery_current_obj_list = pv_battery_current_doc.as<JsonObject>();
 
     for (int i = 0; i < NUM_READINGS; i++)
     {
-
-        DynamicJsonDocument bat_load_current_reading_doc(200);
+        
+          Serial.print(i);
+        DynamicJsonDocument bat_load_current_reading_doc(1000);
         // Serial.println(obj_list["content"][i].as<String>());
         deserializeJson(bat_load_current_reading_doc, battery_load_current_obj_list["content"][i].as<String>());
         JsonObject bat_load_current_reading_obj = bat_load_current_reading_doc.as<JsonObject>();
@@ -393,20 +400,22 @@ Readings_Lists SaveToFlash::convertReadingJSONToStruct(String batteryLoadCurrent
         readings.BatteryLoadCurrent[i].datetime = bat_load_current_reading_obj["datetime"].as<String>();
         readings.BatteryLoadCurrent[i].isValid = bat_load_current_reading_obj["isValid"].as<int>();
 
-        DynamicJsonDocument bat_voltage_reading_doc(200);
+        DynamicJsonDocument bat_voltage_reading_doc(1000);
         deserializeJson(bat_voltage_reading_doc, battery_voltage_obj_list["content"][i].as<String>());
         JsonObject bat_voltage_reading_obj = bat_voltage_reading_doc.as<JsonObject>();
         readings.BatteryVoltage[i].value = bat_voltage_reading_obj["value"].as<float>();
         readings.BatteryVoltage[i].datetime = bat_voltage_reading_obj["datetime"].as<String>();
         readings.BatteryVoltage[i].isValid = bat_voltage_reading_obj["isValid"].as<int>();
 
-        DynamicJsonDocument pv_current_reading_doc(200);
+        DynamicJsonDocument pv_current_reading_doc(1000);
         deserializeJson(pv_current_reading_doc, pv_battery_current_obj_list["content"][i].as<String>());
         JsonObject pv_current_reading_obj = pv_current_reading_doc.as<JsonObject>();
         readings.PVBatteryCurrent[i].value = pv_current_reading_obj["value"].as<float>();
         readings.PVBatteryCurrent[i].datetime = pv_current_reading_obj["datetime"].as<String>();
         readings.PVBatteryCurrent[i].isValid = pv_current_reading_obj["isValid"].as<int>();
     }
+    
+          Serial.println("convertido os dados para json");
     return readings;
 }
 Readings_Lists SaveToFlash::get_readings_from_cache(int page)

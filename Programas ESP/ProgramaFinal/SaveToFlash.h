@@ -28,16 +28,16 @@ struct Readings_Lists
   Reading PVBatteryCurrent[NUM_READINGS];
 };
 
-class SaveToFlash
+class SaveToFlash 
 {
 private:
   int n_cache_saves;
   int n_longterm_saves;
 
-  int cache_size = 2; // 1 day of readings every hour
+  int cache_size = 33; // 1 day of readings every hour
 
   // esse aqui TEM que ser multiplo de NUM_READINGS pq se não a conta fica muito dificil e não quero fazer ela
-  int long_term_size = 5;
+  int long_term_size = 300;
 
   void listDir(fs::FS &fs, const char *dirname, uint8_t levels);
   void createDir(fs::FS &fs, const char *path);
