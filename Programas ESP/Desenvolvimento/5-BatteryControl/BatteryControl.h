@@ -17,7 +17,7 @@ class BatteryControl {
 
         // constants definitions (pontos de ajuste)
         const float AV = 14.4;  // Absorption Voltage
-        const float TC = 0.25;  // Threshold Current
+        const float TC = 250.0;  // Threshold Current in mA
         const float FV = 13.5;  // Float Voltage
         const float LDV = 11.5; // Load Disconnect Voltage
         const float LRV = 12.5; // Load Reconnect Voltage

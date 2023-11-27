@@ -3,10 +3,10 @@
 // Initialize the static variables
 volatile SemaphoreHandle_t TimerInterrupt::timerSemaphore = xSemaphoreCreateBinary();
 
-TimerInterrupt::TimerInterrupt(SaveToFlash *files, Sensors *sensors)
+TimerInterrupt::TimerInterrupt(SaveToFlash *files, Sensors *sensors, TimeConfigurations &configs)
 {
   timer = NULL;
-  QtdMinutes = 1; // Default time is 60 minutes
+  timeConfigs = configs;
   fileSystem = files;
   read_sensors = sensors;
 }
@@ -24,6 +24,7 @@ void TimerInterrupt::timer_init()
 
   timerAttachInterrupt(timer, &TimerInterrupt::onTimer, true); // Attach onTimer function to our timer.
 
+  int QtdMinutes = timeConfigs.get_ReadingInterval();
   int SetTime = QtdMinutes * 10 * 1000000; // Set alarm to call onTimer function every QtdMinutes
   timerAlarmWrite(timer, SetTime, true);   // Repeat the alarm (third parameter)
 
@@ -48,16 +49,11 @@ void TimerInterrupt::timer_interruption()
 
     // If the cache is full, save it to the long term memory
     int n_cache_saves = fileSystem->getNCacheSaves();
-    int cache_size = fileSystem->getCachesize();
+    int cache_size = timeConfigs.get_CacheMaxSize();
     Serial.printf("n_cache: %d | cache_size: %d\n", n_cache_saves, cache_size);
     if (n_cache_saves >= cache_size)
     {
       fileSystem->saveToLongTerm();
     }
   }
-}
-
-void TimerInterrupt::set_newtime(int newTime)
-{
-  QtdMinutes = newTime;
 }
