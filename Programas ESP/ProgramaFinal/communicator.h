@@ -9,6 +9,8 @@
 #include <DateTime.h>
 #include <ESPDateTime.h>
 
+#include "SaveToFlash.h"
+
 #define JSON_BATTERY_VOLTAGE "bat_volt"
 #define JSON_SOLAR_BAT_CURRENT "sol_bat_amp"
 #define JSON_BAT_LOAD_CURRENT "bat_load_amp"
@@ -50,6 +52,7 @@ public:
     bool check_interruption_flag();
     void reconnect_client();
     void sleep();
+    bool send_data_to_server(Readings_Lists readings);
     bool send_data_to_server(String type, float value, String datetime_measurement);
 
 private:
