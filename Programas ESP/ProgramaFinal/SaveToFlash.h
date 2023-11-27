@@ -56,6 +56,7 @@ public:
   void mountLittleFS();
   int getCachesize();
   int getNCacheSaves();
+  int getNLongTermSaves();
   void saveToCache(String datetime, float BatteryCurrent, float BatteryVoltage, float PVCurrent);
   void saveToLongTerm();
   Readings_Lists get_readings_from_cache(int page);

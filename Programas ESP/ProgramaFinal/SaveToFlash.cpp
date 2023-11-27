@@ -456,3 +456,6 @@ void SaveToFlash::set_newlongterm(int newLongTerm)
 {
     long_term_size = newLongTerm;
 }
+int SaveToFlash::getNLongTermSaves(){
+  return this->n_longterm_saves;
+}
