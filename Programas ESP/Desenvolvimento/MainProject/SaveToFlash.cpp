@@ -256,20 +256,14 @@ int SaveToFlash::getNCacheSaves()
     return this->n_cache_saves;
 }
 
-void SaveToFlash::saveToCache()
+void SaveToFlash::saveToCache(String datetime, float BatteryCurrent, float BatteryVoltage, float PVCurrent)
 {
-    // Read the sensors
-    String time = "";
-    float BatteryCurrent = random(100.0);
-    float BatteryVoltage = random(100.0);
-    float PVCurrent = random(100.0);
-
     // Save the readings to cache
-    String JSON = createJSON("BatteryCurrent", BatteryCurrent, time, 1);
+    String JSON = createJSON("BatteryCurrent", BatteryCurrent, datetime, 1);
     appendFile(LittleFS, "/cache/BatCurrent.dt", JSON);
-    JSON = createJSON("BatteryVoltage", BatteryVoltage, time, 1);
+    JSON = createJSON("BatteryVoltage", BatteryVoltage, datetime, 1);
     appendFile(LittleFS, "/cache/BatVoltage.dt", JSON);
-    JSON = createJSON("PVCurrent", PVCurrent, time, 1);
+    JSON = createJSON("PVCurrent", PVCurrent, datetime, 1);
     appendFile(LittleFS, "/cache/PVCurrent.dt", JSON);
 
     this->n_cache_saves++;

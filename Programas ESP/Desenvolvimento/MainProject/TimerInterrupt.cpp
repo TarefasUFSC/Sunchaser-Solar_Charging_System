@@ -31,11 +31,18 @@ void TimerInterrupt::timer_init()
 
 void TimerInterrupt::timer_interruption()
 { // If Timer has fired
-  float time, BatteryCurrent, BatteryVoltage, PVCurrent, PVVoltage;
+  String time = DateTime.toISOString().c_str();
+  float BatteryCurrent, BatteryVoltage, PVCurrent, PVVoltage;
   if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
   {
     Serial.println("entering timer interrupt");
-    fileSystem->saveToCache();
+
+    // Read the sensors
+
+
+
+
+    fileSystem->saveToCache(time, BatteryCurrent, BatteryVoltage, PVCurrent);
     int n_cache_saves = fileSystem->getNCacheSaves();
     int cache_size = fileSystem->getCachesize();
     // If the cache is full, save it to the long term memory
