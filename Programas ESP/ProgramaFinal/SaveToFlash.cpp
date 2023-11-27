@@ -182,18 +182,15 @@ String SaveToFlash::createJSON(String type, float value, float time)
     return Serial;
 }
 
-int SaveToFlash::getCachesize()
-{
-    return cache_size;
-}
-
-int SaveToFlash::getNCacheSaves()
-{
-    return n_cache_saves;
-}
-
 void SaveToFlash::saveToCache()
-{
+{ // AINDA NÃO TESTEI PRA VER SE FUNCIONA !!!!!
+    // If the cache is full, save it to the long term memory
+    if (n_cache_saves >= cache_size)
+    {
+        saveToLongTerm();
+        n_cache_saves = 0;
+    }
+
     // Read the sensors
     float time = random(100.0);
     float BatteryCurrent = random(100.0);
@@ -212,7 +209,7 @@ void SaveToFlash::saveToCache()
 }
 
 void SaveToFlash::saveToLongTerm()
-{
+{ // AINDA NÃO TESTEI PRA VER SE FUNCIONA !!!!!
     // If the long term memory is full, delete the oldest 24 hours of readings
     if (n_longterm_saves >= long_term_size)
     {
@@ -220,8 +217,8 @@ void SaveToFlash::saveToLongTerm()
         String LT_BatVoltage = readFile(LittleFS, "/longterm/BatVoltage.dt");
         String LT_PVCurrent = readFile(LittleFS, "/longterm/PVCurrent.dt");
 
-        // Delete the oldest n_cache_saves hours of readings
-        for (int i = 0; i < n_cache_saves; i++)
+        // Delete the oldest 24 hours of readings
+        for (int i = 0; i < 24; i++)
         {
             LT_BatCurrent.remove(0, LT_BatCurrent.indexOf("}") + 1);
             LT_BatVoltage.remove(0, LT_BatVoltage.indexOf("}") + 1);
@@ -252,14 +249,12 @@ void SaveToFlash::saveToLongTerm()
     writeFile(LittleFS, "/cache/BatCurrent.dt", "");
     writeFile(LittleFS, "/cache/BatVoltage.dt", "");
     writeFile(LittleFS, "/cache/PVCurrent.dt", "");
-
-    n_cache_saves = 0;
 }
 
-Readings_Lists SaveToFlash::get_readings_from_cache(int page)
-{
-    int start = NUM_READINGS * page;
-    int end = NUM_READINGS * (page + 1);
+Readings_Lists SaveToFlash::get_readings_from_cache(int step)
+{ // AINDA NÃO TESTEI PRA VER SE FUNCIONA !!!!!
+    int start = NUM_READINGS * step;
+    int end = NUM_READINGS * (step + 1);
     Readings_Lists readings;
 
     String BatCurrent = readFile(LittleFS, "/cache/BatCurrent.dt");
@@ -268,21 +263,21 @@ Readings_Lists SaveToFlash::get_readings_from_cache(int page)
 
     for (int i = start; i < end; i++)
     {
-        readings.BatteryCurrent[i] = BatCurrent.substring(BatCurrent.indexOf("value") + 7, BatCurrent.indexOf("DateTime") - 3).toFloat();
-        BatCurrent.remove(0, BatCurrent.indexOf("}") + 1);
-        readings.BatteryVoltage[i] = BatVoltage.substring(BatVoltage.indexOf("value") + 7, BatVoltage.indexOf("DateTime") - 3).toFloat();
-        BatVoltage.remove(0, BatVoltage.indexOf("}") + 1);
-        readings.PVCurrent[i] = PVCurrent.substring(PVCurrent.indexOf("value") + 7, PVCurrent.indexOf("DateTime") - 3).toFloat();
-        PVCurrent.remove(0, PVCurrent.indexOf("}") + 1);
+        // readings.BatteryCurrent[i] = BatCurrent.substring(BatCurrent.indexOf("value") + 7, BatCurrent.indexOf("DateTime") - 3).toFloat();
+        // BatCurrent.remove(0, BatCurrent.indexOf("}") + 1);
+        // readings.BatteryVoltage[i] = BatVoltage.substring(BatVoltage.indexOf("value") + 7, BatVoltage.indexOf("DateTime") - 3).toFloat();
+        // BatVoltage.remove(0, BatVoltage.indexOf("}") + 1);
+        // readings.PVCurrent[i] = PVCurrent.substring(PVCurrent.indexOf("value") + 7, PVCurrent.indexOf("DateTime") - 3).toFloat();
+        // PVCurrent.remove(0, PVCurrent.indexOf("}") + 1);
     }
 
     return readings;
 }
 
-Readings_Lists SaveToFlash::get_readings_from_longterm(int page)
-{
-    int start = NUM_READINGS * page;
-    int end = NUM_READINGS * (page + 1);
+Readings_Lists SaveToFlash::get_readings_from_longterm(int step)
+{ // AINDA NÃO TESTEI PRA VER SE FUNCIONA !!!!!
+    int start = NUM_READINGS * step;
+    int end = NUM_READINGS * (step + 1);
     Readings_Lists readings;
 
     String BatCurrent = readFile(LittleFS, "/longterm/BatCurrent.dt");
@@ -291,12 +286,12 @@ Readings_Lists SaveToFlash::get_readings_from_longterm(int page)
 
     for (int i = start; i < end; i++)
     {
-        readings.BatteryCurrent[i] = BatCurrent.substring(BatCurrent.indexOf("value") + 7, BatCurrent.indexOf("DateTime") - 3).toFloat();
-        BatCurrent.remove(0, BatCurrent.indexOf("}") + 1);
-        readings.BatteryVoltage[i] = BatVoltage.substring(BatVoltage.indexOf("value") + 7, BatVoltage.indexOf("DateTime") - 3).toFloat();
-        BatVoltage.remove(0, BatVoltage.indexOf("}") + 1);
-        readings.PVCurrent[i] = PVCurrent.substring(PVCurrent.indexOf("value") + 7, PVCurrent.indexOf("DateTime") - 3).toFloat();
-        PVCurrent.remove(0, PVCurrent.indexOf("}") + 1);
+        //        readings.BatteryCurrent[i] = BatCurrent.substring(BatCurrent.indexOf("value") + 7, BatCurrent.indexOf("DateTime") - 3).toFloat();
+        //        BatCurrent.remove(0, BatCurrent.indexOf("}") + 1);
+        //        readings.BatteryVoltage[i] = BatVoltage.substring(BatVoltage.indexOf("value") + 7, BatVoltage.indexOf("DateTime") - 3).toFloat();
+        //        BatVoltage.remove(0, BatVoltage.indexOf("}") + 1);
+        //        readings.PVCurrent[i] = PVCurrent.substring(PVCurrent.indexOf("value") + 7, PVCurrent.indexOf("DateTime") - 3).toFloat();
+        //        PVCurrent.remove(0, PVCurrent.indexOf("}") + 1);
     }
 
     return readings;

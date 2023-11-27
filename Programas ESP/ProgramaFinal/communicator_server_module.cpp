@@ -1,4 +1,5 @@
 #include "communicator.h"
+#include "SaveToFlash.h"
 void Communicator::_stop_ap()
 {
     // WiFi.softAPdisconnect(true); // por algum motivo deixar isso faz com que ele não feche o server e a rede continua aparecendo
@@ -76,16 +77,6 @@ void Communicator::run_server()
     this->_web_server.handleClient();
 }
 
-// TODO - Remover depois que eu conseguir as funções pra pegar os dados da manu
-float bat_load_amp_values[5] = {1, 2, 3, 4, 5};
-String bat_load_amp_dat[5] = {"2021-05-01T00:00:00-0300", "2021-05-01T00:00:01-0300", "2021-05-01T00:00:02-0300", "2021-05-01T00:00:03-0300", "2021-05-01T00:00:04-0300"};
-
-float bat_volt_values[5] = {1, 2, 3, 4, 5};
-String bat_volt_dat[5] = {"2021-05-01T00:00:00-0300", "2021-05-01T00:00:01-0300", "2021-05-01T00:00:02-0300", "2021-05-01T00:00:03-0300", "2021-05-01T00:00:04-0300"};
-
-float solar_bat_amp_values[5] = {1, 2, 3, 4, 5};
-String solar_bat_amp_dat[5] = {"2021-05-01T00:00:00-0300", "2021-05-01T00:00:01-0300", "2021-05-01T00:00:02-0300", "2021-05-01T00:00:03-0300", "2021-05-01T00:00:04-0300"};
-
 void Communicator::_handle_get_cache()
 {
     String page = "";
@@ -102,14 +93,26 @@ void Communicator::_handle_get_cache()
         doc["total"] = 5;
         doc["qtd_per_page"] = 10;
 
+        // TODO - Remover depois que eu conseguir as funções pra pegar os dados da manu
+        Readings_Lists readings;
+        for (int i = 0; i < 10; i++)
+        {
+            readings.BatteryLoadCurrent[i].datetime = "2021-05-01T00:00:00-0300";
+            readings.BatteryLoadCurrent[i].value = 1;
+            readings.BatteryVoltage[i].datetime = "2021-05-01T00:00:00-0300";
+            readings.BatteryVoltage[i].value = 1;
+            readings.PVBatteryCurrent[i].datetime = "2021-05-01T00:00:00-0300";
+            readings.PVBatteryCurrent[i].value = 1;
+        }
+
         for (int i = 0; i < 5; i++)
         {
-            doc[JSON_BAT_LOAD_CURRENT][i]["datetime"] = bat_load_amp_dat[i];
-            doc[JSON_BAT_LOAD_CURRENT][i]["value"] = bat_load_amp_values[i];
-            doc[JSON_BATTERY_VOLTAGE][i]["datetime"] = bat_volt_dat[i];
-            doc[JSON_BATTERY_VOLTAGE][i]["value"] = bat_volt_values[i];
-            doc[JSON_SOLAR_BAT_CURRENT][i]["datetime"] = solar_bat_amp_dat[i];
-            doc[JSON_SOLAR_BAT_CURRENT][i]["value"] = solar_bat_amp_values[i];
+            doc[JSON_BAT_LOAD_CURRENT][i]["datetime"] = readings.BatteryLoadCurrent[i].datetime;
+            doc[JSON_BAT_LOAD_CURRENT][i]["value"] = readings.BatteryLoadCurrent[i].value;
+            doc[JSON_BATTERY_VOLTAGE][i]["datetime"] = readings.BatteryVoltage[i].datetime;
+            doc[JSON_BATTERY_VOLTAGE][i]["value"] = readings.BatteryVoltage[i].value;
+            doc[JSON_SOLAR_BAT_CURRENT][i]["datetime"] = readings.PVBatteryCurrent[i].datetime;
+            doc[JSON_SOLAR_BAT_CURRENT][i]["value"] = readings.PVBatteryCurrent[i].value;
         }
 
         String return_data;
@@ -137,14 +140,27 @@ void Communicator::_handle_get_ltm()
         doc["total"] = 5;
         doc["qtd_per_page"] = 10;
 
+        // TODO - Remover depois que eu conseguir as funções pra pegar os dados da manu
+
+        Readings_Lists readings;
+        for (int i = 0; i < 10; i++)
+        {
+            readings.BatteryLoadCurrent[i].datetime = "2021-05-01T00:00:00-0300";
+            readings.BatteryLoadCurrent[i].value = 1;
+            readings.BatteryVoltage[i].datetime = "2021-05-01T00:00:00-0300";
+            readings.BatteryVoltage[i].value = 1;
+            readings.PVBatteryCurrent[i].datetime = "2021-05-01T00:00:00-0300";
+            readings.PVBatteryCurrent[i].value = 1;
+        }
+
         for (int i = 0; i < 5; i++)
         {
-            doc[JSON_BAT_LOAD_CURRENT][i]["datetime"] = bat_load_amp_dat[i];
-            doc[JSON_BAT_LOAD_CURRENT][i]["value"] = bat_load_amp_values[i];
-            doc[JSON_BATTERY_VOLTAGE][i]["datetime"] = bat_volt_dat[i];
-            doc[JSON_BATTERY_VOLTAGE][i]["value"] = bat_volt_values[i];
-            doc[JSON_SOLAR_BAT_CURRENT][i]["datetime"] = solar_bat_amp_dat[i];
-            doc[JSON_SOLAR_BAT_CURRENT][i]["value"] = solar_bat_amp_values[i];
+            doc[JSON_BAT_LOAD_CURRENT][i]["datetime"] = readings.BatteryLoadCurrent[i].datetime;
+            doc[JSON_BAT_LOAD_CURRENT][i]["value"] = readings.BatteryLoadCurrent[i].value;
+            doc[JSON_BATTERY_VOLTAGE][i]["datetime"] = readings.BatteryVoltage[i].datetime;
+            doc[JSON_BATTERY_VOLTAGE][i]["value"] = readings.BatteryVoltage[i].value;
+            doc[JSON_SOLAR_BAT_CURRENT][i]["datetime"] = readings.PVBatteryCurrent[i].datetime;
+            doc[JSON_SOLAR_BAT_CURRENT][i]["value"] = readings.PVBatteryCurrent[i].value;
         }
 
         String return_data;
