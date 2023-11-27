@@ -3,11 +3,12 @@
 // Initialize the static variables
 volatile SemaphoreHandle_t TimerInterrupt::timerSemaphore = xSemaphoreCreateBinary();
 
-TimerInterrupt::TimerInterrupt(SaveToFlash *files)
+TimerInterrupt::TimerInterrupt(SaveToFlash *files, Sensors *sensors)
 {
   timer = NULL;
   QtdMinutes = 1; // Default time is 60 minutes
   fileSystem = files;
+  read_sensors = sensors;
 }
 
 void IRAM_ATTR TimerInterrupt::onTimer()
@@ -31,27 +32,28 @@ void TimerInterrupt::timer_init()
 
 void TimerInterrupt::timer_interruption()
 { // If Timer has fired
-  String time = DateTime.toISOString().c_str();
+  String date_time;
   float BatteryCurrent, BatteryVoltage, PVCurrent, PVVoltage;
   if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
   {
     Serial.println("entering timer interrupt");
 
     // Read the sensors
+    date_time = DateTime.toISOString().c_str();
+    BatteryCurrent = read_sensors->battery_current();
+    BatteryVoltage = read_sensors->battery_voltage();
+    PVCurrent = read_sensors->pv_current();
 
+    fileSystem->saveToCache(date_time, BatteryCurrent, BatteryVoltage, PVCurrent);
 
-
-
-    fileSystem->saveToCache(time, BatteryCurrent, BatteryVoltage, PVCurrent);
+    // If the cache is full, save it to the long term memory
     int n_cache_saves = fileSystem->getNCacheSaves();
     int cache_size = fileSystem->getCachesize();
-    // If the cache is full, save it to the long term memory
     Serial.printf("n_cache: %d | cache_size: %d\n", n_cache_saves, cache_size);
     if (n_cache_saves >= cache_size)
     {
       fileSystem->saveToLongTerm();
     }
-//    Readings_Lists readings = fileSystem->get_readings_/from_cache(0);
   }
 }
 

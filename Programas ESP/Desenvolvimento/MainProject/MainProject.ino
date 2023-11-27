@@ -10,7 +10,7 @@ Sensors sensors(battery_ina219, pv_ina219);
 // BatteryControl battery_controller(&sensors);
 
 SaveToFlash fileSystem;
-TimerInterrupt timerInterrupt(&fileSystem);
+TimerInterrupt timerInterrupt(&fileSystem, &sensors);
 
 void setup()
 {
