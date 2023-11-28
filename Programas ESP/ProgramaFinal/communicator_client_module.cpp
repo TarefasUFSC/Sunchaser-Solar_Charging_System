@@ -13,7 +13,7 @@ void Communicator::reconnect_client()
     }
     else
     {
-        this->_setup_wifi_client();
+        this->_reconnect_wifi();
         delay(100);
         this->_mqtt_reconnect();
         delay(100);
@@ -32,6 +32,7 @@ void Communicator::_reconnect_wifi()
         {
             return;
         }
+        WiFi.begin(_ssid_wifi_to_connect, _password_wifi_to_connect);
         while (WiFi.status() != WL_CONNECTED)
         {
             delay(500);

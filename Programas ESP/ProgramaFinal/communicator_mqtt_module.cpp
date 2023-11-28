@@ -99,6 +99,8 @@ bool Communicator::send_data_to_server(Readings_Lists readings)
 
 bool Communicator::send_data_to_server(String type, float value, String datetime_measurement)
 {
+  
+    this->reconnect_client(); // chama isso pra acordar o cliente e reconectar com o broker -> só funciona se o esp estiver em modo client
     // verifica se o type ta no possible_mqtt_types
     bool type_is_valid = false;
     for (int i = 0; i < 3; i++)

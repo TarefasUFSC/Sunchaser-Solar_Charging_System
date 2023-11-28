@@ -7,8 +7,8 @@
 // Cria as instancias globais das classes
 
 SaveToFlash fileSystem;
-TimerInterrupt timerInterrupt(&fileSystem);
 Communicator communicator;
+TimerInterrupt timerInterrupt(&fileSystem,&communicator);
 
 void setup()
 {
@@ -49,7 +49,7 @@ void loop()
     if (envio) // flag pra teste
     {
 
-      communicator.reconnect_client(); // chama isso pra acordar o cliente e reconectar com o broker -> só funciona se o esp estiver em modo client
+      
       if (communicator.send_data_to_server(JSON_SOLAR_BAT_CURRENT, 40.44, DateTime.toISOString()))
       {
         Serial.println("Enviado com sucesso");

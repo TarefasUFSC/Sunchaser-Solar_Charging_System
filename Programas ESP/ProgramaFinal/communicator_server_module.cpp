@@ -164,8 +164,8 @@ void Communicator::_handle_get_settings()
     // TODO - SETTINGS: ver com a manu como que eu vou pegar essas informações
     DynamicJsonDocument doc(1024);
     doc["readingInterval"] = 1;
-    doc["sendingInterval"] = 1;
-    doc["daysBackup"] = 1;
+    doc["cacheMaxSize"] = 1;
+    doc["ltmMaxSize"] = 1;
     String output;
     serializeJson(doc, output);
     this->_web_server.send(200, "application/json", output);

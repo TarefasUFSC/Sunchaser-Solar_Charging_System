@@ -1,13 +1,15 @@
 #include "TimerInterrupt.h"
+#include <math.h>
 
 // Initialize the static variables
 volatile SemaphoreHandle_t TimerInterrupt::timerSemaphore = xSemaphoreCreateBinary();
 
-TimerInterrupt::TimerInterrupt(SaveToFlash *files)
+TimerInterrupt::TimerInterrupt(SaveToFlash *files, Communicator* communicator)
 {
   timer = NULL;
   QtdMinutes = 1; // Default time is 60 minutes
-  fileSystem = files;
+  this->fileSystem = files;
+  this->communicator = communicator;
 }
 
 void IRAM_ATTR TimerInterrupt::onTimer()
@@ -29,6 +31,18 @@ void TimerInterrupt::timer_init()
   timerAlarmEnable(timer); // Start an alarm
 }
 
+bool TimerInterrupt::tryToSendCacheToServer(){
+
+  int qtd_cache = this->fileSystem->getNCacheSaves();
+  int pages = ceil((float)qtd_cache / (float)NUM_READINGS);
+  for(int i = 0; i< pages; i++){
+    Readings_Lists readings = this->fileSystem->get_readings_from_cache(i);
+    if(! (this->communicator->send_data_to_server(readings) )) return false;
+  }
+  
+  return true;
+}
+
 void TimerInterrupt::timer_interruption()
 { // If Timer has fired
   String time = DateTime.toISOString().c_str();
@@ -44,7 +58,7 @@ void TimerInterrupt::timer_interruption()
     int cache_size = fileSystem->getCachesize();
     // If the cache is full, save it to the long term memory
     Serial.printf("n_cache: %d | cache_size: %d\n", n_cache_saves, cache_size);
-    if (n_cache_saves >= cache_size)
+    if (n_cache_saves >= cache_size && this->tryToSendCacheToServer())
     {
       fileSystem->saveToLongTerm();
     }
