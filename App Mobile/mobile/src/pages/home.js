@@ -6,19 +6,23 @@ import { ESP32Context } from '../../App'; // Importar o contexto
 function Home() {
 
   const { batVolt, solarBatAmp, batLoadAmp, reloadData } = useContext(ESP32Context);
-
+  var date ='data', hour = 'hora', flag = false;
+  if (batVolt.length>0){
+    date = batVolt[-1].datetime.split('T')[0].replaceAll('-', '/').substr(2, batVolt[-1].datetime.length)
+    hour = batVolt[-1].datetime.split('T')[1].split('-')[0]
+    if(batVolt.length>0 && solarBatAmp.length>0 && batLoadAmp.length>0) flag = true;
+  }
+  else{
+    date="00/00/0000"; hour="00:00"
+  }
   return (
     <ScrollView>
-      <RoundButton palavra='Nova Leitura' page='home' color='#5DB075' tColor='white' onPressFunction={() => (reloadData())} />
-
-      {batVolt.length && solarBatAmp.length && batLoadAmp.length ?
+      {flag ?
         (<>
           <View >
-            <HorizontalList Variavel="Data" Unidade={batVolt[0].datetime} Input={false} />
-            <HorizontalList Variavel="Hora" Unidade={batVolt[0].datetime} Input={false} />
-
+            <HorizontalList Variavel="Data" Unidade={date} Input={false} />
+            <HorizontalList Variavel="Hora" Unidade={hour} Input={false} />
           </View>
-          <Text>Existem {batVolt.length} leituras na memoria</Text>
           {batVolt ?
             (<View >
               <HorizontalList Variavel={"Tensão na Bateria"} Unidade={batVolt[0].value + "V"} Input={false} />
@@ -35,11 +39,9 @@ function Home() {
               <HorizontalList Variavel={"Corrente entre a Bateria e a Carga"} Unidade={batLoadAmp[0].value + " A"} Input={false} />
             </View>) :
             <><Text>Sem batLoad</Text></>}
-
-
         </>)
         :
-        (<Text>Nenhuma Leitura</Text>)
+        (<View style={{backgroundColor: 'white', height: 50}}><Text style={{marginHorizontal: 10, fontWeight: 'bold'}}>Nenhuma Leitura</Text></View>)
       }
     </ScrollView>
   );

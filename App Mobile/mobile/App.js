@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import Home from './src/pages/home';
 import Graph from './src/pages/graph';
 import Settings from './src/pages/settings';
+import { RoundButton } from './src/components/components';
 
 export const ESP32Context = createContext();
 
@@ -24,7 +25,6 @@ const App = () => {
     setIsBootingUp(false)
   }, []);
 
-
   // Este useEffect será executado após a atualização dos estados
   useEffect(() => {
     if (!isBootingUp) {
@@ -41,6 +41,7 @@ const App = () => {
     setReloadDataFlag(!reloadDataFlag)
     // getData() é chamado após os estados serem limpos
   }
+
   async function fetchData(type, page) {
     let data = {
       'page': 0,
@@ -52,23 +53,22 @@ const App = () => {
     }
     const url = "http://192.168.1.1/" + type + "?page=" + page
     console.log("url: ", url);
-    await axios.get('http://192.168.1.1/cache?page=' + page).then(response => {
-      console.log("deu bom na page ", page);
-      data["page"] = response.data['page']
-      data["total"] = response.data['total']
-      data["items_per_page"] = response.data['qtd_per_page']
-      data["bat_volt"] = (response.data['bat_volt']);
-      data["bat_load"] = (response.data['bat_load_amp'])
-      data["solar_bat"] = (response.data['sol_bat_amp'])
-      // console.log(pg, total, items_per_page, bat_volt, bat_load, solar_bat);
-    })
+    await axios.get(url, {timeout: 500})
+      .then(response => {
+        console.log("deu bom na page ", page);
+        data["page"] = response.data['page']
+        data["total"] = response.data['total']
+        data["items_per_page"] = response.data['qtd_per_page']
+        data["bat_volt"] = (response.data['bat_volt']);
+        data["bat_load"] = (response.data['bat_load_amp'])
+        data["solar_bat"] = (response.data['sol_bat_amp'])
+      })
       .catch(error => {
-        console.error('Erro na chamada GET: ', error.data);
-        // setCache({ "error": error })
+        if (error.code === 'ECONNABORTED') return 'ECCONABORTED'
+        else console.error('Erro na chamada GET: ', error.data);
       });
     return data
   }
-
 
   async function loadData(type) {
     console.log("Pegando o ", type);
@@ -110,21 +110,23 @@ const App = () => {
         }
       }
     }
+    else return 'ECCONABORTED'
   }
 
   async function getData() {
-    await loadData('cache')
-    await loadData('ltm')
-
+    response1 = await loadData('cache')
+    response2 = await loadData('ltm')
+    if(response1==='ECCONABORTED'&&response2==='ECCONABORTED'){
+      alert('Você não está conectado ao ESP')
+    }
   };
+
   const espContextValue = {
     batVolt,
     solarBatAmp,
     batLoadAmp,
     reloadData
   };
-
-
 
   return (
     <ESP32Context.Provider value={espContextValue}>
@@ -141,6 +143,11 @@ const App = () => {
                   source={require('./src/assets/home.png')}
                   style={{ width: size, height: size, tintColor: color }}
                 />
+              ),
+              headerRight: () => (
+                <View>
+                  <RoundButton palavra='Nova Leitura' page='home' color='#5DB075' tColor='white' onPressFunction={() => reloadData()} />
+                </View>
               )
             }}
           />
@@ -176,7 +183,6 @@ const App = () => {
       </NavigationContainer>
     </ESP32Context.Provider>
   );
-
 }
 
 const styles = StyleSheet.create({});

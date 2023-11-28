@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Dimensions, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { reading } from '../routes/routes';
 
 let color = '#5DB075';
 
