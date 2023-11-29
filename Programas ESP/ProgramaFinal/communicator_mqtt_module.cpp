@@ -30,15 +30,15 @@ void Communicator::_mqtt_reconnect()
         {
             Serial.println("connected");
             // Subscribe to topics here
-            this->_mqtt_subscribe("your/topic");
+//            this->_mqtt_subscribe("your/topic");
         }
         else
         {
             Serial.print("failed, rc=");
             Serial.print(_mqtt_client.state());
-            Serial.println(" try again in 5 seconds");
+            Serial.println(" try again in 1/2 second");
             // Wait 5 seconds before retrying
-            delay(5000);
+            delay(500);
         }
     }
 }
@@ -81,45 +81,54 @@ bool Communicator::send_data_to_server(Readings_Lists readings)
 {
     for (int i = 0; i < NUM_READINGS; i++)
     {
-        if (!this->send_data_to_server(JSON_BATTERY_VOLTAGE, readings.BatteryVoltage[i].value, readings.BatteryVoltage[i].datetime))
+        if ((readings.BatteryLoadCurrent[i].isValid!=1) || (readings.BatteryVoltage[i].isValid!=1) || (readings.PVBatteryCurrent[i].isValid!=1))
         {
-            return false;
+          Serial.println("Os dados são invalidos");
+          Serial.printf("Erro ao enviar os dados de:\nsol_bat_amp: isValid: %d, value: %f, datetime: %s\nbat_load_amp: isValid: %d, value: %f, datetime: %s\nbat_volt: isValid: %d, value: %f, datetime: %s\n",
+                    readings.PVBatteryCurrent[i].isValid, readings.PVBatteryCurrent[i].value, readings.PVBatteryCurrent[i].datetime,
+                    readings.BatteryLoadCurrent[i].isValid, readings.BatteryLoadCurrent[i].value, readings.BatteryLoadCurrent[i].datetime,
+                    readings.BatteryVoltage[i].isValid, readings.BatteryVoltage[i].value, readings.BatteryVoltage[i].datetime);
+           continue;
         }
-        if (!this->send_data_to_server(JSON_SOLAR_BAT_CURRENT, readings.PVBatteryCurrent[i].value, readings.PVBatteryCurrent[i].datetime))
-        {
-            return false;
-        }
-        if (!this->send_data_to_server(JSON_BAT_LOAD_CURRENT, readings.BatteryLoadCurrent[i].value, readings.BatteryLoadCurrent[i].datetime))
-        {
-            return false;
+        if(!this->send_data_to_server(readings.PVBatteryCurrent[i], readings.BatteryLoadCurrent[i], readings.BatteryVoltage[i])){
+          return false;
         }
     }
     return true;
 }
+String convertReadingToJsonString(Reading reading)
+{
 
-bool Communicator::send_data_to_server(String type, float value, String datetime_measurement)
+    DynamicJsonDocument reading_doc(1024);
+    reading_doc["value"] = reading.value;
+    reading_doc["datetime"] = reading.datetime;
+    String result;
+
+    serializeJson(reading_doc, result);
+    return result;
+}
+
+bool Communicator::send_data_to_server(Reading sol_bat_amp, Reading bat_load_amp, Reading bat_volt)
 {
   
-    this->reconnect_client(); // chama isso pra acordar o cliente e reconectar com o broker -> só funciona se o esp estiver em modo client
-    // verifica se o type ta no possible_mqtt_types
-    bool type_is_valid = false;
-    for (int i = 0; i < 3; i++)
-    {
-        if (type == possible_mqtt_types[i])
-        {
-            type_is_valid = true;
-            break;
-        }
-    }
-    if (!type_is_valid)
-    {
-        Serial.println("O type não é válido, não vou enviar");
-        return false;
-    }
+   
 
+    
+  this->_mqtt_reconnect();
+        delay(100);
+        this->_mqtt_loop();
     // cria o json no formato que o servidor espera
     // {"version":4, "<type>":<value>, "datetime":"<datetime_measurement>"}
-    String json = "{\"version\":4, \"" + type + "\":" + value + ", \"datetime\":\"" + datetime_measurement + "\"}";
+    DynamicJsonDocument doc(2048);
+    doc["version"] = 4;
+
+    doc[JSON_SOLAR_BAT_CURRENT] = convertReadingToJsonString(sol_bat_amp);
+    doc[JSON_BATTERY_VOLTAGE] = convertReadingToJsonString(bat_volt);
+    doc[JSON_BAT_LOAD_CURRENT] = convertReadingToJsonString(bat_load_amp);
+//    doc["amp"] = 1/; // isso aqui tem que tirar depois pq o codigo do eduardo ta bugado e eu não consigo remover isso do projeto
+
+    String json;
+    serializeJson(doc, json);
     Serial.println(json);
     // envia o json para o servidor
     String topic = "sensor/" + this->mac_address + "/out";

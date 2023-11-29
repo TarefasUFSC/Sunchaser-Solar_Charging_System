@@ -4,7 +4,7 @@
 // Initialize the static variables
 volatile SemaphoreHandle_t TimerInterrupt::timerSemaphore = xSemaphoreCreateBinary();
 
-TimerInterrupt::TimerInterrupt(SaveToFlash *files, Communicator* communicator)
+TimerInterrupt::TimerInterrupt(SaveToFlash *files, Communicator *communicator)
 {
   timer = NULL;
   QtdMinutes = 1; // Default time is 60 minutes
@@ -31,16 +31,24 @@ void TimerInterrupt::timer_init()
   timerAlarmEnable(timer); // Start an alarm
 }
 
-bool TimerInterrupt::tryToSendCacheToServer(){
-
+bool TimerInterrupt::tryToSendCacheToServer()
+{
+  bool sent = true;
   int qtd_cache = this->fileSystem->getNCacheSaves();
   int pages = ceil((float)qtd_cache / (float)NUM_READINGS);
-  for(int i = 0; i< pages; i++){
+
+  this->communicator->reconnect_client(); // chama isso pra acordar o cliente e reconectar com o broker -> só funciona se o esp estiver em modo client
+  for (int i = 0; i < pages; i++)
+  {
     Readings_Lists readings = this->fileSystem->get_readings_from_cache(i);
-    if(! (this->communicator->send_data_to_server(readings) )) return false;
+    if (!(this->communicator->send_data_to_server(readings)))
+    {
+      sent = false;
+      break;
+    }
   }
-  
-  return true;
+  this->communicator->sleep();
+  return sent;
 }
 
 void TimerInterrupt::timer_interruption()

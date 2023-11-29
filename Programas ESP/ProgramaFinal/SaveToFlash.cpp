@@ -150,8 +150,8 @@ String SaveToFlash::readFilePage(fs::FS &fs, const char *path, int page)
 
     int first_line = page * NUM_READINGS;
     int last_line = first_line + NUM_READINGS -1;
-    Serial.print("FL: "); Serial.println(first_line);
-    Serial.print("LL: "); Serial.println(last_line);
+//    Serial.print("FL: "); Serial.println(first_line);
+//    Serial.print("LL: "); Serial.println(last_line);
     int i = first_line;
     if (!file.available())
     {
@@ -160,7 +160,7 @@ String SaveToFlash::readFilePage(fs::FS &fs, const char *path, int page)
     }
     while (file.available() )
     {
-        Serial.print(i);
+//        Serial.print(i);
         // read a line and increment the counter
         // if the counter is in the range of the lines to be read, save the line
         String line = file.readStringUntil('\n');
@@ -176,7 +176,7 @@ String SaveToFlash::readFilePage(fs::FS &fs, const char *path, int page)
           break;
         }
     }
-    Serial.println("Arquivo lido");
+//    Serial.println("Arquivo lido");
     file.close();
     String FileContent;
     serializeJson(doc, FileContent);
@@ -203,7 +203,7 @@ void SaveToFlash::writeFile(fs::FS &fs, const char *path, String message)
 
 void SaveToFlash::appendFile(fs::FS &fs, const char *path, String message)
 {
-    Serial.printf("Appending to file: %s\r\n", path);
+//    Serial.printf("Appending to file: %s\r\n", path);
 
     File file = fs.open(path, FILE_APPEND);
     if (!file)
@@ -287,7 +287,7 @@ void SaveToFlash::saveToLongTerm()
         Readings_Lists readings = get_readings_from_cache(i);
         for (int j = 0; j < NUM_READINGS; j++)
         {
-            Serial.printf("value: %f | datetime: %s | isValid: %d\n", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
+//            Serial.printf("value: %f | datetime: %s | isValid: %d\n", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
 
             if (!readings.BatteryLoadCurrent[j].isValid)
             {
@@ -340,7 +340,7 @@ void SaveToFlash::saveToLongTerm()
                     deleted_entries++;
                     continue;
                 }
-                Serial.printf("value: %f | datetime: %s | isValid: %d\n", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
+//                Serial.printf("value: %f | datetime: %s | isValid: %d\n", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
                 if (!readings.BatteryLoadCurrent[j].isValid)
                 {
                     Serial.println("NAO TA VAAAAAAAAAAAAAALIIIIIIIIIIIIDOOOOO");
@@ -390,7 +390,7 @@ Readings_Lists SaveToFlash::convertReadingJSONToStruct(String batteryLoadCurrent
     for (int i = 0; i < NUM_READINGS; i++)
     {
         
-          Serial.print(i);
+//          Serial.print(i);
         DynamicJsonDocument bat_load_current_reading_doc(1000);
         // Serial.println(obj_list["content"][i].as<String>());
         deserializeJson(bat_load_current_reading_doc, battery_load_current_obj_list["content"][i].as<String>());
@@ -415,7 +415,7 @@ Readings_Lists SaveToFlash::convertReadingJSONToStruct(String batteryLoadCurrent
         readings.PVBatteryCurrent[i].isValid = pv_current_reading_obj["isValid"].as<int>();
     }
     
-          Serial.println("convertido os dados para json");
+//          Serial.println("convertido os dados para json");
     return readings;
 }
 Readings_Lists SaveToFlash::get_readings_from_cache(int page)

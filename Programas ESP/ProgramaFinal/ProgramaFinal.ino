@@ -8,15 +8,15 @@
 
 SaveToFlash fileSystem;
 Communicator communicator;
-TimerInterrupt timerInterrupt(&fileSystem,&communicator);
+TimerInterrupt timerInterrupt(&fileSystem, &communicator);
 
 void setup()
 {
   Serial.begin(115200);
-  
+
   // faz as configurações iniciais de cada objeto, dos attach dos interrupts
-  
-  fileSystem.mountLittleFS();;
+
+  fileSystem.mountLittleFS();
   timerInterrupt.timer_init();
   communicator.init(&fileSystem);
 
@@ -46,21 +46,20 @@ void loop()
   else // esse else inteiro aqui pode ser excluido, é só pra teste
   {
 
-    if (envio) // flag pra teste
-    {
+    // if (envio) // flag pra teste
+    // {
 
-      
-      if (communicator.send_data_to_server(JSON_SOLAR_BAT_CURRENT, 40.44, DateTime.toISOString()))
-      {
-        Serial.println("Enviado com sucesso");
-        envio = false;
-        communicator.sleep(); // chama isso pra botar pra dormir -> isso aqui desliga o AP tb, então cuidado
-      }
-      else
-      {
-        Serial.println("Não foi enviado, se o erro foi de conexão, chama o reconnect_client() e tenta de novo");
-      }
-    }
+    //   if (communicator.send_data_to_server(JSON_SOLAR_BAT_CURRENT, 40.44, DateTime.toISOString()))
+    //   {
+    //     Serial.println("Enviado com sucesso");
+    //     envio = false;
+    //     communicator.sleep(); // chama isso pra botar pra dormir -> isso aqui desliga o AP tb, então cuidado
+    //   }
+    //   else
+    //   {
+    //     Serial.println("Não foi enviado, se o erro foi de conexão, chama o reconnect_client() e tenta de novo");
+    //   }
+    // }
   }
 
   // verifica o counter do TimerInterrupt e faz as chamadas

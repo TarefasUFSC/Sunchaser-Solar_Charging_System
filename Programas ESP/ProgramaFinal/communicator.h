@@ -21,7 +21,7 @@ public:
     volatile bool is_server = false;
     const int interrupt_pin = 33;
     String mac_address;
-    
+
 private:
     const char *_ssid_wifi_to_connect = "RFS-S21FE";
     const char *_password_wifi_to_connect = "23011306";
@@ -38,7 +38,7 @@ private:
     const int mqtt_port = 8004;
     WiFiClient _esp_client;
     PubSubClient _mqtt_client;
-    SaveToFlash* _files;
+    SaveToFlash *_files;
 
 public:
     Communicator();
@@ -54,7 +54,7 @@ public:
     void reconnect_client();
     void sleep();
     bool send_data_to_server(Readings_Lists readings);
-    bool send_data_to_server(String type, float value, String datetime_measurement);
+    bool send_data_to_server(Reading sol_bat_amp, Reading bat_load_amp, Reading bat_volt);
 
 private:
     void _notify_rise_edge();
