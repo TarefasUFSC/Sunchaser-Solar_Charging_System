@@ -1,5 +1,8 @@
 #include "communicator.h"
 #include "SaveToFlash.h"
+
+#include <string>
+
 void Communicator::_stop_ap()
 {
     // WiFi.softAPdisconnect(true); // por algum motivo deixar isso faz com que ele não feche o server e a rede continua aparecendo
@@ -84,37 +87,31 @@ void Communicator::_handle_get_cache()
     {                                         // Verifica se o argumento "page" existe
         page = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
-        // TODO - CACHE: ver com a manu como que eu vou pegar essas informações
-        // retorna um json com 3 listas de objetos JSON_BAT_LOAD_CURRENT JSON_BATTERY_VOLTAGE JSON_SOLAR_BAT_CURRENT
-        // cada uma é uma lista de objetos que possuem um datetime do tipo string e um value float
-
-        DynamicJsonDocument doc(1024);
+        
+        DynamicJsonDocument doc(2048);
         doc["page"] = page;
-        doc["total"] = 5;
-        doc["qtd_per_page"] = 10;
+        doc["total"] = this->_files->getNCacheSaves();
+        doc["qtd_per_page"] = NUM_READINGS;
 
-        // TODO - Remover depois que eu conseguir as funções pra pegar os dados da manu
-        Readings_Lists readings;
-        for (int i = 0; i < 10; i++)
+        Readings_Lists readings = this->_files->get_readings_from_cache(atoi(page.c_str()));
+        for (int i = 0; i < NUM_READINGS; i++)
         {
-            readings.BatteryLoadCurrent[i].datetime = "2021-05-01T00:00:00-0300";
-            readings.BatteryLoadCurrent[i].value = 1;
-            readings.BatteryVoltage[i].datetime = "2021-05-01T00:00:00-0300";
-            readings.BatteryVoltage[i].value = 1;
-            readings.PVBatteryCurrent[i].datetime = "2021-05-01T00:00:00-0300";
-            readings.PVBatteryCurrent[i].value = 1;
-        }
-
-        for (int i = 0; i < 5; i++)
-        {
+          if( readings.BatteryLoadCurrent[i].isValid && readings.BatteryVoltage[i].isValid &&  readings.PVBatteryCurrent[i].isValid)
+          {
+            
+          Serial.print(i);
             doc[JSON_BAT_LOAD_CURRENT][i]["datetime"] = readings.BatteryLoadCurrent[i].datetime;
             doc[JSON_BAT_LOAD_CURRENT][i]["value"] = readings.BatteryLoadCurrent[i].value;
+        
             doc[JSON_BATTERY_VOLTAGE][i]["datetime"] = readings.BatteryVoltage[i].datetime;
             doc[JSON_BATTERY_VOLTAGE][i]["value"] = readings.BatteryVoltage[i].value;
+        
             doc[JSON_SOLAR_BAT_CURRENT][i]["datetime"] = readings.PVBatteryCurrent[i].datetime;
             doc[JSON_SOLAR_BAT_CURRENT][i]["value"] = readings.PVBatteryCurrent[i].value;
+          }
         }
-
+        
+          Serial.println("enviado os dados do chache");
         String return_data;
         serializeJson(doc, return_data);
         this->_web_server.send(200, "application/json", return_data);
@@ -133,25 +130,13 @@ void Communicator::_handle_get_ltm()
     {                                         // Verifica se o argumento "page" existe
         page = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
-        // TODO - LTM: ver com a manu como que eu vou pegar essas informações
-
-        DynamicJsonDocument doc(1024);
+        
+        DynamicJsonDocument doc(2048);
         doc["page"] = page;
-        doc["total"] = 5;
-        doc["qtd_per_page"] = 10;
+        doc["total"] = this->_files->getNLongTermSaves();
+        doc["qtd_per_page"] = NUM_READINGS;
 
-        // TODO - Remover depois que eu conseguir as funções pra pegar os dados da manu
-
-        Readings_Lists readings;
-        for (int i = 0; i < 10; i++)
-        {
-            readings.BatteryLoadCurrent[i].datetime = "2021-05-01T00:00:00-0300";
-            readings.BatteryLoadCurrent[i].value = 1;
-            readings.BatteryVoltage[i].datetime = "2021-05-01T00:00:00-0300";
-            readings.BatteryVoltage[i].value = 1;
-            readings.PVBatteryCurrent[i].datetime = "2021-05-01T00:00:00-0300";
-            readings.PVBatteryCurrent[i].value = 1;
-        }
+        Readings_Lists readings = this->_files->get_readings_from_longterm(atoi(page.c_str()));
 
         for (int i = 0; i < 5; i++)
         {
@@ -179,8 +164,8 @@ void Communicator::_handle_get_settings()
     // TODO - SETTINGS: ver com a manu como que eu vou pegar essas informações
     DynamicJsonDocument doc(1024);
     doc["readingInterval"] = 1;
-    doc["sendingInterval"] = 1;
-    doc["daysBackup"] = 1;
+    doc["cacheMaxSize"] = 1;
+    doc["ltmMaxSize"] = 1;
     String output;
     serializeJson(doc, output);
     this->_web_server.send(200, "application/json", output);

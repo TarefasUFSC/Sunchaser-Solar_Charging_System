@@ -1,6 +1,7 @@
 #include "communicator.h"
 void Communicator::sleep()
 {
+  Serial.println("Indo dormir");
     // desliga o wifi para economizar energia
     WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);
@@ -22,6 +23,7 @@ void Communicator::reconnect_client()
 }
 void Communicator::_reconnect_wifi()
 {
+  delay(1000);
     if (this->is_server)
     {
         Serial.println("Vc é um server, não vou reconectar o wifi");
@@ -32,6 +34,8 @@ void Communicator::_reconnect_wifi()
         {
             return;
         }
+        WiFi.begin(_ssid_wifi_to_connect, _password_wifi_to_connect);
+        delay(500);
         while (WiFi.status() != WL_CONNECTED)
         {
             delay(500);

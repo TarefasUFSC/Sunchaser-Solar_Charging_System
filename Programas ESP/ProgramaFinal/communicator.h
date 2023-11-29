@@ -38,10 +38,11 @@ private:
     const int mqtt_port = 8004;
     WiFiClient _esp_client;
     PubSubClient _mqtt_client;
+    SaveToFlash *_files;
 
 public:
     Communicator();
-    void init();
+    void init(SaveToFlash *files);
     void attach_interruption();
     void interrupt_handler();
     void check_flags();
@@ -53,7 +54,7 @@ public:
     void reconnect_client();
     void sleep();
     bool send_data_to_server(Readings_Lists readings);
-    bool send_data_to_server(String type, float value, String datetime_measurement);
+    bool send_data_to_server(Reading sol_bat_amp, Reading bat_load_amp, Reading bat_volt);
 
 private:
     void _notify_rise_edge();
