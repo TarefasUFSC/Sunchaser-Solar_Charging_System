@@ -10,7 +10,7 @@
  * E.g. if A0 is tied to ground and A1 is tied to V+,
  * the resulting address is b1000100 = 0x44
  */
-Adafruit_INA219 battery_ina219(0x40);
+Adafruit_INA219 battery_ina219(0x41);
 Adafruit_INA219 pv_ina219(0x41);
 Sensors sensors(battery_ina219, pv_ina219);
 

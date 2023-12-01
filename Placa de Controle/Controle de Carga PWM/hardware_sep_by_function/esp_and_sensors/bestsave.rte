@@ -1,0 +1,325 @@
+ (routes 
+  (resolution mm 100000)
+  (parser
+  )
+  (parser
+  )
+  (structure_out
+   (layer TOP (type signal)
+   )
+   (layer I1 (type signal)
+   )
+   (layer I2 (type signal)
+   )
+   (layer I3 (type signal)
+   )
+   (layer I4 (type signal)
+   )
+   (layer I5 (type signal)
+   )
+   (layer I6 (type signal)
+   )
+   (layer I7 (type signal)
+   )
+   (layer I8 (type signal)
+   )
+   (layer I9 (type signal)
+   )
+   (layer I10 (type signal)
+   )
+   (layer I11 (type signal)
+   )
+   (layer I12 (type signal)
+   )
+   (layer I13 (type signal)
+   )
+   (layer I14 (type signal)
+   )
+   (layer BOT (type signal)
+   )
+  )
+  (library_out
+  (padstack $VIA#0_SIGNAL
+   (shape (circ TOP 177800 0 0))
+   (shape (circ I1 177800 0 0))
+   (shape (circ I2 177800 0 0))
+   (shape (circ I3 177800 0 0))
+   (shape (circ I4 177800 0 0))
+   (shape (circ I5 177800 0 0))
+   (shape (circ I6 177800 0 0))
+   (shape (circ I7 177800 0 0))
+   (shape (circ I8 177800 0 0))
+   (shape (circ I9 177800 0 0))
+   (shape (circ I10 177800 0 0))
+   (shape (circ I11 177800 0 0))
+   (shape (circ I12 177800 0 0))
+   (shape (circ I13 177800 0 0))
+   (shape (circ I14 177800 0 0))
+   (shape (circ BOT 177800 0 0))
+  )
+  (padstack $VIA#0_POWER
+   (shape (circ TOP 177800 0 0))
+   (shape (circ I1 177800 0 0))
+   (shape (circ I2 177800 0 0))
+   (shape (circ I3 177800 0 0))
+   (shape (circ I4 177800 0 0))
+   (shape (circ I5 177800 0 0))
+   (shape (circ I6 177800 0 0))
+   (shape (circ I7 177800 0 0))
+   (shape (circ I8 177800 0 0))
+   (shape (circ I9 177800 0 0))
+   (shape (circ I10 177800 0 0))
+   (shape (circ I11 177800 0 0))
+   (shape (circ I12 177800 0 0))
+   (shape (circ I13 177800 0 0))
+   (shape (circ I14 177800 0 0))
+   (shape (circ BOT 177800 0 0))
+  )
+  (padstack 15V
+   (shape (circ TOP 0 0 0))
+  )
+  )
+  (network_out
+   (Net #00011 
+   (rule
+   )
+   (wire (path BOT 152400  5588000 -7620000 5080000 -7620000)
+    (connect (terminal pin R7-1) (terminal pin R6-0))
+   )
+   )
+   (Net #00013 
+   (rule
+   )
+   (wire (path BOT 152400  7112000 -7620000 6604000 -7620000)
+    (connect (terminal pin R8-0) (terminal pin R7-0))
+   )
+   )
+   (Net #00014 
+   (rule
+   )
+   (wire (path BOT 152400  8128000 -7112000 8128000 -7620000)
+    (connect (terminal pin R9-0) (terminal pin R8-1))
+   )
+   )
+   (Net #00029 
+   (rule
+   )
+   (wire (path BOT 152400  5588000 -6604000 5080000 -6604000)
+    (connect (terminal pin R2-1) (terminal pin R1-0))
+   )
+   )
+   (Net #00031 
+   (rule
+   )
+   (wire (path BOT 152400  7112000 -6604000 6604000 -6604000)
+    (connect (terminal pin R3-0) (terminal pin R2-0))
+   )
+   )
+   (Net #00032 
+   (rule
+   )
+   (wire (path BOT 152400  8128000 -6604000 8128000 -5969000)
+    (connect (terminal pin R3-1) (terminal pin R4-0))
+   )
+   )
+   (Net BATTERY_15V 
+   (rule
+   )
+   (wire (path BOT 152400  4064000 -7620000 3048000 -7620000)
+    (connect (terminal pin R6-1) (terminal pin "J4 - BAT V"-0))
+   )
+   )
+   (Net BATTERY_V-SENSOR_OUT 
+   (rule
+   )
+   )
+   (Net BATTERY_V-SENSOR_SIGNAL 
+   (rule
+   )
+   (wire (path BOT 152400  5588000 -4699000 6350000 -4699000)
+    (connect (terminal pin "Z D2"-1) (terminal pin R10-0))
+   )
+   (wire (path BOT 152400  6350000 -4699000 6350000 -7112000 7112000 -7112000)
+    (connect (terminal pin R10-0) (terminal pin R9-1))
+   )
+   )
+   (Net BAT_LOAD_I-SCL 
+   (rule
+   )
+   (wire (path BOT 152400  7366000 -3949000 7620000 -3949000 7620000 -2222500
+     6794500 -2222500 6794500 -500000 7348200 -500000)
+    (connect (terminal pin INA2-4) (terminal pin INA1-4))
+   )
+   (wire (path BOT 152400  7366000 -3949000 7112000 -3949000 7112000 -5461000
+     7620000 -5461000 7620000 -7874000 2286000 -7874000 2286000 -3429260
+     2680140 -3429260)
+    (connect (terminal pin INA2-4) (terminal pin ESP1-13))
+   )
+   )
+   (Net GND 
+   (rule
+   )
+   (wire (path BOT 152400  6350000 -3683000 6350000 -2984500 5969000 -2984500
+     5969000 -2286000 5461000 -2286000 5461000 -381260 5207440 -381260)
+    (connect (terminal pin R10-1) (terminal pin ESP1-28))
+   )
+   (wire (path BOT 152400  6350000 -254000 6350000 254000 4127500 254000)
+    (connect (terminal pin R5-1) (terminal wire))
+   )
+   (wire (path BOT 152400  2984500 254000 2984500 -381260 2680140 -381260)
+    (connect (terminal wire) (terminal pin ESP1-1))
+   )
+   (wire (path BOT 152400  7348200 -250000 6731000 -250000 6731000 -254000
+     6350000 -254000)
+    (connect (terminal pin INA1-3) (terminal pin R5-1))
+   )
+   (wire (path BOT 152400  5207440 -381260 4445000 -381260 4445000 -381000
+     4127500 -381000)
+    (connect (terminal pin ESP1-28) (terminal wire))
+   )
+   (wire (path BOT 152400  4127500 -381000 4127500 -4699000)
+    (connect (terminal wire) (terminal wire))
+   )
+   (wire (path BOT 152400  4127500 254000 2984500 254000)
+    (connect (terminal wire) (terminal wire))
+   )
+   (wire (path BOT 152400  4127500 -381000 4127500 254000)
+    (connect (terminal wire) (terminal wire))
+   )
+   (wire (path BOT 152400  2794000 1270000 2794000 254000 2984500 254000)
+    (connect (terminal pin "J5 - POWER"-1) (terminal wire))
+   )
+   (wire (path BOT 152400  6350000 -3683000 7048500 -3683000 7048500 -3695700
+     7366000 -3695700 7366000 -3699000)
+    (connect (terminal pin R10-1) (terminal pin INA2-3))
+   )
+   (wire (path BOT 152400  3556000 -4699000 4127500 -4699000)
+    (connect (terminal pin R12-0) (terminal wire))
+   )
+   (wire (path BOT 152400  4127500 -4699000 4572000 -4699000)
+    (connect (terminal wire) (terminal pin "Z D2"-0))
+   )
+   (wire (path BOT 152400  4572000 -5969000 4572000 -4699000)
+    (connect (terminal pin "Z D4"-0) (terminal pin "Z D2"-0))
+   )
+   )
+   (Net INTERRUPTOR_BLUETOOTH 
+   (rule
+   )
+   (wire (path BOT 152400  2540000 -5588000 2540000 -6350000 4826000 -6350000
+     4826000 -2159260 5207440 -2159260)
+    (connect (terminal pin "BT ON/OFF"-0) (terminal pin ESP1-21))
+   )
+   (wire (path BOT 152400  2540000 -5588000 2540000 -4699000)
+    (connect (terminal pin "BT ON/OFF"-0) (terminal pin R12-1))
+   )
+   )
+   (Net LOAD-I_SENSOR+ 
+   (rule
+   )
+   (wire (path BOT 152400  7366000 -4699000 7366000 -5207000 10922000 -5207000
+     10922000 -3683000 9906000 -3683000 9906000 -4333240 10414000 -4333240)
+    (connect (terminal pin INA2-7) (terminal pin "J1 - INA2"-1))
+   )
+   )
+   (Net LOAD-I_SENSOR- 
+   (rule
+   )
+   (wire (path BOT 152400  10414000 -3937000 10668000 -3937000 10668000 -4635500
+     7620000 -4635500 7620000 -4449000 7366000 -4449000)
+    (connect (terminal pin "J1 - INA2"-0) (terminal pin INA2-6))
+   )
+   )
+   (Net LOAD_SWITCH_SIGNAL 
+   (rule
+   )
+   )
+   (Net PV_BAT-I_SENSOR+ 
+   (rule
+   )
+   (wire (path BOT 152400  7348200 -1250000 9652000 -1250000 9652000 -777240
+     10414000 -777240)
+    (connect (terminal pin INA1-7) (terminal pin "J2 - INA1"-1))
+   )
+   )
+   (Net PV_BAT-I_SENSOR- 
+   (rule
+   )
+   (wire (path BOT 152400  10414000 -381000 9652000 -381000 9652000 127000
+     7874000 127000 7874000 -1000000 7348200 -1000000)
+    (connect (terminal pin "J2 - INA1"-0) (terminal pin INA1-6))
+   )
+   )
+   (Net PV_PANEL_+VCC 
+   (rule
+   )
+   (wire (path BOT 152400  4064000 -6604000 3048000 -6604000)
+    (connect (terminal pin R1-1) (terminal pin "J3 - SOLAR V"-0))
+   )
+   )
+   (Net PWM_SIGNAL 
+   (rule
+   )
+   )
+   (Net SOLAR_BAT_I-SDA 
+   (rule
+   )
+   (wire (path BOT 152400  7348200 -750000 7620000 -750000 7620000 1524000
+     2286000 1524000 2286000 -2667260 2680140 -2667260)
+    (connect (terminal pin INA1-5) (terminal pin ESP1-10))
+   )
+   (wire (path BOT 152400  7366000 -4199000 7874000 -4199000 7874000 -1714500
+     7048500 -1714500 7048500 -750000 7348200 -750000)
+    (connect (terminal pin INA2-5) (terminal pin INA1-5))
+   )
+   )
+   (Net SOLAR_V-SENSOR_SIGNAL 
+   (rule
+   )
+   (wire (path BOT 152400  6350000 -1270000 5715000 -1270000 5715000 -2921260)
+    (connect (terminal pin R5-0) (terminal wire))
+   )
+   (wire (path BOT 152400  5715000 -2921260 5715000 -4191000 5334000 -4191000
+     5334000 -5207000 5588000 -5207000 5588000 -5969000)
+    (connect (terminal wire) (terminal pin "Z D4"-1))
+   )
+   (wire (path BOT 152400  5207440 -2921260 5715000 -2921260)
+    (connect (terminal pin ESP1-18) (terminal wire))
+   )
+   (wire (path BOT 152400  7112000 -5969000 7366000 -5969000 7366000 -7366000
+     6096000 -7366000 6096000 -5969000 5588000 -5969000)
+    (connect (terminal pin R4-1) (terminal pin "Z D4"-1))
+   )
+   )
+   (Net VCC/VDD 
+   (rule
+   )
+   (wire (path BOT 152400  7366000 -3449000 7366000 -2730500 6572250 -2730500
+     6572250 -762000 5715000 -762000 5715000 -127260)
+    (connect (terminal pin INA2-2) (terminal wire))
+   )
+   (wire (path BOT 152400  5715000 -127260 5207440 -127260)
+    (connect (terminal wire) (terminal pin ESP1-29))
+   )
+   (wire (path BOT 152400  3302000 -127260 3302000 -5588000 3040000 -5588000)
+    (connect (terminal wire) (terminal pin "BT ON/OFF"-1))
+   )
+   (wire (path BOT 152400  7348200 0 6985000 0 6985000 508000
+     3302000 508000)
+    (connect (terminal pin INA1-2) (terminal wire))
+   )
+   (wire (path BOT 152400  3302000 508000 3302000 1270000)
+    (connect (terminal wire) (terminal wire))
+   )
+   (wire (path BOT 152400  5207440 -127260 3302000 -127260)
+    (connect (terminal pin ESP1-29) (terminal wire))
+   )
+   (wire (path BOT 152400  3302000 -127260 3302000 508000)
+    (connect (terminal wire) (terminal wire))
+   )
+   (wire (path BOT 152400  3302000 1270000 3048000 1270000)
+    (connect (terminal wire) (terminal pin "J5 - POWER"-0))
+   )
+   )
+  )
+ )

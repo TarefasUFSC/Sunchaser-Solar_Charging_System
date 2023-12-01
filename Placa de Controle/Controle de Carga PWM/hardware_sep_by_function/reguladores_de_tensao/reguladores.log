@@ -1,0 +1,12 @@
+# Writing all output to: Z:\mnt\ssd\Projetos\UFSC\PSU\Sunchaser-Solar_Charging_System\Placa de Controle\Controle de Carga PWM\hardware_sep_by_function\reguladores_de_tensao\reguladores.log
+set pad_wire_necking on
+bus diagonal
+fanout 5
+route 50
+clean 2
+route 50 16
+clean 2
+filter 5
+recorner diagonal
+status_file
+
