@@ -10,4 +10,7 @@ void Communicator::init(SaveToFlash *files)
     this->_files = files;
     this->_setup_wifi_client();
     this->attach_interruption();
+
+    
+    this->mac_address = WiFi.macAddress();
 }

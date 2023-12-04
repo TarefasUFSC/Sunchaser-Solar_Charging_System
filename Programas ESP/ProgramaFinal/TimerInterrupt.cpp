@@ -54,7 +54,7 @@ bool TimerInterrupt::tryToSendCacheToServer()
 void TimerInterrupt::timer_interruption()
 { // If Timer has fired
   String time = DateTime.toISOString().c_str();
-  float BatteryCurrent, BatteryVoltage, PVCurrent, PVVoltage;
+  float BatteryCurrent = 2.0, BatteryVoltage = 30.9, PVCurrent = 11.1, PVVoltage = 9.876;
   if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
   {
     Serial.println("entering timer interrupt");

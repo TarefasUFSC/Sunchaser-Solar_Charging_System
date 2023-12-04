@@ -109,22 +109,19 @@ String convertReadingToJsonString(Reading reading)
 }
 
 bool Communicator::send_data_to_server(Reading sol_bat_amp, Reading bat_load_amp, Reading bat_volt)
-{
-  
-   
-
-    
+{ 
   this->_mqtt_reconnect();
         delay(100);
         this->_mqtt_loop();
     // cria o json no formato que o servidor espera
     // {"version":4, "<type>":<value>, "datetime":"<datetime_measurement>"}
     DynamicJsonDocument doc(2048);
-    doc["version"] = 4;
+    doc["version"] = 20;
 
-    doc[JSON_SOLAR_BAT_CURRENT] = convertReadingToJsonString(sol_bat_amp);
-    doc[JSON_BATTERY_VOLTAGE] = convertReadingToJsonString(bat_volt);
-    doc[JSON_BAT_LOAD_CURRENT] = convertReadingToJsonString(bat_load_amp);
+    doc[JSON_SOLAR_BAT_CURRENT] = sol_bat_amp.value;
+    doc[JSON_BATTERY_VOLTAGE] = bat_volt.value;
+    doc[JSON_BAT_LOAD_CURRENT] = bat_load_amp.value;
+    doc["datetime"] = bat_volt.datetime;
 //    doc["amp"] = 1/; // isso aqui tem que tirar depois pq o codigo do eduardo ta bugado e eu não consigo remover isso do projeto
 
     String json;
