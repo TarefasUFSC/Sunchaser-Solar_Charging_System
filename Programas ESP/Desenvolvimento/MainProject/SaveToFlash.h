@@ -5,6 +5,7 @@
 #include "FS.h"
 #include <LittleFS.h>
 #include <ArduinoJson.h>
+#include "TimeConfigurations.h"
 
 /* You only need to format LittleFS the first time you run a
    test or else use the LITTLEFS plugin to create a partition
@@ -33,9 +34,10 @@ class SaveToFlash
 private:
   int n_cache_saves;
   int n_longterm_saves;
+  
+  TimeConfigurations timeConfigs;
 
   int cache_size = 2;      // 1 day of readings every hour
-  
   // esse aqui TEM que ser multiplo de NUM_READINGS pq se não a conta fica muito dificil e não quero fazer ela
   int long_term_size = 5; 
 
@@ -52,7 +54,7 @@ private:
   Readings_Lists convertReadingJSONToStruct(String batteryLoadCurrent, String batteryVoltage, String pvBatteryCurrent);
 
 public:
-  SaveToFlash(); // Constructor
+  SaveToFlash(TimeConfigurations &configs); // Constructor
   void mountLittleFS();
   int getCachesize();
   int getNCacheSaves();
@@ -60,8 +62,6 @@ public:
   void saveToLongTerm();
   Readings_Lists get_readings_from_cache(int page);
   Readings_Lists get_readings_from_longterm(int page);
-  void set_newcachesize(int newSize);
-  void set_newlongterm(int newLongTerm);
 };
 
 #endif
