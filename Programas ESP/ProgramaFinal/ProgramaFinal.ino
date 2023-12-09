@@ -13,8 +13,8 @@ Sensors sensors(battery_ina219, pv_ina219);
 
 TimeConfigurations timeConfigs;
 Communicator communicator;
-SaveToFlash fileSystem(timeConfigs);
-TimerInterrupt timerInterrupt(&fileSystem, &communicator, &sensors, timeConfigs);
+SaveToFlash fileSystem(&timeConfigs);
+TimerInterrupt timerInterrupt(&fileSystem, &communicator, &sensors, &timeConfigs);
 
 void setup()
 {
@@ -25,7 +25,7 @@ void setup()
   // battery_controller.PWM_init();
   fileSystem.mountLittleFS();
   timerInterrupt.timer_init();
-  communicator.init(&fileSystem);
+  communicator.init(&fileSystem, &timeConfigs);
 
   // verifica o tempo da rede (fica travado aqui até ele conseguir pegar o tempo inicial pra fazer as coisas)
   // ou seja, antes daqui tando o PWM quanto o switch do Load tem que estar abertos para não dar problema, pq o esp vai ficar travado aqui

@@ -4,7 +4,7 @@
 // Initialize the static variables
 volatile SemaphoreHandle_t TimerInterrupt::timerSemaphore = xSemaphoreCreateBinary();
 
-TimerInterrupt::TimerInterrupt(SaveToFlash *files, Communicator *communicator, Sensors *sensors, TimeConfigurations &configs)
+TimerInterrupt::TimerInterrupt(SaveToFlash *files, Communicator *communicator, Sensors *sensors, TimeConfigurations *configs)
 {
   timer = NULL;
   this->fileSystem = files;
@@ -26,7 +26,7 @@ void TimerInterrupt::timer_init()
 
   timerAttachInterrupt(timer, &TimerInterrupt::onTimer, true); // Attach onTimer function to our timer.
 
-  int QtdMinutes = timeConfigs.get_ReadingInterval();
+  int QtdMinutes = timeConfigs->get_ReadingInterval();
   int SetTime = QtdMinutes * 10 * 1000000; // Set alarm to call onTimer function every QtdMinutes
   timerAlarmWrite(timer, SetTime, true);   // Repeat the alarm (third parameter)
 
@@ -67,13 +67,12 @@ void TimerInterrupt::timer_interruption()
     BatteryVoltage = read_sensors->battery_voltage();
     PVCurrent = read_sensors->pv_current();
 
-
     fileSystem->saveToCache(time, BatteryCurrent, BatteryVoltage, PVCurrent);
     int n_cache_saves = fileSystem->getNCacheSaves();
-    int cache_size = fileSystem->getCachesize();
+    int max_cache_size = fileSystem->getMaxCacheSize();
     // If the cache is full, save it to the long term memory
-    Serial.printf("n_cache: %d | cache_size: %d\n", n_cache_saves, cache_size);
-    if (n_cache_saves >= cache_size && this->tryToSendCacheToServer())
+    Serial.printf("n_cache: %d | max_cache_size: %d\n", n_cache_saves, max_cache_size);
+    if (n_cache_saves >= max_cache_size && this->tryToSendCacheToServer())
     {
       fileSystem->saveToLongTerm();
     }

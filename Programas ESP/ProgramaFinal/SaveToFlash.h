@@ -29,17 +29,13 @@ struct Readings_Lists
   Reading PVBatteryCurrent[NUM_READINGS];
 };
 
-class SaveToFlash 
+class SaveToFlash
 {
 private:
   int n_cache_saves;
   int n_longterm_saves;
 
-  TimeConfigurations timeConfigs;
-
-  int cache_size = 5; // 1 day of readings every hour
-
-  int long_term_size = 300;
+  TimeConfigurations *timeConfigs;
 
   void listDir(fs::FS &fs, const char *dirname, uint8_t levels);
   void createDir(fs::FS &fs, const char *path);
@@ -54,9 +50,9 @@ private:
   Readings_Lists convertReadingJSONToStruct(String batteryLoadCurrent, String batteryVoltage, String pvBatteryCurrent);
 
 public:
-  SaveToFlash(TimeConfigurations &configs); // Constructor
+  SaveToFlash(TimeConfigurations *configs); // Constructor
   void mountLittleFS();
-  int getCachesize();
+  int getMaxCacheSize();
   int getNCacheSaves();
   int getNLongTermSaves();
   void saveToCache(String datetime, float BatteryCurrent, float BatteryVoltage, float PVCurrent);

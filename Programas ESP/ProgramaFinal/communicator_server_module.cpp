@@ -87,7 +87,6 @@ void Communicator::_handle_get_cache()
     {                                         // Verifica se o argumento "page" existe
         page = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
-        
         DynamicJsonDocument doc(2048);
         doc["page"] = page;
         doc["total"] = this->_files->getNCacheSaves();
@@ -96,22 +95,22 @@ void Communicator::_handle_get_cache()
         Readings_Lists readings = this->_files->get_readings_from_cache(atoi(page.c_str()));
         for (int i = 0; i < NUM_READINGS; i++)
         {
-          if( readings.BatteryLoadCurrent[i].isValid && readings.BatteryVoltage[i].isValid &&  readings.PVBatteryCurrent[i].isValid)
-          {
-            
-          Serial.print(i);
-            doc[JSON_BAT_LOAD_CURRENT][i]["datetime"] = readings.BatteryLoadCurrent[i].datetime;
-            doc[JSON_BAT_LOAD_CURRENT][i]["value"] = readings.BatteryLoadCurrent[i].value;
-        
-            doc[JSON_BATTERY_VOLTAGE][i]["datetime"] = readings.BatteryVoltage[i].datetime;
-            doc[JSON_BATTERY_VOLTAGE][i]["value"] = readings.BatteryVoltage[i].value;
-        
-            doc[JSON_SOLAR_BAT_CURRENT][i]["datetime"] = readings.PVBatteryCurrent[i].datetime;
-            doc[JSON_SOLAR_BAT_CURRENT][i]["value"] = readings.PVBatteryCurrent[i].value;
-          }
+            if (readings.BatteryLoadCurrent[i].isValid && readings.BatteryVoltage[i].isValid && readings.PVBatteryCurrent[i].isValid)
+            {
+
+                Serial.print(i);
+                doc[JSON_BAT_LOAD_CURRENT][i]["datetime"] = readings.BatteryLoadCurrent[i].datetime;
+                doc[JSON_BAT_LOAD_CURRENT][i]["value"] = readings.BatteryLoadCurrent[i].value;
+
+                doc[JSON_BATTERY_VOLTAGE][i]["datetime"] = readings.BatteryVoltage[i].datetime;
+                doc[JSON_BATTERY_VOLTAGE][i]["value"] = readings.BatteryVoltage[i].value;
+
+                doc[JSON_SOLAR_BAT_CURRENT][i]["datetime"] = readings.PVBatteryCurrent[i].datetime;
+                doc[JSON_SOLAR_BAT_CURRENT][i]["value"] = readings.PVBatteryCurrent[i].value;
+            }
         }
-        
-          Serial.println("enviado os dados do chache");
+
+        Serial.println("enviado os dados do chache");
         String return_data;
         serializeJson(doc, return_data);
         this->_web_server.send(200, "application/json", return_data);
@@ -130,7 +129,6 @@ void Communicator::_handle_get_ltm()
     {                                         // Verifica se o argumento "page" existe
         page = this->_web_server.arg("page"); // Obtém o valor do argumento "page"
 
-        
         DynamicJsonDocument doc(2048);
         doc["page"] = page;
         doc["total"] = this->_files->getNLongTermSaves();
@@ -163,9 +161,9 @@ void Communicator::_handle_get_settings()
 {
     // TODO - SETTINGS: ver com a manu como que eu vou pegar essas informações
     DynamicJsonDocument doc(1024);
-    doc["readingInterval"] = 1;
-    doc["cacheMaxSize"] = 1;
-    doc["ltmMaxSize"] = 1;
+    doc["readingInterval"] = this->_time_configs->get_ReadingInterval();
+    doc["cacheMaxSize"] = this->_time_configs->get_CacheMaxSize();
+    doc["ltmMaxSize"] = this->_time_configs->get_LTMMaxSize();
     String output;
     serializeJson(doc, output);
     this->_web_server.send(200, "application/json", output);
@@ -196,7 +194,10 @@ void Communicator::_handle_put_change_settings()
     deserializeJson(settings_json_doc, message);
     JsonObject obj = settings_json_doc.as<JsonObject>();
 
-    Serial.println(obj["daysBackup"].as<String>());
+    Serial.println(obj["readingInterval"].as<String>());
+    this->_time_configs->set_ReadingInterval(obj["readingInterval"].as<int>());
+    this->_time_configs->set_CacheMaxSize(obj["cacheMaxSize"].as<int>());
+    this->_time_configs->set_LTMaxSize(obj["ltmMaxSize"].as<int>());
 
     this->_web_server.send(200, "text/plain", "OK");
 }
