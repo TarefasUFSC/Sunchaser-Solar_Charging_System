@@ -1,0 +1,17 @@
+[
+    {
+        "type": "Corrente Bateria",
+        "value": "2.7 mA",
+        "datetime": "11/10/2023 15h45"
+    },
+    {
+        "type": "Corrente Painel",
+        "value": "3 mA",
+        "datetime": "11/10/2023 15h45"
+    },
+    {
+        "type": "Tensão Bateria",
+        "value": "6.3 V",
+        "datetime": "11/10/2023 15h45"
+    }
+]

@@ -1,16 +1,24 @@
 
 #include "communicator.h"
 #include "SaveToFlash.h"
+#include "TimerInterrupt.h"
+#include "SaveToFlash.h"
 
 // Cria as instancias globais das classes
+
+SaveToFlash fileSystem;
 Communicator communicator;
+TimerInterrupt timerInterrupt(&fileSystem, &communicator);
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // faz as configurações iniciais de cada objeto, dos attach dos interrupts
-  communicator.init();
+
+  fileSystem.mountLittleFS();
+  timerInterrupt.timer_init();
+  communicator.init(&fileSystem);
 
   // verifica o tempo da rede (fica travado aqui até ele conseguir pegar o tempo inicial pra fazer as coisas)
   // ou seja, antes daqui tando o PWM quanto o switch do Load tem que estar abertos para não dar problema, pq o esp vai ficar travado aqui
@@ -27,6 +35,7 @@ void loop()
 
   // chama a função de verificar flags do comunicador
   communicator.interrupt_handler();
+  timerInterrupt.timer_interruption();
 
   if (communicator.is_server)
   {
@@ -37,21 +46,20 @@ void loop()
   else // esse else inteiro aqui pode ser excluido, é só pra teste
   {
 
-    if (envio) // flag pra teste
-    {
+    // if (envio) // flag pra teste
+    // {
 
-      communicator.reconnect_client(); // chama isso pra acordar o cliente e reconectar com o broker -> só funciona se o esp estiver em modo client
-      if (communicator.send_data_to_server(JSON_SOLAR_BAT_CURRENT, 40.44, DateTime.toISOString()))
-      {
-        Serial.println("Enviado com sucesso");
-        envio = false;
-        communicator.sleep(); // chama isso pra botar pra dormir -> isso aqui desliga o AP tb, então cuidado
-      }
-      else
-      {
-        Serial.println("Não foi enviado, se o erro foi de conexão, chama o reconnect_client() e tenta de novo");
-      }
-    }
+    //   if (communicator.send_data_to_server(JSON_SOLAR_BAT_CURRENT, 40.44, DateTime.toISOString()))
+    //   {
+    //     Serial.println("Enviado com sucesso");
+    //     envio = false;
+    //     communicator.sleep(); // chama isso pra botar pra dormir -> isso aqui desliga o AP tb, então cuidado
+    //   }
+    //   else
+    //   {
+    //     Serial.println("Não foi enviado, se o erro foi de conexão, chama o reconnect_client() e tenta de novo");
+    //   }
+    // }
   }
 
   // verifica o counter do TimerInterrupt e faz as chamadas
