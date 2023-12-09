@@ -4,12 +4,13 @@
 // Initialize the static variables
 volatile SemaphoreHandle_t TimerInterrupt::timerSemaphore = xSemaphoreCreateBinary();
 
-TimerInterrupt::TimerInterrupt(SaveToFlash *files, Communicator *communicator)
+TimerInterrupt::TimerInterrupt(SaveToFlash *files, Communicator *communicator, Sensors *sensors, TimeConfigurations &configs)
 {
   timer = NULL;
-  QtdMinutes = 1; // Default time is 60 minutes
   this->fileSystem = files;
   this->communicator = communicator;
+  this->read_sensors = sensors;
+  this->timeConfigs = configs;
 }
 
 void IRAM_ATTR TimerInterrupt::onTimer()
@@ -25,6 +26,7 @@ void TimerInterrupt::timer_init()
 
   timerAttachInterrupt(timer, &TimerInterrupt::onTimer, true); // Attach onTimer function to our timer.
 
+  int QtdMinutes = timeConfigs.get_ReadingInterval();
   int SetTime = QtdMinutes * 10 * 1000000; // Set alarm to call onTimer function every QtdMinutes
   timerAlarmWrite(timer, SetTime, true);   // Repeat the alarm (third parameter)
 
@@ -53,13 +55,18 @@ bool TimerInterrupt::tryToSendCacheToServer()
 
 void TimerInterrupt::timer_interruption()
 { // If Timer has fired
-  String time = DateTime.toISOString().c_str();
-  float BatteryCurrent = 2.0, BatteryVoltage = 30.9, PVCurrent = 11.1, PVVoltage = 9.876;
+  String time;
+  float BatteryCurrent, BatteryVoltage, PVCurrent;
   if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
   {
     Serial.println("entering timer interrupt");
 
     // Read the sensors
+    time = DateTime.toISOString().c_str();
+    BatteryCurrent = read_sensors->battery_current();
+    BatteryVoltage = read_sensors->battery_voltage();
+    PVCurrent = read_sensors->pv_current();
+
 
     fileSystem->saveToCache(time, BatteryCurrent, BatteryVoltage, PVCurrent);
     int n_cache_saves = fileSystem->getNCacheSaves();
@@ -72,9 +79,4 @@ void TimerInterrupt::timer_interruption()
     }
     //    Readings_Lists readings = fileSystem->get_readings_/from_cache(0);
   }
-}
-
-void TimerInterrupt::set_newtime(int newTime)
-{
-  QtdMinutes = newTime;
 }

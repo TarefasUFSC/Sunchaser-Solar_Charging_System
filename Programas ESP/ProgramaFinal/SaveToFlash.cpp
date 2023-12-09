@@ -1,10 +1,13 @@
 #include "SaveToFlash.h"
 #include <math.h>
 
-SaveToFlash::SaveToFlash()
+SaveToFlash::SaveToFlash(TimeConfigurations &configs)
 {
+    timeConfigs = configs;
     this->n_cache_saves = 0;
     this->n_longterm_saves = 0;
+    this->cache_size = timeConfigs.get_CacheMaxSize();
+    this->long_term_size = timeConfigs.get_LTMMazSize();
 }
 
 void SaveToFlash::mountLittleFS()
@@ -312,6 +315,7 @@ void SaveToFlash::saveToLongTerm()
     deleteFile(LittleFS, "/cache/PVCurrent.dt");
     this->n_cache_saves = 0;
 
+    this->long_term_size = timeConfigs.get_LTMMazSize();
     // verificacao de tamanho do longterm
     if (this->n_longterm_saves > this->long_term_size)
     {
@@ -447,15 +451,6 @@ Readings_Lists SaveToFlash::get_readings_from_longterm(int page)
     return readings;
 }
 
-void SaveToFlash::set_newcachesize(int newSize)
-{
-    cache_size = newSize;
-}
-
-void SaveToFlash::set_newlongterm(int newLongTerm)
-{
-    long_term_size = newLongTerm;
-}
 int SaveToFlash::getNLongTermSaves(){
   return this->n_longterm_saves;
 }
