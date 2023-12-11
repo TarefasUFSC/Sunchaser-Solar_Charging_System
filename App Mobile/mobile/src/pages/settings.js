@@ -16,13 +16,16 @@ function Settings({ navigation }) {
 
   function setSettings(leitura, envio, dias) {
     if(leitura>60){
-      alert("O intervalo de leitura não pode ser maior que 60 minutos");
+      alert("O intervalo de leitura não pode ser maior que 60 minutos")
+    }
+    else if(24*60/leitura*dias>80000){
+      alert("O ESP não vai conseguir armazernar tantas leituras. Por favor, escolha menos dias ou intervalo de leitura maior")
     }
     else{
       const data = {
         "readingInterval": parseInt(leitura),
-        "sendingInterval": parseInt(envio),
-        "daysBackup": parseInt(dias)
+        "cacheMaxSize": parseInt(envio),
+        "ltmMaxSize": parseInt(dias)
       }
       axios.put('http://192.168.1.1/settings', data, {timeout: 3000})
         .then(response => {
@@ -33,7 +36,7 @@ function Settings({ navigation }) {
           setDaysBackup(parseInt(dias))
         })
         .catch(error => {
-          if (error.code === 'ECONNABORTED') {alert('Você não está conectado ao ESP');}
+          if (error.code === 'ECONNABORTED') {alert('Você não está conectado ao ESP')}
           else console.error('Erro na chamada PUT:', error);
         });
     }
@@ -44,7 +47,7 @@ function Settings({ navigation }) {
       .then(response => {
         console.log(response.data);
 
-        console.log(response.data['readingInterval'], response.data['sendingInterval'], response.data['daysBackup']);
+        console.log(response.data['readingInterval'], response.data['sendingInterval'], response.data['daysBackup'])
         setReadingInterval(parseInt(response.data['readingInterval']))
         setSendingInterval(parseInt(response.data['sendingInterval']))
         setDaysBackup(parseInt(response.data['daysBackup']))
