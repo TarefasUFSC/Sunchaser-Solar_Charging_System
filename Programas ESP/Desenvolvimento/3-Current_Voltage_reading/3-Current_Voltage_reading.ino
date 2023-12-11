@@ -10,7 +10,7 @@
  * E.g. if A0 is tied to ground and A1 is tied to V+,
  * the resulting address is b1000100 = 0x44
  */
-Adafruit_INA219 battery_ina219(0x41);
+Adafruit_INA219 battery_ina219(0x40);
 Adafruit_INA219 pv_ina219(0x41);
 Sensors sensors(battery_ina219, pv_ina219);
 
@@ -25,16 +25,16 @@ void setup() {
 }
 
 void loop() {
-  float bat_current, bat_voltage, pv_voltage;
+  float bat_current, bat_voltage, pv_voltage, pv_current;
   bat_current = sensors.battery_current();
-  // pv_current = sensors.pv_current();
+   pv_current = sensors.pv_current();
   // bat_voltage = sensors.battery_voltage();
   // pv_voltage = sensors.pv_voltage();
 
   Serial.print("Battery current: ");
   Serial.println(bat_current);
-  // Serial.print("    PV current: ");
-  // Serial.println(pv_current);
+   Serial.print("    PV current: ");
+   Serial.println(pv_current);
   // Serial.print("    Battery voltage: ");
   // Serial.print(bat_voltage);
   // Serial.print("    PV voltage: ");

@@ -18,7 +18,7 @@ void Communicator::_mqtt_reconnect()
     // Loop until we're reconnected
     while (!this->_mqtt_client.connected())
     {
-        if (this->check_interruption_flag())
+        if (this->check_interruption_flag() || this->isServer())
         {
             Serial.println("Interrupção acionada, vou desistir de conectar com o broker");
             this->interrupt_handler();
@@ -110,6 +110,9 @@ String convertReadingToJsonString(Reading reading)
 
 bool Communicator::send_data_to_server(Reading sol_bat_amp, Reading bat_load_amp, Reading bat_volt)
 { 
+  if(this->check_interruption_flag() || this->isServer()){
+    return false;
+  }
   this->_mqtt_reconnect();
         delay(100);
         this->_mqtt_loop();
