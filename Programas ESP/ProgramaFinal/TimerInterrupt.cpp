@@ -27,7 +27,7 @@ void TimerInterrupt::timer_init()
   timerAttachInterrupt(timer, &TimerInterrupt::onTimer, true); // Attach onTimer function to our timer.
 
   int QtdMinutes = timeConfigs->get_ReadingInterval();
-  int SetTime = QtdMinutes * 10 * 1000000; // Set alarm to call onTimer function every QtdMinutes
+  int SetTime = QtdMinutes * 60 * 1000000; // Set alarm to call onTimer function every QtdMinutes
   timerAlarmWrite(timer, SetTime, true);   // Repeat the alarm (third parameter)
 
   timerAlarmEnable(timer); // Start an alarm
@@ -35,6 +35,9 @@ void TimerInterrupt::timer_init()
 
 bool TimerInterrupt::tryToSendCacheToServer()
 {
+  if(this->communicator->check_interruption_flag() || this->communicator->isServer()){
+    return false;
+  }
   bool sent = true;
   int qtd_cache = this->fileSystem->getNCacheSaves();
   int pages = ceil((float)qtd_cache / (float)NUM_READINGS);
@@ -65,6 +68,7 @@ void TimerInterrupt::timer_interruption()
     time = DateTime.toISOString().c_str();
     BatteryCurrent = read_sensors->battery_current();
     BatteryVoltage = read_sensors->battery_voltage();
+    Serial.printf("Bateria: %f\n", BatteryVoltage);
     PVCurrent = read_sensors->pv_current();
 
     fileSystem->saveToCache(time, BatteryCurrent, BatteryVoltage, PVCurrent);

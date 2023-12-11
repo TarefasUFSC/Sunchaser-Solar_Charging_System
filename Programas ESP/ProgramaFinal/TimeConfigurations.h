@@ -12,8 +12,8 @@ private:
 public:
     TimeConfigurations()
     {
-        ReadingInterval = 60; // 1 hour
-        CacheMaxSize = 24;    // 1 day
+        ReadingInterval = 1; // 1 hour
+        CacheMaxSize = 5;    // 1 day
         LTMazSize = 720;      // 1 month
     };
     void set_ReadingInterval(int newInterval) { this->ReadingInterval = newInterval; };

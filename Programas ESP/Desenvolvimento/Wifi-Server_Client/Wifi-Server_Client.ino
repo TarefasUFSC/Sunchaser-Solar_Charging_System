@@ -2,7 +2,7 @@
 #include <WebServer.h>
 #include <HTTPClient.h>
 
-const char *ssid = "RFS-21FE";
+const char *ssid = "RFS-S21FE";
 const char *password = "23011306";
 
 // Configurações do servidor AP

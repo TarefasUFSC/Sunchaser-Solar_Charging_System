@@ -14,3 +14,7 @@ void Communicator::init(SaveToFlash *files, TimeConfigurations *configs)
 
     this->_time_configs = configs;
 }
+
+bool Communicator::isServer(){
+  return this->is_server;
+}

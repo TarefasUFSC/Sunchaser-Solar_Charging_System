@@ -53,6 +53,7 @@ public:
 
     void setup_datetime();
     bool check_interruption_flag();
+    bool isServer();
     void reconnect_client();
     void sleep();
     bool send_data_to_server(Readings_Lists readings);
