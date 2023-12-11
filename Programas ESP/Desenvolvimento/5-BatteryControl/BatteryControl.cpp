@@ -40,22 +40,25 @@ void BatteryControl::PWM_init(){
 }
 
 void BatteryControl::bulk_stage(){
-  ledcWrite(PWM_Channel, 255); // Corrente máxima Isc, duty cycle = 1 (255)
+  this->dutyCycle = 255;
+  ledcWrite(PWM_Channel, this->dutyCycle); // Corrente máxima Isc, duty cycle = 1 (255)
 }
 
 void BatteryControl::absorption_stage(){ // tentar igualar a tensão lida com AV
   float BatteryVoltage = read_sensors->battery_voltage();
-  float error = AV - BatteryVoltage;
+  float error = BatteryVoltage - AV;
 
-  int dutyCycle = (int) 255*BatteryVoltage/AV; // Mapeia a tensão do banco de baterias para o duty cycle
-  if(error > 0.1){
-    dutyCycle ++; // Aumenta o duty cycle em 1 para aumentar a corrente de recarga
+  if(error>0){
+    this->dutyCycle --; // Diminui o duty cycle em 1 para diminuir a tensão de recarga
   }
-  else if(error < -0.1){
-    dutyCycle --; // Diminui o duty cycle em 1 para diminuir a corrente de recarga
+  else if(error<0){
+    this->dutyCycle ++; // Aumenta o duty cycle em 1 para aumentar a tensão de recarga
   }
+  
+  Serial.print("dutyCycle: ");
+  Serial.println(this->dutyCycle);
 
-  ledcWrite(PWM_Channel, dutyCycle);  
+  ledcWrite(PWM_Channel, this->dutyCycle);  
 }
 
 // Tensão do banco de baterias é reduzida e mantida regulada no patamar da tensão de flutuação (FV)
@@ -63,16 +66,17 @@ void BatteryControl::float_stage(){
   float BatteryVoltage = read_sensors->battery_voltage();
   float error = FV - BatteryVoltage;
 
-  int FV_dutyCycle = (int) 255*FV/AV;
-  int dutyCycle = constrain(map(BatteryVoltage, FV, AV, FV_dutyCycle, 255), 0, 255); // Mapeia a tensão do banco de baterias para o duty cycle
+  if( error > 0){
+    this->dutyCycle ++; // Aumenta o duty cycle em 1 para aumentar a tensão de recarga
+  }
+  else if( error < 0){
+    this->dutyCycle --; // Diminui o duty cycle em 1 para diminuir a tensão de recarga
+  }
   
-  if( error > 0.1){
-    dutyCycle ++; // Aumenta o duty cycle em 1 para aumentar a tensão de recarga
-  }
-  else if( error < -0.1){
-    dutyCycle --; // Diminui o duty cycle em 1 para diminuir a tensão de recarga
-  }
-  ledcWrite(PWM_Channel, dutyCycle);
+  Serial.print("dutyCycle: ");
+  Serial.println(this->dutyCycle);
+
+  ledcWrite(PWM_Channel, this->dutyCycle);
 }
 
 void BatteryControl::charging_control(){
@@ -80,13 +84,23 @@ void BatteryControl::charging_control(){
   BatteryCurrent = read_sensors->battery_current();
   BatteryVoltage = read_sensors->battery_voltage();
 
+  Serial.print("Corrente: ");
+  Serial.print(BatteryCurrent);
+  Serial.print("    Tensao: ");
+  Serial.println(BatteryVoltage);
+
+  delay(500);
+
   if(BatteryVoltage < AV && BatteryCurrent > TC){
+    Serial.println("bulk_stage");
     bulk_stage();
   }
   else if(BatteryVoltage >= AV && BatteryCurrent > TC){
+    Serial.println("absorption_stage");
     absorption_stage();
   }
   else if(BatteryVoltage < AV && BatteryCurrent <= TC){
+    Serial.println("float_stage");
     float_stage();
   }
 }
