@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Dimensions, Image, Modal, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import Home from './src/pages/home';
 import Graph from './src/pages/graph';
 import Settings from './src/pages/settings';
+import { RoundButton } from './src/components/components';
 
 export const ESP32Context = createContext();
 
@@ -16,14 +17,13 @@ const App = () => {
   const [batVolt, setBatVolt] = useState([]);
   const [solarBatAmp, setSolarBatAmp] = useState([]);
   const [batLoadAmp, setBatLoadAmp] = useState([]);
-  const [reloadDataFlag, setReloadDataFlag] = useState(false)
+  const [reloadDataFlag, setReloadDataFlag] = useState(false);
   const [isBootingUp, setIsBootingUp] = useState(true);
 
   useEffect(() => {
-    reloadData()
-    setIsBootingUp(false)
+    reloadData();
+    setIsBootingUp(false);
   }, []);
-
 
   // Este useEffect será executado após a atualização dos estados
   useEffect(() => {
@@ -52,23 +52,23 @@ const App = () => {
     }
     const url = "http://192.168.1.1/" + type + "?page=" + page
     console.log("url: ", url);
-    await axios.get('http://192.168.1.1/cache?page=' + page).then(response => {
-      console.log("deu bom na page ", page);
-      data["page"] = response.data['page']
-      data["total"] = response.data['total']
-      data["items_per_page"] = response.data['qtd_per_page']
-      data["bat_volt"] = (response.data['bat_volt']);
-      data["bat_load"] = (response.data['bat_load_amp'])
-      data["solar_bat"] = (response.data['sol_bat_amp'])
-      // console.log(pg, total, items_per_page, bat_volt, bat_load, solar_bat);
-    })
+    await axios.get(url)
+      .then(response => {
+        console.log("deu bom na page ", page);
+        data["page"] = response.data['page']
+        data["total"] = response.data['total']
+        data["items_per_page"] = response.data['qtd_per_page']
+        data["bat_volt"] = (response.data['bat_volt']);
+        data["bat_load"] = (response.data['bat_load_amp'])
+        data["solar_bat"] = (response.data['sol_bat_amp'])
+        // console.log(pg, total, items_per_page, bat_volt, bat_load, solar_bat);
+      })
       .catch(error => {
         console.error('Erro na chamada GET: ', error.data);
         // setCache({ "error": error })
       });
     return data
   }
-
 
   async function loadData(type) {
     console.log("Pegando o ", type);
@@ -124,8 +124,6 @@ const App = () => {
     reloadData
   };
 
-
-
   return (
     <ESP32Context.Provider value={espContextValue}>
       <NavigationContainer>
@@ -141,6 +139,10 @@ const App = () => {
                   source={require('./src/assets/home.png')}
                   style={{ width: size, height: size, tintColor: color }}
                 />
+              ),headerRight: () => (
+                <View>
+                  <RoundButton palavra='Nova Leitura' page='home' color='#5DB075' tColor='white' onPressFunction={() => reloadData()} />
+                </View>
               )
             }}
           />
@@ -173,12 +175,34 @@ const App = () => {
             }}
           />
         </Tab.Navigator>
-      </NavigationContainer>
+        </NavigationContainer>
+      {/* Modal de carregamento */}
+      {isBootingUp && (
+        <Modal transparent={true} animationType="fade">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text>LOADING!!</Text>
+            </View>
+          </View>
+        </Modal>
+      )}
     </ESP32Context.Provider>
   );
+};
 
-}
-
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  // Estilos para o modal
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+  },
+});
 
 export default App;

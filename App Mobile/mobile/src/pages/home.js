@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { HorizontalList, RoundButton } from '../components/components';
+import { HorizontalList } from '../components/components';
 import { ESP32Context } from '../../App'; // Importar o contexto
 
 function Home() {
@@ -16,7 +16,6 @@ function Home() {
   
   return (
     <ScrollView>
-      <RoundButton palavra='Nova Leitura' page='home' color='#5DB075' tColor='white' onPressFunction={() => (reloadData())} />
       {batVolt.length && solarBatAmp.length && batLoadAmp.length ?
         (<>
           <View >
