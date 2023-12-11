@@ -14,23 +14,20 @@ function Graph() {
 	}, []);
 
 	function changeChartData(data_list, unit) {
-		batVolt ? (() => {
-			let newChartData = data_list.map(it => {
-				const date = it['datetime'].split('T')[0].replaceAll('-', '/').substr(2, it.length).split('/')
-				let dt = {
-					'value': it['value'],
-					'label': + date[1] + '/' + date[0],
-					'unit': unit
-				}
-				return dt;
-			})
-			console.log(newChartData);
-			setChartData(newChartData)
-		}) : (<></>)
+		let newChartData = data_list.map(it => {
+			const date = it['datetime'].split('T')[0].replaceAll('-', '/').substr(2, it.length).split('/')
+			let dt = {
+				'value': it['value'],
+				'label': + date[1] + '/' + date[0],
+				'unit': unit
+			}
+			return dt;
+		})
+		console.log(newChartData);
+		setChartData(newChartData)
 	}
 
 	const handleOptionChange = (option) => {
-		console.log(batVolt);
 		setSelectedOption(option);
 		switch (option) {
 			case 'Tensão na Bateria':
