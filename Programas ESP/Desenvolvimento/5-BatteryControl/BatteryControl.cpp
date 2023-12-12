@@ -59,7 +59,9 @@ void BatteryControl::bulk_stage(){
 
 void BatteryControl::check_error(float error){
   if(error>0){
-    this->dutyCycle --; // Diminui o duty cycle em 1 para diminuir a tensão de recarga
+    if(dutyCycle>0){
+    this->dutyCycle --; // Diminui o duty cycle em 1 para diminuir a tensão de recarga      
+    }
   }
   else if(error<0){
     this->dutyCycle ++; // Aumenta o duty cycle em 1 para aumentar a tensão de recarga
@@ -84,7 +86,7 @@ void BatteryControl::absorption_stage(){ // tentar igualar a tensão lida com AV
 // Tensão do banco de baterias é reduzida e mantida regulada no patamar da tensão de flutuação (FV)
 void BatteryControl::float_stage(){
   float BatteryVoltage = read_sensors->battery_voltage();
-  float error = FV - BatteryVoltage;
+  float error =  BatteryVoltage - AV;
 
   
   this->check_error(error);
@@ -94,38 +96,59 @@ void BatteryControl::float_stage(){
 }
 
 void BatteryControl::charging_control(){
-  float BatteryCurrent, BatteryVoltage;
+  float BatteryCurrent, BatteryVoltage, PV_Voltage;
   BatteryCurrent = read_sensors->pv_current();
   BatteryVoltage = read_sensors->battery_voltage();
 
-  Serial.print("Corrente: ");
+  Serial.print("Corrente PV-BAT: ");
   Serial.print(BatteryCurrent);
-  Serial.print("    Tensao: ");
+  Serial.print("    Tensao BAT: ");
   Serial.println(BatteryVoltage);
   Serial.print("    duty: ");
   Serial.println(this->dutyCycle);
 
-  delay(50);
 
-  if(BatteryVoltage < FV * 0.9 ){
-    Serial.println("bulk_stage");
-    bulk_stage();
-  }
-  else if((BatteryVoltage <= AV* 1.1 && BatteryVoltage >= AV* 0.9) && BatteryCurrent > TC){
-    Serial.println("absorption_stage");
-    absorption_stage();
-  }
-  else if((BatteryVoltage <= FV* 1.1 && BatteryVoltage >= FV* 0.9) && BatteryCurrent <= TC){
-    Serial.println("float_stage");
-    float_stage();
-  }
+      delay(50);
+
+
+  
+    if(BatteryVoltage < AV * 0.9 ||  BatteryCurrent == 0){
+      Serial.println("bulk_stage");
+      bulk_stage();
+    }
+    
+    else if((BatteryVoltage <= AV* 1.1 && BatteryVoltage >= AV* 0.9 ) && (BatteryCurrent > TC ) ){
+      Serial.println("absorption_stage");
+      absorption_stage();
+    }
+    else if((BatteryVoltage <= AV* 1.1 && BatteryVoltage >= AV* 0.9 ) && (BatteryCurrent <= TC )){
+      Serial.println("float_stage");
+      float_stage();
+    }
+    
+    else{
+      Serial.println("Não precisa carregar");
+      this->dutyCycle = 0 ;
+      this->changeDutyCycle();
+    }
 }
 
 void BatteryControl::load_connection(){
-  float BatteryVoltage = read_sensors->battery_voltage();
+  float BatteryVoltage,PV_Voltage,BatLoadCurrent;
+  BatteryVoltage = read_sensors->battery_voltage();
+  BatLoadCurrent = read_sensors->battery_current();
+  PV_Voltage = read_sensors->pv_voltage();
+  Serial.print("    Tensao PV: ");
+  Serial.println(PV_Voltage);
+  
+  Serial.print("    Corrente BAT-LOAD: ");
+  Serial.print(BatLoadCurrent);
+  
 
-  if(BatteryVoltage < LDV){
+  if(BatteryVoltage < LDV || BatLoadCurrent >= LDC){
+    Serial.println("DESCONECTANDO CARGA!");
     digitalWrite(S2_Pin, HIGH); // Corta a alimentação da carga em S2
+    delay(1000);
   }
   else if(BatteryVoltage > LRV){
     digitalWrite(S2_Pin, LOW); // Reconecta a carga em S2

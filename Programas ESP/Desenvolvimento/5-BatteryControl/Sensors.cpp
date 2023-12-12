@@ -20,9 +20,17 @@ void Sensors::INA_init(){ // Initialize current sensor
 
   // To use a slightly lower 32V, 1A range (higher precision on amps):
   //sensor.setCalibration_32V_1A();
+
+  // To use a slightly lower 32V, 2A range (higher precision on amps):
+  //sensor.setCalibration_32V_2A();
+
+  
   // Or to use a lower 16V, 400mA range (higher precision on volts and amps):
-  _pv_sensor.setCalibration_16V_400mA();
-  _bat_sensor.setCalibration_16V_400mA();
+//  _pv_sensor.setCalibration_16V_400mA();
+//  _bat_sensor.setCalibration_16V_400mA();
+
+  _pv_sensor.setCalibration_32V_2A();
+  _bat_sensor.setCalibration_32V_2A();
 }
 
 float Sensors::read_current(Adafruit_INA219 &sensor){
@@ -48,8 +56,12 @@ float Sensors::read_voltage(int pin){
     ADC_value = analogRead(pin);
     float reading = (ADC_value*(V_ref/4095));
 //    voltage +=  -0.142766377622467*reading*reading + 5.105738613083325*reading + 0.2856480236739929;
-    voltage += 5 * reading + 0.8;
-  }
+      voltage += 5 * reading;
+      if(reading>0){
+        voltage += 0.8;
+      }
+    }
+  
   voltage = voltage/mean_number;
   
   return voltage;

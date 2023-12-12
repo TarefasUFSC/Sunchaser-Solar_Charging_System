@@ -18,11 +18,13 @@ class BatteryControl {
         const int S2_Pin = 26; // 26 corresponds to GPIO26
 
         // constants definitions (pontos de ajuste)
-        const float AV = 11.5;  // Absorption Voltage (14.4 V) - para a de teste é 12.6 (litio)
+        const float AV = 12;  // Absorption Voltage (14.4 V) - para a de teste é 12.6 (litio)
         const float TC = 22;  // Threshold Current in mA (250mA)
         const float FV = 10;  // Float Voltage (13.5 V)
         const float LDV = 9; // Load Disconnect Voltage
         const float LRV = 11; // Load Reconnect Voltage
+        
+        const float LDC = 1100; // Load Disconnect Current
 
         Sensors* read_sensors;
 
