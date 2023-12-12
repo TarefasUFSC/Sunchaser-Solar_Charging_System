@@ -38,16 +38,26 @@ void BatteryControl::PWM_init(){
   ledcSetup(PWM_Channel, freq, resolution); // Configure PWM functionalitites
   ledcAttachPin(PWM_Pin, PWM_Channel); // Attach the channel to the GPIO to be controlled
 }
+void BatteryControl::changeDutyCycle(){
+  if(this->dutyCycle>255){
+    this->dutyCycle = 255;
+  }
+   if(this->dutyCycle<0){
+    this->dutyCycle = 0;
+  }
+  ledcWrite(PWM_Channel, this->dutyCycle); // Corrente máxima Isc, duty cycle = 1 (255)
+
+  
+  Serial.print("dutyCycle: ");
+  Serial.println(this->dutyCycle);
+}
 
 void BatteryControl::bulk_stage(){
   this->dutyCycle = 255;
-  ledcWrite(PWM_Channel, this->dutyCycle); // Corrente máxima Isc, duty cycle = 1 (255)
+  this->changeDutyCycle();
 }
 
-void BatteryControl::absorption_stage(){ // tentar igualar a tensão lida com AV
-  float BatteryVoltage = read_sensors->battery_voltage();
-  float error = BatteryVoltage - AV;
-
+void BatteryControl::check_error(float error){
   if(error>0){
     this->dutyCycle --; // Diminui o duty cycle em 1 para diminuir a tensão de recarga
   }
@@ -55,10 +65,20 @@ void BatteryControl::absorption_stage(){ // tentar igualar a tensão lida com AV
     this->dutyCycle ++; // Aumenta o duty cycle em 1 para aumentar a tensão de recarga
   }
   
-  Serial.print("dutyCycle: ");
-  Serial.println(this->dutyCycle);
 
-  ledcWrite(PWM_Channel, this->dutyCycle);  
+  
+  Serial.printf("Error: %f\n", error);
+}
+
+void BatteryControl::absorption_stage(){ // tentar igualar a tensão lida com AV
+  float BatteryVoltage = read_sensors->battery_voltage();
+  float error = BatteryVoltage - AV;
+
+  this->check_error(error);
+  
+
+  this->changeDutyCycle();
+   
 }
 
 // Tensão do banco de baterias é reduzida e mantida regulada no patamar da tensão de flutuação (FV)
@@ -66,40 +86,36 @@ void BatteryControl::float_stage(){
   float BatteryVoltage = read_sensors->battery_voltage();
   float error = FV - BatteryVoltage;
 
-  if( error > 0){
-    this->dutyCycle ++; // Aumenta o duty cycle em 1 para aumentar a tensão de recarga
-  }
-  else if( error < 0){
-    this->dutyCycle --; // Diminui o duty cycle em 1 para diminuir a tensão de recarga
-  }
   
-  Serial.print("dutyCycle: ");
-  Serial.println(this->dutyCycle);
+  this->check_error(error);
+  
 
-  ledcWrite(PWM_Channel, this->dutyCycle);
+  this->changeDutyCycle();
 }
 
 void BatteryControl::charging_control(){
   float BatteryCurrent, BatteryVoltage;
-  BatteryCurrent = read_sensors->battery_current();
+  BatteryCurrent = read_sensors->pv_current();
   BatteryVoltage = read_sensors->battery_voltage();
 
   Serial.print("Corrente: ");
   Serial.print(BatteryCurrent);
   Serial.print("    Tensao: ");
   Serial.println(BatteryVoltage);
+  Serial.print("    duty: ");
+  Serial.println(this->dutyCycle);
 
-  delay(500);
+  delay(50);
 
-  if(BatteryVoltage < AV && BatteryCurrent > TC){
+  if(BatteryVoltage < FV * 0.9 ){
     Serial.println("bulk_stage");
     bulk_stage();
   }
-  else if(BatteryVoltage >= AV && BatteryCurrent > TC){
+  else if((BatteryVoltage <= AV* 1.1 && BatteryVoltage >= AV* 0.9) && BatteryCurrent > TC){
     Serial.println("absorption_stage");
     absorption_stage();
   }
-  else if(BatteryVoltage < AV && BatteryCurrent <= TC){
+  else if((BatteryVoltage <= FV* 1.1 && BatteryVoltage >= FV* 0.9) && BatteryCurrent <= TC){
     Serial.println("float_stage");
     float_stage();
   }
@@ -117,6 +133,12 @@ void BatteryControl::load_connection(){
 }
 
 void BatteryControl::battery_loop(){
+  if(!started){
+    this->dutyCycle = 255;
+    this->changeDutyCycle();
+    delay(500);
+    started = true;
+  }
   charging_control();
   load_connection();
 }
