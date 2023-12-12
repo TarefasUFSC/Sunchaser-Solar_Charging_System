@@ -4,19 +4,20 @@ import { HorizontalList } from '../components/components';
 import { ESP32Context } from '../../App'; // Importar o contexto
 
 function Home() {
+  const { batVolt, solarBatAmp, batLoadAmp, reloadData } = useContext(ESP32Context);
+  const flag = batVolt.length && solarBatAmp.length && batLoadAmp.length
+  var datetime;
 
-  function date(datetime, opt){
+  function date(datetime){
     let data = datetime.split('T')[0].replaceAll('-', '/')
     let time = datetime.split('T')[1].split('-')[0]
     return [data, time]
   }
 
-  const { batVolt, solarBatAmp, batLoadAmp, reloadData } = useContext(ESP32Context);
-  let datetime = date(batVolt[batVolt.length-1].datetime)
-  
+  if (flag) datetime = date(batVolt[batVolt.length-1].datetime)
   return (
     <ScrollView>
-      {batVolt.length && solarBatAmp.length && batLoadAmp.length ?
+      {flag ?
         (<>
           <View >
             <HorizontalList Variavel="Data" Unidade={datetime[0]} Input={false} />

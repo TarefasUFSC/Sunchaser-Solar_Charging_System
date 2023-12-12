@@ -7,7 +7,6 @@ import { HorizontalList, RoundButton } from '../components/components';
 import { getSettings, setSettings } from '../routes/routes';
 
 function Settings({ navigation }) {
-  data = /*getSettings().settings*/[1, 2, 3];
   const [readingInterval, setReadingInterval] = useState('');
   const [cacheMaxSize, setCacheMaxSize] = useState('');
   const [ltmMaxSize, setLtmMaxSize] = useState('');
@@ -27,7 +26,6 @@ function Settings({ navigation }) {
     }
     axios.put('http://192.168.1.1/settings', data)
       .then(response => {
-        console.log('Resposta: ', response.data);
         alert('Configurações enviadas');
         setReadingInterval(parseInt(leitura))
         setCacheMaxSize(parseInt(envio))
@@ -42,14 +40,9 @@ function Settings({ navigation }) {
   function getSettings() {
     axios.get('http://192.168.1.1/settings')
       .then(response => {
-        console.log(response.data);
-
-        console.log(response.data['readingInterval'], response.data['cacheMaxSize'], response.data['ltmMaxSize']);
         setReadingInterval(parseInt(response.data['readingInterval']))
         setCacheMaxSize(parseInt(response.data['cacheMaxSize']))
         setLtmMaxSize(parseInt(response.data['ltmMaxSize']))
-
-        console.log(response.data['readingInterval'], cacheMaxSize, ltmMaxSize);
       })
       .catch(error => {
         console.error('Erro na chamada GET: ', error);

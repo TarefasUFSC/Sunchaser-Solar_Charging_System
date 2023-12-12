@@ -19,18 +19,19 @@ const App = () => {
   const [batLoadAmp, setBatLoadAmp] = useState([]);
   const [reloadDataFlag, setReloadDataFlag] = useState(false);
   const [isBootingUp, setIsBootingUp] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     reloadData();
     setIsBootingUp(false);
   }, []);
-
   // Este useEffect será executado após a atualização dos estados
+
   useEffect(() => {
     if (!isBootingUp) {
-      console.log("Estados atualizados", { batLoadAmp, batVolt, solarBatAmp });
 
       getData();
+      setIsLoading(false);
     }
   }, [reloadDataFlag]);
 
@@ -51,27 +52,22 @@ const App = () => {
       "solar_bat": 0
     }
     const url = "http://192.168.1.1/" + type + "?page=" + page
-    console.log("url: ", url);
     await axios.get(url)
       .then(response => {
-        console.log("deu bom na page ", page);
         data["page"] = response.data['page']
         data["total"] = response.data['total']
         data["items_per_page"] = response.data['qtd_per_page']
         data["bat_volt"] = (response.data['bat_volt']);
         data["bat_load"] = (response.data['bat_load_amp'])
         data["solar_bat"] = (response.data['sol_bat_amp'])
-        // console.log(pg, total, items_per_page, bat_volt, bat_load, solar_bat);
       })
       .catch(error => {
         console.error('Erro na chamada GET: ', error.data);
-        // setCache({ "error": error })
       });
     return data
   }
 
   async function loadData(type) {
-    console.log("Pegando o ", type);
     let data = await fetchData(type, 1)
     // append das listas nas variavei
     let page = parseInt(data["page"])
@@ -81,16 +77,13 @@ const App = () => {
     let bat_load = data["bat_load"]
     let solar_bat = data["solar_bat"]
 
-    console.log(page, total, items_per_page, bat_volt, bat_load, solar_bat);
     if (page > 0) {
-      console.log("Leu");
       setBatLoadAmp(currentBatLoadAmp => currentBatLoadAmp.concat(bat_load));
       setBatVolt(currentBatVolt => currentBatVolt.concat(bat_volt));
       setSolarBatAmp(currentSolarBatAmp => currentSolarBatAmp.concat(solar_bat));
 
       let pages_needed = total / (items_per_page * page)
       while (pages_needed > page) {
-        console.log("PRECISO DE MAIS PAGINASSSS");
         page = page + 1;
         data = await fetchData(type, page)
         // append das listas nas variavei
@@ -115,7 +108,6 @@ const App = () => {
   async function getData() {
     await loadData('cache')
     await loadData('ltm')
-
   };
   const espContextValue = {
     batVolt,
@@ -177,7 +169,7 @@ const App = () => {
         </Tab.Navigator>
         </NavigationContainer>
       {/* Modal de carregamento */}
-      {isBootingUp && (
+      {isLoading && (
         <Modal transparent={true} animationType="fade">
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>

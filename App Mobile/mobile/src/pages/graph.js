@@ -23,7 +23,6 @@ function Graph() {
 			}
 			return dt;
 		})
-		console.log(newChartData);
 		setChartData(newChartData)
 	}
 
@@ -53,7 +52,7 @@ function Graph() {
 				</View>
 				{chartData ?
 					<View style={styles.chartContainer}>
-						<ScrollView horizontal><Chart data={chartData} /></ScrollView>
+						<ScrollView horizontal><Chart data={chartData} opt={selectedOption} /></ScrollView>
 					</View> :
 					<Text>Sem Dados</Text>}
 			</View>
