@@ -17,7 +17,6 @@ function Settings({ navigation }) {
   }, []);
 
 
-
   function setSettings(leitura, envio, dias) {
     const data = {
       "readingInterval": parseInt(leitura),
@@ -38,7 +37,7 @@ function Settings({ navigation }) {
   }
 
   function getSettings() {
-    axios.get('http://192.168.1.1/settings')
+    let data = axios.get('http://192.168.1.1/settings')
       .then(response => {
         setReadingInterval(parseInt(response.data['readingInterval']))
         setCacheMaxSize(parseInt(response.data['cacheMaxSize']))
@@ -52,6 +51,7 @@ function Settings({ navigation }) {
       });
     return data;
   }
+  
   return (
     <View style={{ backgroundColor: 'white', flex: 1 }}><ScrollView>
       {readingInterval != null && cacheMaxSize != null && ltmMaxSize != null ?
