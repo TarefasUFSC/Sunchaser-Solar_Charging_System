@@ -13,7 +13,7 @@ void Sensors::INA_init(){ // Initialize current sensor
     Serial.println("Failed to find battery_ina219 chip");
     while (1) { delay(10); }
   }
-   if (! _pv_sensor.begin()) {
+if (! _pv_sensor.begin()) {
      Serial.println("Failed to find pv_ina219 chip");
      while (1) { delay(10); }
    }
