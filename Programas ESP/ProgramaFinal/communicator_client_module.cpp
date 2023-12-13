@@ -15,6 +15,7 @@ void Communicator::reconnect_client()
     }
     else
     {
+        this->_battery_controller->stopCharging();
         this->_setup_wifi_client();
         delay(100);
         this->_mqtt_reconnect();
@@ -40,6 +41,8 @@ void Communicator::_reconnect_wifi()
         while (WiFi.status() != WL_CONNECTED)
         {
             delay(500);
+            
+          this->_battery_controller->stopCharging();
             Serial.print(".");
         }
         Serial.println("\nConectado!");

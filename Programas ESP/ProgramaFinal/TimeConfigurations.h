@@ -12,7 +12,7 @@ private:
 public:
     TimeConfigurations()
     {
-        ReadingInterval = 1; // 1 hour
+        ReadingInterval = 1; // 1 hour (60)
         CacheMaxSize = 5;    // 1 day
         LTMazSize = 720;      // 1 month
     };

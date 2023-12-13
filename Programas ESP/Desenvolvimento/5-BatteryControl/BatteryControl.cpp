@@ -35,6 +35,7 @@ BatteryControl::BatteryControl(Sensors* sensors){
 void BatteryControl::PWM_init(){
   pinMode(S2_Pin, OUTPUT);
   
+  
   ledcSetup(PWM_Channel, freq, resolution); // Configure PWM functionalitites
   ledcAttachPin(PWM_Pin, PWM_Channel); // Attach the channel to the GPIO to be controlled
 }

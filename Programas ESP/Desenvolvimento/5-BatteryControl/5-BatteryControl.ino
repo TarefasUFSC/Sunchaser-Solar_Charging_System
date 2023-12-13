@@ -9,9 +9,7 @@ BatteryControl battery_controller(&sensors);
 void setup() {
   // Open serial communications and wait for port to open:
   Serial.begin(115200);
-  while (!Serial) {
-    ; // Wait for serial port to connect. Needed for native USB port only
-  }
+  
 
   sensors.INA_init();
   battery_controller.PWM_init();

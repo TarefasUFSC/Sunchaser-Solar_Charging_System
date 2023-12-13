@@ -25,6 +25,8 @@ void Communicator::_mqtt_reconnect()
             return;
         }
         Serial.print("Attempting MQTT connection...");
+        
+        this->_battery_controller->stopCharging();
         // Attempt to connect
         if (this->_mqtt_client.connect("ESP32Client"))
         {

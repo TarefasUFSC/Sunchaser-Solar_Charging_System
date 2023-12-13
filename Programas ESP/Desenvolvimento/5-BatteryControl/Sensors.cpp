@@ -3,20 +3,25 @@
 Sensors::Sensors(Adafruit_INA219 &bat, Adafruit_INA219 &pv){
   _bat_sensor = bat;
   _pv_sensor = pv;
+  
 }
 
 void Sensors::INA_init(){ // Initialize current sensor
   // Initialize the INA219.
   // By default the initialization will use the largest range (32V, 2A).  However
   // you can call a setCalibration function to change this range.
-  if (! _bat_sensor.begin()) {
-    Serial.println("Failed to find Battery INA219 chip");
-    while (1) { delay(10); }
-  }
-  if (! _pv_sensor.begin()) {
-    Serial.println("Failed to PV find INA219 chip");
-    while (1) { delay(10); }
-  }
+//  if (! _bat_sensor.begin()) {
+//    Serial.println("Failed to find Battery INA219 chip");
+//    while (1) { delay(10); }
+//  }
+//  if (! _pv_sensor.begin()) {
+//    Serial.println("Failed to PV find INA219 chip");
+//    while (1) { delay(10); }
+//  }
+
+  
+  pinMode(this->_pv_voltage_pin, INPUT);
+  pinMode(this->_bat_voltage_pin, INPUT);
 
   // To use a slightly lower 32V, 1A range (higher precision on amps):
   //sensor.setCalibration_32V_1A();
