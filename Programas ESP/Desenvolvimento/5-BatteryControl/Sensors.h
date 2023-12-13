@@ -10,7 +10,7 @@ class Sensors {
         Adafruit_INA219 _pv_sensor;
         Adafruit_INA219 _bat_sensor;
         int _pv_voltage_pin = 34;
-        int _bat_voltage_pin = 35;
+        int _bat_voltage_pin = 39;
         float read_current(Adafruit_INA219 &sensor);
         float read_voltage(int pin);
     public:

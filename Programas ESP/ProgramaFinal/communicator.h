@@ -10,6 +10,8 @@
 #include <ESPDateTime.h>
 
 #include "SaveToFlash.h"
+#include "TimeConfigurations.h"
+#include "BatteryControl.h"
 
 #define JSON_BATTERY_VOLTAGE "bat_volt"
 #define JSON_SOLAR_BAT_CURRENT "sol_bat_amp"
@@ -39,10 +41,12 @@ private:
     WiFiClient _esp_client;
     PubSubClient _mqtt_client;
     SaveToFlash *_files;
+    TimeConfigurations *_time_configs;
+    BatteryControl *_battery_controller;
 
 public:
     Communicator();
-    void init(SaveToFlash *files);
+    void init(SaveToFlash *files, TimeConfigurations *configs, BatteryControl* battery_controller);
     void attach_interruption();
     void interrupt_handler();
     void check_flags();
@@ -51,6 +55,7 @@ public:
 
     void setup_datetime();
     bool check_interruption_flag();
+    bool isServer();
     void reconnect_client();
     void sleep();
     bool send_data_to_server(Readings_Lists readings);
@@ -72,6 +77,7 @@ private:
     void _handle_get_settings();
     void _handle_post_request_new_reading();
     void _handle_put_change_settings();
+    void _handle_check_connection();
 
     void _mqtt_reconnect();
     void _setup_mqtt();

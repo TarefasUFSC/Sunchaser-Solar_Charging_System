@@ -5,6 +5,7 @@ void Communicator::sleep()
     // desliga o wifi para economizar energia
     WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);
+    delay(1000);
 }
 void Communicator::reconnect_client()
 {
@@ -14,6 +15,7 @@ void Communicator::reconnect_client()
     }
     else
     {
+        this->_battery_controller->stopCharging();
         this->_setup_wifi_client();
         delay(100);
         this->_mqtt_reconnect();
@@ -39,6 +41,8 @@ void Communicator::_reconnect_wifi()
         while (WiFi.status() != WL_CONNECTED)
         {
             delay(500);
+            
+          this->_battery_controller->stopCharging();
             Serial.print(".");
         }
         Serial.println("\nConectado!");
@@ -49,7 +53,6 @@ void Communicator::_reconnect_wifi()
         Serial.print("MAC: ");
         Serial.println(WiFi.macAddress());
 
-        this->mac_address = WiFi.macAddress();
     }
 }
 void Communicator::_setup_wifi_client()

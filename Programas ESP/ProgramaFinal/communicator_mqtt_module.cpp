@@ -18,13 +18,15 @@ void Communicator::_mqtt_reconnect()
     // Loop until we're reconnected
     while (!this->_mqtt_client.connected())
     {
-        if (this->check_interruption_flag())
+        if (this->check_interruption_flag() || this->isServer())
         {
             Serial.println("Interrupção acionada, vou desistir de conectar com o broker");
             this->interrupt_handler();
             return;
         }
         Serial.print("Attempting MQTT connection...");
+        
+        this->_battery_controller->stopCharging();
         // Attempt to connect
         if (this->_mqtt_client.connect("ESP32Client"))
         {
@@ -50,9 +52,7 @@ void Communicator::_mqtt_subscribe(const char *topic)
 
 bool Communicator::_mqtt_publish(const char *topic, const char *message)
 {
-    Serial.print("Enviando: ");
-    Serial.println(message);
-    Serial.print("Para: ");
+    Serial.print("Enviando Para: ");
     Serial.println(topic);
     // verifica se tem conexão
     if (!this->_mqtt_client.connected())
@@ -83,11 +83,11 @@ bool Communicator::send_data_to_server(Readings_Lists readings)
     {
         if ((readings.BatteryLoadCurrent[i].isValid!=1) || (readings.BatteryVoltage[i].isValid!=1) || (readings.PVBatteryCurrent[i].isValid!=1))
         {
-          Serial.println("Os dados são invalidos");
-          Serial.printf("Erro ao enviar os dados de:\nsol_bat_amp: isValid: %d, value: %f, datetime: %s\nbat_load_amp: isValid: %d, value: %f, datetime: %s\nbat_volt: isValid: %d, value: %f, datetime: %s\n",
-                    readings.PVBatteryCurrent[i].isValid, readings.PVBatteryCurrent[i].value, readings.PVBatteryCurrent[i].datetime,
-                    readings.BatteryLoadCurrent[i].isValid, readings.BatteryLoadCurrent[i].value, readings.BatteryLoadCurrent[i].datetime,
-                    readings.BatteryVoltage[i].isValid, readings.BatteryVoltage[i].value, readings.BatteryVoltage[i].datetime);
+//          Serial.println("Os dados são invalidos");
+//          Serial.printf("Erro ao enviar os dados de:\nsol_bat_amp: isValid: %d, value: %f, datetime: %s\nbat_load_amp: isValid: %d, value: %f, datetime: %s\nbat_volt: isValid: %d, value: %f, datetime: %s\n",
+//                    readings.PVBatteryCurrent[i].isValid, readings.PVBatteryCurrent[i].value, readings.PVBatteryCurrent[i].datetime,
+//                    readings.BatteryLoadCurrent[i].isValid, readings.BatteryLoadCurrent[i].value, readings.BatteryLoadCurrent[i].datetime,
+//                    readings.BatteryVoltage[i].isValid, readings.BatteryVoltage[i].value, readings.BatteryVoltage[i].datetime);
            continue;
         }
         if(!this->send_data_to_server(readings.PVBatteryCurrent[i], readings.BatteryLoadCurrent[i], readings.BatteryVoltage[i])){
@@ -109,27 +109,27 @@ String convertReadingToJsonString(Reading reading)
 }
 
 bool Communicator::send_data_to_server(Reading sol_bat_amp, Reading bat_load_amp, Reading bat_volt)
-{
-  
-   
-
-    
+{ 
+  if(this->check_interruption_flag() || this->isServer()){
+    return false;
+  }
   this->_mqtt_reconnect();
         delay(100);
         this->_mqtt_loop();
     // cria o json no formato que o servidor espera
     // {"version":4, "<type>":<value>, "datetime":"<datetime_measurement>"}
     DynamicJsonDocument doc(2048);
-    doc["version"] = 4;
+    doc["version"] = 20;
 
-    doc[JSON_SOLAR_BAT_CURRENT] = convertReadingToJsonString(sol_bat_amp);
-    doc[JSON_BATTERY_VOLTAGE] = convertReadingToJsonString(bat_volt);
-    doc[JSON_BAT_LOAD_CURRENT] = convertReadingToJsonString(bat_load_amp);
+    doc[JSON_SOLAR_BAT_CURRENT] = sol_bat_amp.value;
+    doc[JSON_BATTERY_VOLTAGE] = bat_volt.value;
+    doc[JSON_BAT_LOAD_CURRENT] = bat_load_amp.value;
+    doc["datetime"] = bat_volt.datetime;
 //    doc["amp"] = 1/; // isso aqui tem que tirar depois pq o codigo do eduardo ta bugado e eu não consigo remover isso do projeto
 
     String json;
     serializeJson(doc, json);
-    Serial.println(json);
+//    Serial.println(json);
     // envia o json para o servidor
     String topic = "sensor/" + this->mac_address + "/out";
     Serial.println(topic);
