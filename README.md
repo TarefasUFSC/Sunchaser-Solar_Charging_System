@@ -20,6 +20,7 @@ O sistema é projetado para operar em locais remotos, onde a estabilidade da con
 Continue lendo para uma visão detalhada da implementação do projeto, incluindo instruções de montagem de hardware, configuração de software, e operação do sistema.
 
 ### Visão de Alto Nível do Sistema
+
 ![Diagrama Alto Nivel](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/alto_nivel.png)
 
 ## Estrutura de Arquivos
@@ -47,78 +48,16 @@ O projeto está organizado em diretórios que separam cada componente e fase de 
 │       │       └── routes.js
 │       └── yarn.lock
 ├── Documentação
-│   ├── Cronograma
-│   │   ├── agosto.png
-│   │   ├── outubro.png
-│   │   └── setembro.png
-│   ├── Diagramas
-│   │   ├── alto_nivel_comentado.jpg
-│   │   ├── alto_nivel.png
-│   │   ├── circuito_eletrico_controle.png
-│   │   ├── circuito_eletrico_reguladores.png
-│   │   ├── circuito_eletrico_sensores.png
-│   │   ├── circuito_pcb.png
-│   │   ├── Diagrama de Alto Nivel.drawio
-│   │   ├── diagrama_memoria_esp_bluetooth.png
-│   │   ├── diagrama_memoria_esp_medicoes.png
-│   │   ├── diagrama_memoria_esp.png
-│   │   ├── diagrama_memoria_esp_servidor.png
-│   │   ├── fluxograma_app.png
-│   │   ├── fluxograma_esp_bluetooth.png
-│   │   ├── fluxograma_esp_controle.png
-│   │   ├── Fluxograma ESP.pdf
-│   │   ├── Fluxograma ESP.png
-│   │   ├── fluxograma_esp_principal.png
-│   │   ├── fluxograma_esp_wifi.png
-│   │   ├── tela1.png
-│   │   ├── tela2.png
-│   │   ├── tela3.png
-│   │   └── tela4.png
-│   ├── Planejamento
-│   │   ├── Diagrama do Projeto (alto nivel, sistema todo).drawio
-│   │   └── Diagrama do Projeto (alto nivel, sistema todo).jpg
-│   ├── Relatorios
-│   │   ├── 01 - Cronograma de atividades PSU - Sunchaser - Agosto_final.pdf
-│   │   ├── 02 - Cronograma de atividades PSU - Sunchaser - Setembro_final.pdf
-│   │   ├── 03 - Cronograma de atividades PSU - Sunchaser - Outubro_final.pdf
-│   │   ├── Cronograma 01 de atividades PSU - Sunchaser.pdf
-│   │   ├── images
-│   │   ├── Revisao_de_Literatura-Controle_de_Carga_de_Bateria_com_Placa_Voltaica.pptx
-│   │   ├── RFS_MR_PSU_Relatorio_Sunchaser_ControleDeCargaDeBateriaComPlacaFotovoltaica-Agosto.pdf
-│   │   ├── RFS_MR_PSU_Relatorio_Sunchaser_ControleDeCargaDeBateriaComPlacaFotovoltaica-Setembro.pdf
-│   │   └── Version-Agosto
-│   │       ├── 01 - Cronograma de atividades PSU - Sunchaser - Agosto_final.pdf
-│   │       ├── 02 - Cronograma de atividades PSU - Sunchaser - Setembro_final.pdf
-│   │       ├── 03 - Cronograma de atividades PSU - Sunchaser - Outubro_final.pdf
-│   │       ├── Controle-de-Carga-de-Bateria-com-Placa-Voltaica.pptx
-│   │       ├── Cronograma 01 de atividades PSU - Sunchaser.pdf
-│   │       └── RFS_MR_PSU_RelatorioRevisaoRapida_Sunchaser_ControleDeCargaDeBateriaComPlacaFotovoltaica-Agosto.pdf
-│   └── Revisão de Lietratura
-│       ├── Artigos
-│       │   ├── *.pdf
-│       └── Rayyan
-│           ├── 1
-│           │   ├── articles.csv
-│           │   └── customizations_log.csv
-│           ├── articles-busca-perna.txt
-│           ├── articles-busca-ralph.txt
-│           ├── articles.csv
-│           └── customizations_log.csv
-├── logo
-│   ├── Default_Contemporary_sleek_design_logo_for_SUNFLOWER_SOLAR_TEC_1_13d49b1d-7ded-48dd-b5ec-6c5b1a076d15_1.jpg
-│   ├── Default_Contemporary_sleek_design_logo_for_SUNFLOWER_SOLAR_TEC_1_13d49b1d-7ded-48dd-b5ec-6c5b1a076d15_1.psd
-│   ├── Firefly Inpaint 20230814124036.png
-│   ├── Firefly Inpaint 20230814124326.png
-│   ├── logo.png
-│   └── T1550095-Circular_photovoltaic_or_solar_cell_.jpg
+│   ├── Cronograma/
+│   ├── Diagramas/
+│   ├── Planejamento/
+│   ├── Relatorios/
+│   └── Revisão de Lietratura/
+├── logo/
 ├── Placa de Controle
 │   ├── Controle de Carga PWM
 │   │   ├── ESP32-Pinout.jpg
-│   │   ├── hardware
-│   │   │   ├── controle_de_carga_pwm.pdsprj
-│   │   │   ├── controle_de_carga_pwm.pdsprj.DESKTOP-IE6HTQN.Ralph.workspace
-│   │   │   └── Project Backups
-│   │   │       ├── ...
+│   │   ├── hardware/ -> (Antigo)
 │   │   ├── hardware proteus 8.9
 │   │   │   ├── controle_PWM.PDF
 │   │   │   ├── controle_PWM.pdsprj
@@ -158,15 +97,7 @@ O projeto está organizado em diretórios que separam cada componente e fase de 
 │   │   │       │   └── reguladores_top_silk.pdf
 │   │   │       ├── reguladores.pdsprj
 │   │   ├── HJR-3FF_TIANBOGANGLIANELECTRONICS.pdf
-│   │   ├── imagens dos circuitos
-│   │   │   ├── circuito da placa do esp e sensores.png
-│   │   │   ├── circuito do controle do switch da carga.png
-│   │   │   ├── circuito reguladores.png
-│   │   │   ├── circuto placa all.png
-│   │   │   ├── pcb controle do switch da carga.png
-│   │   │   ├── pcb placa all.png
-│   │   │   ├── pcb reguladores.png
-│   │   │   └── pc da placa do esp e sensores.png
+│   │   ├── imagens dos circuitos/
 │   │   ├── teste controle MOSFETs
 │   │   │   ├── teste_controle_mosfet.pdsprj
 │   │   └── teste controle MOSFETs com optoacoplador
@@ -177,54 +108,17 @@ O projeto está organizado em diretórios que separam cada componente e fase de 
 │   ├── ESP32-DEVKITC.zip
 ├── Programas ESP
 │   ├── Desenvolvimento
-│   │   ├── 1-CurrentSensorExample
-│   │   │   └── 1-CurrentSensorExample.ino
-│   │   ├── 2-VoltageReadingExample
-│   │   │   └── 2-VoltageReadingExample.ino
-│   │   ├── 3-Current_Voltage_reading
-│   │   │   ├── 3-Current_Voltage_reading.ino
-│   │   │   ├── Sensors.cpp
-│   │   │   └── Sensors.h
-│   │   ├── 4-PWMControlExample
-│   │   │   └── 4-PWMControlExample.ino
-│   │   ├── 5-BatteryControl
-│   │   │   ├── 5-BatteryControl.ino
-│   │   │   ├── BatteryControl.cpp
-│   │   │   ├── BatteryControl.h
-│   │   │   ├── Sensors.cpp
-│   │   │   └── Sensors.h
-│   │   ├── 6-TimerInterrupt
-│   │   │   ├── 6-TimerInterrupt.ino
-│   │   │   ├── Sensors.cpp
-│   │   │   ├── Sensors.h
-│   │   │   ├── TimerInterrupt.cpp
-│   │   │   └── TimerInterrupt.h
-│   │   ├── 7-BLE_server
-│   │   │   ├── 7-BLE_server.ino
-│   │   │   ├── BLE_Server.cpp
-│   │   │   └── BLE_Server.h
-│   │   ├── 8-LittleFS
-│   │   │   ├── 8-LittleFS.ino
-│   │   │   ├── SaveToFlash.cpp
-│   │   │   ├── SaveToFlash.h
-│   │   │   ├── TimerInterrupt.cpp
-│   │   │   └── TimerInterrupt.h
-│   │   ├── ESP-GetTime
-│   │   │   └── ESP-GetTime.ino
-│   │   ├── MainProject
-│   │   │   ├── BatteryControl.cpp
-│   │   │   ├── BatteryControl.h
-│   │   │   ├── MainProject.ino
-│   │   │   ├── SaveToFlash.cpp
-│   │   │   ├── SaveToFlash.h
-│   │   │   ├── Sensors.cpp
-│   │   │   ├── Sensors.h
-│   │   │   ├── TimeConfigurations.h
-│   │   │   ├── TimerInterrupt.cpp
-│   │   │   └── TimerInterrupt.h
-│   │   └── Wifi-Server_Client
-│   │       ├── leitura.json
-│   │       └── Wifi-Server_Client.ino
+│   │   ├── 1-CurrentSensorExample/
+│   │   ├── 2-VoltageReadingExample/
+│   │   ├── 3-Current_Voltage_reading/
+│   │   ├── 4-PWMControlExample/
+│   │   ├── 5-BatteryControl/
+│   │   ├── 6-TimerInterrupt/
+│   │   ├── 7-BLE_server/
+│   │   ├── 8-LittleFS/
+│   │   ├── ESP-GetTime/
+│   │   ├── MainProject/
+│   │   └── Wifi-Server_Client/
 │   ├── ProgramaFinal
 │   │   ├── BatteryControl.cpp
 │   │   ├── BatteryControl.h
@@ -249,12 +143,7 @@ O projeto está organizado em diretórios que separam cada componente e fase de 
 │   └── pubsubclient-master.zip
 ├── README.md
 └── Referencias que o professor deu no inicio
-    ├── Controladores PWM - LivroRLD.pdf
-    ├── Descri__o__cronograma__diagramas_e_materiais_do_projeto_de_Sistemas_Ub_quos.pdf
-    ├── MPPT
-    │   └── DIY-1kW-MPPT-Solar-Charge-Controller.pdf
-    ├── Sugestôes de Propostas - Lenon.docx
-    └── TCC André Canela - Versão Final.pdf
+    ├── *.pdf
 
 ```
 
