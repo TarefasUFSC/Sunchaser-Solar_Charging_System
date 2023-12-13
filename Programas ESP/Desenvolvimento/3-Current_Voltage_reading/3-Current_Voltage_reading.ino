@@ -25,16 +25,16 @@ void setup() {
 }
 
 void loop() {
-  float bat_current, pv_current, bat_voltage, pv_voltage;
+  float bat_current, bat_voltage, pv_voltage, pv_current;
   bat_current = sensors.battery_current();
-  pv_current = sensors.pv_current();
+   pv_current = sensors.pv_current();
   // bat_voltage = sensors.battery_voltage();
   // pv_voltage = sensors.pv_voltage();
 
   Serial.print("Battery current: ");
-  Serial.print(bat_current);
-  Serial.print("    PV current: ");
-  Serial.println(pv_current);
+  Serial.println(bat_current);
+   Serial.print("    PV current: ");
+   Serial.println(pv_current);
   // Serial.print("    Battery voltage: ");
   // Serial.print(bat_voltage);
   // Serial.print("    PV voltage: ");

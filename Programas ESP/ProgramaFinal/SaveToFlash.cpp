@@ -1,8 +1,9 @@
 #include "SaveToFlash.h"
 #include <math.h>
 
-SaveToFlash::SaveToFlash()
+SaveToFlash::SaveToFlash(TimeConfigurations *configs)
 {
+    timeConfigs = configs;
     this->n_cache_saves = 0;
     this->n_longterm_saves = 0;
 }
@@ -149,18 +150,18 @@ String SaveToFlash::readFilePage(fs::FS &fs, const char *path, int page)
     }
 
     int first_line = page * NUM_READINGS;
-    int last_line = first_line + NUM_READINGS -1;
-//    Serial.print("FL: "); Serial.println(first_line);
-//    Serial.print("LL: "); Serial.println(last_line);
+    int last_line = first_line + NUM_READINGS - 1;
+    //    Serial.print("FL: "); Serial.println(first_line);
+    //    Serial.print("LL: "); Serial.println(last_line);
     int i = first_line;
     if (!file.available())
     {
         Serial.println("File is empty");
         return "";
     }
-    while (file.available() )
+    while (file.available())
     {
-//        Serial.print(i);
+        //        Serial.print(i);
         // read a line and increment the counter
         // if the counter is in the range of the lines to be read, save the line
         String line = file.readStringUntil('\n');
@@ -172,11 +173,12 @@ String SaveToFlash::readFilePage(fs::FS &fs, const char *path, int page)
             doc["content"][i - first_line - 1] = line;
             //            Serial.printf("Colocado no JS/ON na linha %d\n", (i - first_line - 1));
         }
-        else{
-          break;
+        else
+        {
+            break;
         }
     }
-//    Serial.println("Arquivo lido");
+    //    Serial.println("Arquivo lido");
     file.close();
     String FileContent;
     serializeJson(doc, FileContent);
@@ -203,7 +205,7 @@ void SaveToFlash::writeFile(fs::FS &fs, const char *path, String message)
 
 void SaveToFlash::appendFile(fs::FS &fs, const char *path, String message)
 {
-//    Serial.printf("Appending to file: %s\r\n", path);
+    //    Serial.printf("Appending to file: %s\r\n", path);
 
     File file = fs.open(path, FILE_APPEND);
     if (!file)
@@ -252,9 +254,9 @@ String SaveToFlash::createJSON(String type, float value, String datetime, int is
     return Serial;
 }
 
-int SaveToFlash::getCachesize()
+int SaveToFlash::getMaxCacheSize()
 {
-    return cache_size;
+    return this->timeConfigs->get_CacheMaxSize();
 }
 
 int SaveToFlash::getNCacheSaves()
@@ -287,12 +289,12 @@ void SaveToFlash::saveToLongTerm()
         Readings_Lists readings = get_readings_from_cache(i);
         for (int j = 0; j < NUM_READINGS; j++)
         {
-//            Serial.printf("value: %f | datetime: %s | isValid: %d\n", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
+            //            Serial.printf("value: %f | datetime: %s | isValid: %d\n", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
 
             if (!readings.BatteryLoadCurrent[j].isValid)
             {
 
-                Serial.println("NAO TA VAAAAAAAAAAAAAALIIIIIIIIIIIIDOOOOO");
+//                Serial.println("NAO TA VAAAAAAAAAAAAAALIIIIIIIIIIIIDOOOOO");
                 break;
             }
             String JSON = createJSON("BatteryCurrent", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
@@ -312,8 +314,9 @@ void SaveToFlash::saveToLongTerm()
     deleteFile(LittleFS, "/cache/PVCurrent.dt");
     this->n_cache_saves = 0;
 
+    ;
     // verificacao de tamanho do longterm
-    if (this->n_longterm_saves > this->long_term_size)
+    if (this->n_longterm_saves > timeConfigs->get_LTMMaxSize())
     {
 
         // verifica quantas paginas tem o longterm
@@ -321,11 +324,11 @@ void SaveToFlash::saveToLongTerm()
         int qtd_pages_longterm = ceil((float)this->n_longterm_saves / (float)NUM_READINGS);
         Serial.printf("O longterm tem %d paginas\n", qtd_pages_longterm);
 
-        int items_to_delete = this->n_longterm_saves - this->long_term_size;
+        int items_to_delete = this->n_longterm_saves - timeConfigs->get_LTMMaxSize();
         Serial.printf("O longterm deve deletar %d itens\n", items_to_delete);
         int pages_to_delete = ceil((float)items_to_delete / (float)NUM_READINGS);
 
-        Serial.printf("O longterm deve deletar %d paginas, ficando com %d elementos\n", pages_to_delete, this->long_term_size);
+        Serial.printf("O longterm deve deletar %d paginas, ficando com %d elementos\n", pages_to_delete, timeConfigs->get_LTMMaxSize());
 
         // cria um arquivo temporario com as paginas que não serão deletadas
         int deleted_entries = 0;
@@ -340,10 +343,10 @@ void SaveToFlash::saveToLongTerm()
                     deleted_entries++;
                     continue;
                 }
-//                Serial.printf("value: %f | datetime: %s | isValid: %d\n", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
+                //                Serial.printf("value: %f | datetime: %s | isValid: %d\n", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
                 if (!readings.BatteryLoadCurrent[j].isValid)
                 {
-                    Serial.println("NAO TA VAAAAAAAAAAAAAALIIIIIIIIIIIIDOOOOO");
+//                    Serial.println("NAO TA VAAAAAAAAAAAAAALIIIIIIIIIIIIDOOOOO");
                     break;
                 }
                 String JSON = createJSON("BatteryCurrent", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
@@ -389,8 +392,8 @@ Readings_Lists SaveToFlash::convertReadingJSONToStruct(String batteryLoadCurrent
 
     for (int i = 0; i < NUM_READINGS; i++)
     {
-        
-//          Serial.print(i);
+
+        //          Serial.print(i);
         DynamicJsonDocument bat_load_current_reading_doc(1000);
         // Serial.println(obj_list["content"][i].as<String>());
         deserializeJson(bat_load_current_reading_doc, battery_load_current_obj_list["content"][i].as<String>());
@@ -414,15 +417,15 @@ Readings_Lists SaveToFlash::convertReadingJSONToStruct(String batteryLoadCurrent
         readings.PVBatteryCurrent[i].datetime = pv_current_reading_obj["datetime"].as<String>();
         readings.PVBatteryCurrent[i].isValid = pv_current_reading_obj["isValid"].as<int>();
     }
-    
-//          Serial.println("convertido os dados para json");
+
+    //          Serial.println("convertido os dados para json");
     return readings;
 }
 Readings_Lists SaveToFlash::get_readings_from_cache(int page)
 {
     Readings_Lists readings;
-    Serial.println("files cache");
-    Serial.println(page);
+//    Serial.println("files cache");
+//    Serial.println(page);
     String battery_load_current = readFilePage(LittleFS, "/cache/BatCurrent.dt", page);
     String battery_voltage = readFilePage(LittleFS, "/cache/BatVoltage.dt", page);
     String pv_battery_current = readFilePage(LittleFS, "/cache/PVCurrent.dt", page);
@@ -437,8 +440,8 @@ Readings_Lists SaveToFlash::get_readings_from_longterm(int page)
     Readings_Lists readings;
 
     String battery_load_current = readFilePage(LittleFS, "/longterm/BatCurrent.dt", page);
-    Serial.print("LT");
-    Serial.println(battery_load_current);
+//    Serial.print("LT");
+//    Serial.println(battery_load_current);
     String battery_voltage = readFilePage(LittleFS, "/longterm/BatVoltage.dt", page);
     String pv_battery_current = readFilePage(LittleFS, "/longterm/PVCurrent.dt", page);
 
@@ -447,15 +450,7 @@ Readings_Lists SaveToFlash::get_readings_from_longterm(int page)
     return readings;
 }
 
-void SaveToFlash::set_newcachesize(int newSize)
+int SaveToFlash::getNLongTermSaves()
 {
-    cache_size = newSize;
-}
-
-void SaveToFlash::set_newlongterm(int newLongTerm)
-{
-    long_term_size = newLongTerm;
-}
-int SaveToFlash::getNLongTermSaves(){
-  return this->n_longterm_saves;
+    return this->n_longterm_saves;
 }
