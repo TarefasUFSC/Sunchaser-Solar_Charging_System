@@ -77,6 +77,7 @@ private:
     void _handle_get_settings();
     void _handle_post_request_new_reading();
     void _handle_put_change_settings();
+    void _handle_check_connection();
 
     void _mqtt_reconnect();
     void _setup_mqtt();

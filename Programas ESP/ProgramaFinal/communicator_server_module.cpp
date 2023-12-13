@@ -70,6 +70,8 @@ void Communicator::_setup_wifi_ap()
     this->_web_server.on("/reading", HTTP_POST, std::bind(&Communicator::_handle_post_request_new_reading, this));
     // put change settings
     this->_web_server.on("/settings", HTTP_PUT, std::bind(&Communicator::_handle_put_change_settings, this));
+    // check connection
+    this->_web_server.on("/check", HTTP_GET, std::bind(&Communicator::_handle_check_connection, this));
 
     this->_web_server.begin();
     this->is_server = true;
@@ -79,6 +81,12 @@ void Communicator::run_server()
 {
     this->_web_server.handleClient();
 }
+
+
+void Communicator::_handle_check_connection(){
+  this->_web_server.send(200, "text/plain", "conectado!");
+}
+
 
 void Communicator::_handle_get_cache()
 {

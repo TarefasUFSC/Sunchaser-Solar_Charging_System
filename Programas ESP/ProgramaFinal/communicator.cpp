@@ -13,6 +13,8 @@ void Communicator::init(SaveToFlash *files, TimeConfigurations *configs, Battery
   this->attach_interruption();
 
   this->mac_address = WiFi.macAddress();
+  Serial.print("MAC Cliente: ");
+  Serial.println(this->mac_address);
 
   this->_time_configs = configs;
 }
