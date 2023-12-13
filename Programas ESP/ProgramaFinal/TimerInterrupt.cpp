@@ -68,7 +68,7 @@ void TimerInterrupt::timer_interruption()
     time = DateTime.toISOString().c_str();
     BatteryCurrent = read_sensors->battery_current();
     BatteryVoltage = read_sensors->battery_voltage();
-    Serial.printf("Bateria: %f\n", BatteryVoltage);
+//    Serial.printf("Bateria: %f\n", BatteryVoltage);
     PVCurrent = read_sensors->pv_current();
 
     fileSystem->saveToCache(time, BatteryCurrent, BatteryVoltage, PVCurrent);

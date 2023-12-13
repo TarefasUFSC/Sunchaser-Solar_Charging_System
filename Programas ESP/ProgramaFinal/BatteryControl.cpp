@@ -52,8 +52,8 @@ void BatteryControl::changeDutyCycle()
   }
   ledcWrite(PWM_Channel, this->dutyCycle); // Corrente máxima Isc, duty cycle = 1 (255)
 
-  Serial.print("dutyCycle: ");
-  Serial.println(this->dutyCycle);
+//  Serial.print("dutyCycle: ");
+//  Serial.println(this->dutyCycle);
 }
 
 void BatteryControl::bulk_stage()
@@ -76,7 +76,7 @@ void BatteryControl::check_error(float error)
     this->dutyCycle++; // Aumenta o duty cycle em 1 para aumentar a tensão de recarga
   }
 
-  Serial.printf("Error: %f\n", error);
+//  Serial.printf("Error: %f\n", error);
 }
 
 void BatteryControl::absorption_stage()
@@ -99,33 +99,48 @@ void BatteryControl::float_stage()
 
   this->changeDutyCycle();
 }
-
+int counter_prints_bc = 0;
+int print_th = 500;
 void BatteryControl::charging_control()
 {
   float BatteryCurrent, BatteryVoltage, PV_Voltage;
   BatteryCurrent = read_sensors->pv_current();
   BatteryVoltage = read_sensors->battery_voltage();
 
-  Serial.print("Corrente PV-BAT: ");
+  counter_prints_bc++;
+  if(counter_prints_bc>print_th){
+     Serial.print("Corrente PV-BAT: ");
   Serial.print(BatteryCurrent);
   Serial.print("    Tensao BAT: ");
   Serial.println(BatteryVoltage);
   Serial.print("    duty: ");
   Serial.println(this->dutyCycle);
+  counter_prints_bc = 0;
+  }
+ 
 
 //  delay(50);
 
   if(BatteryVoltage < AV * 0.9 ||  BatteryCurrent == 0){
+    
+  if(counter_prints_bc>print_th){
       Serial.println("bulk_stage");
+  }
       bulk_stage();
     }
     
     else if((BatteryVoltage <= AV* 1.1 && BatteryVoltage >= AV* 0.9 ) && (BatteryCurrent > TC ) ){
+      
+  if(counter_prints_bc>print_th){
       Serial.println("absorption_stage");
+  }
       absorption_stage();
     }
     else if((BatteryVoltage <= AV* 1.1 && BatteryVoltage >= AV* 0.9 ) && (BatteryCurrent <= TC )){
+      
+  if(counter_prints_bc>print_th){
       Serial.println("float_stage");
+  }
       float_stage();
     }
   else
@@ -133,6 +148,12 @@ void BatteryControl::charging_control()
     Serial.println("Pontape inicial pra verificar a corrente");
     this->dutyCycle = 1;
     this->changeDutyCycle();
+  }
+
+  
+  if(counter_prints_bc>print_th){
+    counter_prints_bc = 0;
+  
   }
 }
 
@@ -142,11 +163,7 @@ void BatteryControl::load_connection()
   BatteryVoltage = read_sensors->battery_voltage();
   BatLoadCurrent = read_sensors->battery_current();
   PV_Voltage = read_sensors->pv_voltage();
-  Serial.print("    Tensao PV: ");
-  Serial.println(PV_Voltage);
 
-  Serial.print("    Corrente BAT-LOAD: ");
-  Serial.print(BatLoadCurrent);
 
   if (BatteryVoltage < LDV || BatLoadCurrent >= LDC)
   {

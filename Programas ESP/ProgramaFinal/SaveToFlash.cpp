@@ -294,7 +294,7 @@ void SaveToFlash::saveToLongTerm()
             if (!readings.BatteryLoadCurrent[j].isValid)
             {
 
-                Serial.println("NAO TA VAAAAAAAAAAAAAALIIIIIIIIIIIIDOOOOO");
+//                Serial.println("NAO TA VAAAAAAAAAAAAAALIIIIIIIIIIIIDOOOOO");
                 break;
             }
             String JSON = createJSON("BatteryCurrent", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
@@ -346,7 +346,7 @@ void SaveToFlash::saveToLongTerm()
                 //                Serial.printf("value: %f | datetime: %s | isValid: %d\n", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
                 if (!readings.BatteryLoadCurrent[j].isValid)
                 {
-                    Serial.println("NAO TA VAAAAAAAAAAAAAALIIIIIIIIIIIIDOOOOO");
+//                    Serial.println("NAO TA VAAAAAAAAAAAAAALIIIIIIIIIIIIDOOOOO");
                     break;
                 }
                 String JSON = createJSON("BatteryCurrent", readings.BatteryLoadCurrent[j].value, readings.BatteryLoadCurrent[j].datetime, readings.BatteryLoadCurrent[j].isValid);
@@ -424,8 +424,8 @@ Readings_Lists SaveToFlash::convertReadingJSONToStruct(String batteryLoadCurrent
 Readings_Lists SaveToFlash::get_readings_from_cache(int page)
 {
     Readings_Lists readings;
-    Serial.println("files cache");
-    Serial.println(page);
+//    Serial.println("files cache");
+//    Serial.println(page);
     String battery_load_current = readFilePage(LittleFS, "/cache/BatCurrent.dt", page);
     String battery_voltage = readFilePage(LittleFS, "/cache/BatVoltage.dt", page);
     String pv_battery_current = readFilePage(LittleFS, "/cache/PVCurrent.dt", page);
@@ -440,8 +440,8 @@ Readings_Lists SaveToFlash::get_readings_from_longterm(int page)
     Readings_Lists readings;
 
     String battery_load_current = readFilePage(LittleFS, "/longterm/BatCurrent.dt", page);
-    Serial.print("LT");
-    Serial.println(battery_load_current);
+//    Serial.print("LT");
+//    Serial.println(battery_load_current);
     String battery_voltage = readFilePage(LittleFS, "/longterm/BatVoltage.dt", page);
     String pv_battery_current = readFilePage(LittleFS, "/longterm/PVCurrent.dt", page);
 

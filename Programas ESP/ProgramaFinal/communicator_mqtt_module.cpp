@@ -52,9 +52,7 @@ void Communicator::_mqtt_subscribe(const char *topic)
 
 bool Communicator::_mqtt_publish(const char *topic, const char *message)
 {
-    Serial.print("Enviando: ");
-    Serial.println(message);
-    Serial.print("Para: ");
+    Serial.print("Enviando Para: ");
     Serial.println(topic);
     // verifica se tem conexão
     if (!this->_mqtt_client.connected())
@@ -85,11 +83,11 @@ bool Communicator::send_data_to_server(Readings_Lists readings)
     {
         if ((readings.BatteryLoadCurrent[i].isValid!=1) || (readings.BatteryVoltage[i].isValid!=1) || (readings.PVBatteryCurrent[i].isValid!=1))
         {
-          Serial.println("Os dados são invalidos");
-          Serial.printf("Erro ao enviar os dados de:\nsol_bat_amp: isValid: %d, value: %f, datetime: %s\nbat_load_amp: isValid: %d, value: %f, datetime: %s\nbat_volt: isValid: %d, value: %f, datetime: %s\n",
-                    readings.PVBatteryCurrent[i].isValid, readings.PVBatteryCurrent[i].value, readings.PVBatteryCurrent[i].datetime,
-                    readings.BatteryLoadCurrent[i].isValid, readings.BatteryLoadCurrent[i].value, readings.BatteryLoadCurrent[i].datetime,
-                    readings.BatteryVoltage[i].isValid, readings.BatteryVoltage[i].value, readings.BatteryVoltage[i].datetime);
+//          Serial.println("Os dados são invalidos");
+//          Serial.printf("Erro ao enviar os dados de:\nsol_bat_amp: isValid: %d, value: %f, datetime: %s\nbat_load_amp: isValid: %d, value: %f, datetime: %s\nbat_volt: isValid: %d, value: %f, datetime: %s\n",
+//                    readings.PVBatteryCurrent[i].isValid, readings.PVBatteryCurrent[i].value, readings.PVBatteryCurrent[i].datetime,
+//                    readings.BatteryLoadCurrent[i].isValid, readings.BatteryLoadCurrent[i].value, readings.BatteryLoadCurrent[i].datetime,
+//                    readings.BatteryVoltage[i].isValid, readings.BatteryVoltage[i].value, readings.BatteryVoltage[i].datetime);
            continue;
         }
         if(!this->send_data_to_server(readings.PVBatteryCurrent[i], readings.BatteryLoadCurrent[i], readings.BatteryVoltage[i])){
@@ -131,7 +129,7 @@ bool Communicator::send_data_to_server(Reading sol_bat_amp, Reading bat_load_amp
 
     String json;
     serializeJson(doc, json);
-    Serial.println(json);
+//    Serial.println(json);
     // envia o json para o servidor
     String topic = "sensor/" + this->mac_address + "/out";
     Serial.println(topic);
