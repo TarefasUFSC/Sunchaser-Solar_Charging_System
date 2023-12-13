@@ -238,38 +238,50 @@ O software do projeto é composto por várias classes, cada uma responsável por
 ## Classe BatteryControl
 
 - **Arquivos**: `BatteryControl.cpp`, `BatteryControl.h`
-- **Responsabilidade**: Esta classe gerencia a carga da bateria. Ela controla o PWM aplicado ao MOSFET para regular a tensão fornecida pela placa fotovoltaica à bateria, com o objetivo de manter a tensão da bateria em torno de 12V.
+- **Responsabilidade**: Controla o processo de carregamento da bateria ao modular a tensão fornecida pelo painel solar. Garante a manutenção da tensão da bateria nos níveis ideais para otimizar o carregamento e a vida útil da bateria.
 - **Métodos Principais**:
-  - `controlPWM()`: Ajusta o ciclo de trabalho do PWM com base na leitura atual da tensão da bateria.
-  - `readBatteryVoltage()`: Retorna a tensão atual da bateria.
-  - `readChargingCurrent()`: Mede a corrente que está carregando a bateria.
+  - `PWM_init()`: Inicializa a configuração do PWM.
+  - `battery_loop()`: Executa o loop principal de controle da bateria, ajustando o PWM conforme necessário.
+  - `check_error(float error)`: Verifica e lida com erros no sistema de carregamento.
+  - `stopCharging()`: Interrompe o processo de carregamento da bateria.
+  - `bulk_stage()`, `absorption_stage()`, `float_stage()`: Gerenciam as diferentes fases do processo de carregamento.
+  - `charging_control()`: Controle lógico para a regulação do carregamento da bateria.
+  - `load_connection()`: Gerencia a conexão e desconexão da carga da bateria.
+  - `changeDutyCycle()`: Ajusta o ciclo de trabalho do PWM para regular a tensão.
 
 ![Diagrama do Cotrole de Carga](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_controle.png)
 
 ## Classe Sensors
 
 - **Arquivos**: `Sensors.cpp`, `Sensors.h`
-- **Responsabilidade**: Encapsula a funcionalidade dos sensores INA219, realizando leituras de tensão e corrente.
+- **Responsabilidade**: Realiza a leitura da corrente e tensão da bateria e do painel solar.
 - **Métodos Principais**:
-  - `readCurrent()`: Retorna a corrente medida pelo sensor INA219.
-  - `readVoltage()`: Retorna a tensão medida pelo sensor INA219.
+  - `INA_init()`: Inicializa os sensores INA219.
+  - `battery_current()`, `pv_current()`: Retorna a corrente medida pela bateria e pelo sensor do painel solar.
+  - `battery_voltage()`, `pv_voltage()`: Retorna a tensão medida pela bateria e pelo sensor do painel solar.
+
+## Classe TimeConfigurations
+
+- **Arquivo**: `TimeConfigurations.h`
+- **Responsabilidade**: Armazena as configurações de tempo relacionadas ao intervalo de leitura, tamanho máximo do cache e memória de longo prazo.
 
 ## Classe TimerInterrupt
 
 - **Arquivos**: `TimerInterrupt.cpp`, `TimerInterrupt.h`
-- **Responsabilidade**: Gerencia as interrupções de tempo para operações periódicas, como a leitura de sensores e o controle de carga.
+- **Responsabilidade**: Gerencia as interrupções do temporizador para realizar operações periódicas.
 - **Métodos Principais**:
-  - `initializeTimer()`: Configura o timer para interromper em intervalos regulares.
-  - `handleInterrupt()`: É chamado sempre que o timer atinge o intervalo definido e executa ações periódicas.
+  - `timer_init()`: Inicializa o timer.
+  - `timer_interruption()`: Método chamado em cada interrupção do temporizador.
+  - `tryToSendCacheToServer()`: Tenta enviar dados do cache para o servidor.
 
 ## Classe SaveToFlash
 
 - **Arquivos**: `SaveToFlash.cpp`, `SaveToFlash.h`
-- **Responsabilidade**: Responsável por salvar e recuperar os dados do cache e da memória de longo prazo na memória flash do ESP32.
+- **Responsabilidade**: Gerencia o armazenamento e recuperação de dados de leituras na memória flash.
 - **Métodos Principais**:
-  - `saveToCache()`: Armazena as leituras atuais no arquivo de cache.
-  - `retrieveFromCache()`: Recupera leituras do cache.
-  - `saveToLTM()`: Move os dados do cache para a memória de longo prazo após o sucesso do envio para o MQTT.
+  - `mountLittleFS()`: Monta o sistema de arquivos LittleFS.
+  - `saveToCache()`, `saveToLongTerm()`: Salva as leituras no cache ou na memória de longo prazo.
+  - `get_readings_from_cache()`, `get_readings_from_longterm()`: Recupera leituras do cache ou da memória de longo prazo.
 
 ![Diagrama Memoria](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/diagrama_memoria_esp.png)
 
