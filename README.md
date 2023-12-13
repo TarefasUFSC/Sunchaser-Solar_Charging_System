@@ -2,7 +2,7 @@
 
 ## Introdução
 
-Este projeto foi desenvolvido como parte de um sistema ubíquo para o controle eficiente da carga de baterias de chumbo-ácido ou de lítio, utilizando uma placa fotovoltaica de 20W. O sistema emprega uma metodologia de modulação de largura de pulso (PWM) controlada por um ESP32 para regular a tensão e a corrente fornecida pela placa solar, assegurando uma tensão estável na bateria. Os dados de carregamento são monitorados e transmitidos para um Broker MQTT, integrando-se ao projeto do Pluviômetro existente. Adicionalmente, um aplicativo móvel fornece acesso local aos dados através de uma API REST.
+Este projeto foi desenvolvido como parte de um trabalho para Projeto de Sistemas Ubiquos na UFSC, para o controle eficiente da carga de baterias de chumbo-ácido ou de lítio, utilizando uma placa fotovoltaica de 20W. O sistema emprega uma metodologia de modulação de largura de pulso (PWM) controlada por um ESP32 para regular a tensão e a corrente fornecida pela placa solar, assegurando uma tensão estável na bateria. Os dados de carregamento são monitorados e transmitidos para um Broker MQTT, integrando-se ao projeto do Pluviômetro existente. Adicionalmente, um aplicativo móvel fornece acesso local aos dados através de uma API REST.
 
 O projeto é dividido em várias etapas de desenvolvimento, com testes dedicados para cada componente, seguindo princípios de orientação a objetos. Esta documentação fornece uma visão detalhada da estrutura do projeto, descrições de hardware e software, além de instruções operacionais e de diagnóstico.
 
@@ -18,6 +18,9 @@ O sistema é projetado para operar em locais remotos, onde a estabilidade da con
 - Transmitir dados acumulados para um sistema centralizado quando conectado à internet.
 
 Continue lendo para uma visão detalhada da implementação do projeto, incluindo instruções de montagem de hardware, configuração de software, e operação do sistema.
+
+### Visão de Alto Nível do Sistema
+![Diagrama Alto Nivel](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/alto_nivel.png)
 
 ## Estrutura de Arquivos
 
@@ -337,6 +340,8 @@ Os programas de teste localizados em `Programas ESP/Desenvolvimento` são fundam
 
 A pasta `Programas ESP/ProgramaFinal` contém o código-fonte consolidado que será executado no ESP32. Inclui a integração das classes desenvolvidas, a lógica de controle PWM e a comunicação com o Broker MQTT.
 
+![Funcionamento Geral](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_principal.png)
+
 # Documentação do Código
 
 O software do projeto é composto por várias classes, cada uma responsável por uma parte específica da lógica de controle e comunicação do sistema. Abaixo estão os arquivos principais e a descrição de suas responsabilidades e operações:
@@ -349,6 +354,8 @@ O software do projeto é composto por várias classes, cada uma responsável por
   - `controlPWM()`: Ajusta o ciclo de trabalho do PWM com base na leitura atual da tensão da bateria.
   - `readBatteryVoltage()`: Retorna a tensão atual da bateria.
   - `readChargingCurrent()`: Mede a corrente que está carregando a bateria.
+
+![Diagrama do Cotrole de Carga](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_controle.png)
 
 ## Classe Sensors
 
@@ -375,10 +382,15 @@ O software do projeto é composto por várias classes, cada uma responsável por
   - `retrieveFromCache()`: Recupera leituras do cache.
   - `saveToLTM()`: Move os dados do cache para a memória de longo prazo após o sucesso do envio para o MQTT.
 
+![Diagrama Memoria](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/diagrama_memoria_esp.png)
+
 ## Classe Communicator
 
 - **Arquivos**: `communicator.cpp`, `communicator.h`, `communicator_client_module.cpp`, `communicator_interruption_module.cpp`, `communicator_mqtt_module.cpp`, `communicator_server_module.cpp`
 - **Responsabilidade**: Esta classe gerencia toda a comunicação do ESP32, atuando como um cliente para se conectar ao Broker MQTT, e como um servidor para interagir com o aplicativo móvel. A classe também gerencia a transição entre o modo de economia de energia e operação normal e lida com interrupções externas que podem sinalizar a necessidade de mudança no estado de operação.
+
+![Diagrama do Wifi Client](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_wifi.png)
+![Diagrama do Wifi Server](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_server.png)
 
 ### Métodos Principais
 
@@ -444,6 +456,8 @@ A comunicação com o ESP32 pode ser realizada através das seguintes APIs, disp
 | POST     | /settings | -             | JSON: Novas configurações | -                                                                         | O app verifica o sucesso pela resposta do status code |
 | GET      | /settings | -             | -                         | JSON: Configurações atuais                                                | -                                                     |
 | GET      | /check    | -             | -                         | String: "conectado!"                                                      | Utilizado para verificar a conexão com o ESP          |
+
+![Diagrama do Aplicativo](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_app.png)
 
 ### Diagnóstico de Problemas e Soluções
 
