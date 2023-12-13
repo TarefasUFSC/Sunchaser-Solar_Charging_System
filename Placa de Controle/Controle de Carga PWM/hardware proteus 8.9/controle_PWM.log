@@ -1,4 +1,4 @@
-# Writing all output to: E:\Projetos\UFSC\PSU\Sunchaser-Solar_Charging_System\Placa de Controle\Controle de Carga PWM\hardware proteus 8.9\controle_PWM.log
+# Writing all output to: Z:\mnt\ssd\Projetos\UFSC\PSU\Sunchaser-Solar_Charging_System\Placa de Controle\Controle de Carga PWM\hardware proteus 8.9\controle_PWM.log
 set pad_wire_necking on
 bus diagonal
 fanout 5
