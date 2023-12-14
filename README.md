@@ -278,7 +278,10 @@ Manter a documentação atualizada e criar testes para novas funcionalidades sã
 
 O projeto está organizado em diretórios que separam cada componente e fase de desenvolvimento, facilitando a navegação e compreensão do sistema como um todo. Abaixo está a árvore de arquivos com a descrição de cada diretório e arquivo-chave:
 
-```
+<details>
+  <summary><b>Mostrar File Tree</summary>
+
+  ```
 .
 ├── App Mobile
 │   └── mobile
@@ -359,3 +362,5 @@ O projeto está organizado em diretórios que separam cada componente e fase de 
     ├── *.pdf
 
 ```
+
+</details>
