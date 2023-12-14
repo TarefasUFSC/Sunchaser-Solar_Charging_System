@@ -4,10 +4,14 @@ import { HorizontalList } from '../components/components';
 import { ESP32Context } from '../../App'; // Importar o contexto
 
 function Home() {
-  const { batVolt, solarBatAmp, batLoadAmp, reloadData } = useContext(ESP32Context);
+  const { batVolt, solarBatAmp, batLoadAmp, reloadData, checkConnection } = useContext(ESP32Context);
   const flag = batVolt.length && solarBatAmp.length && batLoadAmp.length
   var datetime;
 
+  useEffect(() => {
+    checkConnection();
+  }, []);
+  
   function date(datetime){
     let data = datetime.split('T')[0].replaceAll('-', '/')
     let time = datetime.split('T')[1].split('-')[0]

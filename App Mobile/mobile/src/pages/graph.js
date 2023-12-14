@@ -5,12 +5,13 @@ import { Chart, Dropdown } from '../components/components';
 import { ESP32Context } from '../../App'; // Importar o contexto
 
 function Graph() {
-	const { batVolt, solarBatAmp, batLoadAmp, reloadData } = useContext(ESP32Context);
+	const { batVolt, solarBatAmp, batLoadAmp, reloadData, checkConnection } = useContext(ESP32Context);
 	const [selectedOption, setSelectedOption] = useState('Tensão na Bateria');
 	const [chartData, setChartData] = useState(null);
 
 	useEffect(() => {
 		changeChartData(batVolt, 'V')
+		checkConnection();
 	}, []);
 
 	function changeChartData(data_list, unit) {

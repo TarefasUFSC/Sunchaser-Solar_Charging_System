@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, ScrollView, StyleSheet, Text, Button } from 'react-native';
 import axios from 'axios';
 
 import { HorizontalList, RoundButton } from '../components/components';
-
-import { getSettings, setSettings } from '../routes/routes';
+import { ESP32Context } from '../../App'; // Importar o contexto
 
 function Settings({ navigation }) {
+  const { batVolt, solarBatAmp, batLoadAmp, reloadData, checkConnection } = useContext(ESP32Context);
   const [readingInterval, setReadingInterval] = useState('');
   const [cacheMaxSize, setCacheMaxSize] = useState('');
   const [ltmMaxSize, setLtmMaxSize] = useState('');
 
   useEffect(() => {
-
     getSettings()
+    checkConnection();
   }, []);
-
 
   function setSettings(leitura, envio, dias) {
     const data = {

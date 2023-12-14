@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react';
-import { Dimensions, Image, Modal, StyleSheet, Text, View } from 'react-native';
+import { Button, Dimensions, Image, Modal, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import axios from 'axios';
@@ -20,16 +20,18 @@ const App = () => {
   const [reloadDataFlag, setReloadDataFlag] = useState(false);
   const [isBootingUp, setIsBootingUp] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     reloadData();
     setIsBootingUp(false);
+    checkConnection();
   }, []);
   // Este useEffect será executado após a atualização dos estados
 
   useEffect(() => {
     if (!isBootingUp) {
-
+      checkConnection();
       getData();
       setIsLoading(false);
     }
@@ -42,6 +44,13 @@ const App = () => {
     setReloadDataFlag(!reloadDataFlag)
     // getData() é chamado após os estados serem limpos
   }
+
+  function checkConnection(){
+    let data = axios.get('http://192.168.1.1/check', {timeout: 3000})
+      .then((response)=>{setIsConnected(true)})
+      .catch((error)=>{setIsConnected(false)})
+  }
+
   async function fetchData(type, page) {
     let data = {
       'page': 0,
@@ -113,7 +122,8 @@ const App = () => {
     batVolt,
     solarBatAmp,
     batLoadAmp,
-    reloadData
+    reloadData,
+    checkConnection
   };
 
   return (
@@ -178,6 +188,16 @@ const App = () => {
           </View>
         </Modal>
       )}
+      {!isConnected && (
+        <Modal transparent={true} animationType="fade">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text>Você não está conectado com o esp. Por favor, conecte com a rede ESP32_SUNCHASER para continuar</Text>
+              <RoundButton palavra='Tente Novamente' page='home' color='#5DB075' tColor='white' onPressFunction={() => checkConnection()} />
+            </View>
+          </View>
+        </Modal>
+      )}
     </ESP32Context.Provider>
   );
 };
@@ -192,6 +212,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
+    flex: 1,
+    justifyContent: 'center',
     padding: 20,
     borderRadius: 10,
   },
