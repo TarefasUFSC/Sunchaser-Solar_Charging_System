@@ -23,7 +23,8 @@ Continue lendo para uma visão detalhada da implementação do projeto, incluind
 
 ![Diagrama Alto Nivel](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/alto_nivel.png)
 
-## Hardware
+## [Hardware](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM)
+**FEITO COM PROTEUS 8.9**
 
 ### Visão Geral
 
@@ -33,7 +34,7 @@ O coração do projeto Sunchaser é uma solução de hardware meticulosamente pr
 
 Importante frisar que todo o design foi realizado utilizando o Proteus 8.9. Versões mais recentes do Proteus podem abrir os arquivos do projeto, mas há uma incompatibilidade retroativa: projetos salvos em versões mais novas do software não poderão ser reabertos na versão 8.9. Esta informação é crucial para a manutenção e futuras iterações do projeto por outras equipes.
 
-### Estruturação Modular do Projeto
+### [Estruturação Modular do Projeto](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/hardware_sep_by_function)
 
 O design inicial foi acomodado na pasta `Placa de Controle/Controle de Carga PWM/hardware proteus 8.9`. Para superar desafios encontrados durante os testes, optou-se por uma abordagem modular, segmentando o hardware em diferentes funções:
 
@@ -50,31 +51,31 @@ Esta estruturação facilitou a identificação e solução de problemas, permit
 
 Abaixo, as imagens dos circuitos correspondem às seções descritas, proporcionando uma representação visual dos componentes e sua disposição.
 
-#### ESP e Sensores
+#### [ESP e Sensores](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/hardware_sep_by_function/esp_and_sensors)
 
 ![Circuito da Placa do ESP e Sensores](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/imagens%20dos%20circuitos/circuito%20da%20placa%20do%20esp%20e%20sensores.png)
 
 O circuito do ESP e sensores constitui o núcleo de processamento e coleta de dados, onde o ESP32 opera como a unidade central, gerenciando tanto a comunicação quanto o processamento dos dados de sensores.
 
-#### Controle PWM
+#### [Controle PWM](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/hardware_sep_by_function/controle_de_pot-PWM)
 
 ![Circuito Controle PWM](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/imagens%20dos%20circuitos/circuito%20placa%20de%20controle%20pwm.png)
 
 O circuito de controle PWM manipula a tensão fornecida pela placa fotovoltaica à bateria, utilizando um MOSFET de canal P para modular a carga com precisão, baseando-se nas leituras de tensão da bateria.
 
-#### Controle do Switch da Carga
+#### [Controle do Switch da Carga](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/hardware_sep_by_function/controle_de_pot-SWITCH)
 
 ![Circuito Controle do Switch da Carga](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/imagens%20dos%20circuitos/circuito%20do%20controle%20do%20switch%20da%20carga.png)
 
 Esta parte do hardware gerencia a conectividade entre a bateria e a carga, assegurando que a transferência de energia seja feita de maneira eficaz e segura, pois o Relé é aberto caso a tensão da bateria seja muito baixa (o que danifica a vida uti dela) e caso a corrente seja alta demais para a bateria.
 
-#### Reguladores
+#### [Reguladores](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/hardware_sep_by_function/reguladores_de_tensao)
 
 ![Circuito Reguladores](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/imagens%20dos%20circuitos/circuito%20reguladores.png)
 
 Os reguladores de tensão são componentes cruciais do projeto, desempenhando um papel vital ao fornecer tensões DC estáveis de 5V, 9V e 12V. Esta placa reguladora é uma unidade modular, projetada para ser flexível e potencialmente integrável em outros projetos. Recebendo uma tensão de entrada variando de 12 a 20V, os reguladores asseguram a estabilização nas saídas especificadas, proporcionando uma alimentação confiável e segura para todos os componentes eletrônicos do sistema.
 
-#### Circuito Geral
+#### [Circuito Geral](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/hardware%20proteus%208.9)
 
 ![Circuito Visão Geral](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/imagens%20dos%20circuitos/circuto%20placa%20all.png)
 
