@@ -10,7 +10,6 @@ O projeto é dividido em várias etapas de desenvolvimento, com testes dedicados
 
 O sistema é projetado para operar em locais remotos, onde a estabilidade da conexão de internet pode ser intermitente. Portanto, ele armazena dados localmente e tenta transmitir informações retroativas quando uma conexão está disponível. A abordagem de design permite o acesso local aos dados do ESP32, que pode alternar entre modos cliente e servidor para facilitar a interação com o usuário por meio de um aplicativo móvel.
 
-
 ### Objetivos
 
 - Manter uma tensão estável de 12V na bateria, conforme especificações técnicas do fabricante.
@@ -25,6 +24,7 @@ Continue lendo para uma visão detalhada da implementação do projeto, incluind
 ![Diagrama Alto Nivel](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/alto_nivel.png)
 
 ## [Hardware](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM)
+
 **FEITO COM PROTEUS 8.9**
 
 ### Visão Geral
@@ -82,7 +82,6 @@ Os reguladores de tensão são componentes cruciais do projeto, desempenhando um
 
 </details>
 
-
 ### Observações Técnicas Importantes
 
 - A presença de uma resistência interna na simulação da bateria é vital para o comportamento adequado das tensões no circuito. A ausência desta foi contornada com a implementação de um resistor em paralelo com a fonte de alimentação durante os testes.
@@ -134,11 +133,11 @@ O software do projeto é composto por várias classes, cada uma responsável por
     - `changeDutyCycle()`: Ajusta o ciclo de trabalho do PWM para regular a tensão.
 
 ![Diagrama do Cotrole de Carga](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_controle.png)
+
 </details>
 
-
-
-## Classe Sensors
+<details>
+  <summary><b>Classe Sensors</b></summary>
 
 - **Arquivos**: `Sensors.cpp`, `Sensors.h`
 - **Responsabilidade**: Realiza a leitura da corrente e tensão da bateria e do painel solar.
@@ -146,13 +145,17 @@ O software do projeto é composto por várias classes, cada uma responsável por
   - `INA_init()`: Inicializa os sensores INA219.
   - `battery_current()`, `pv_current()`: Retorna a corrente medida pela bateria e pelo sensor do painel solar.
   - `battery_voltage()`, `pv_voltage()`: Retorna a tensão medida pela bateria e pelo sensor do painel solar.
+  </details>
 
-## Classe TimeConfigurations
+<details>
+  <summary><b>Classe TimeConfigurations</b></summary>
 
 - **Arquivo**: `TimeConfigurations.h`
 - **Responsabilidade**: Armazena as configurações de tempo relacionadas ao intervalo de leitura, tamanho máximo do cache e memória de longo prazo.
+</details>
 
-## Classe TimerInterrupt
+<details>
+  <summary><b>Classe TimerInterrupt</b></summary>
 
 - **Arquivos**: `TimerInterrupt.cpp`, `TimerInterrupt.h`
 - **Responsabilidade**: Gerencia as interrupções do temporizador para realizar operações periódicas.
@@ -161,7 +164,8 @@ O software do projeto é composto por várias classes, cada uma responsável por
   - `timer_interruption()`: Método chamado em cada interrupção do temporizador.
   - `tryToSendCacheToServer()`: Tenta enviar dados do cache para o servidor.
 
-## Classe SaveToFlash
+<details>
+  <summary><b>Classe SaveToFlash</b></summary>
 
 - **Arquivos**: `SaveToFlash.cpp`, `SaveToFlash.h`
 - **Responsabilidade**: Gerencia o armazenamento e recuperação de dados de leituras na memória flash.
@@ -172,13 +176,18 @@ O software do projeto é composto por várias classes, cada uma responsável por
 
 ![Diagrama Memoria](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/diagrama_memoria_esp.png)
 
-## Classe Communicator
+</details>
+
+<details>
+  <summary><b>Classe Communicator</b></summary>
 
 - **Arquivos**: `communicator.cpp`, `communicator.h`, `communicator_client_module.cpp`, `communicator_interruption_module.cpp`, `communicator_mqtt_module.cpp`, `communicator_server_module.cpp`
 - **Responsabilidade**: Esta classe gerencia toda a comunicação do ESP32, atuando como um cliente para se conectar ao Broker MQTT, e como um servidor para interagir com o aplicativo móvel. A classe também gerencia a transição entre o modo de economia de energia e operação normal e lida com interrupções externas que podem sinalizar a necessidade de mudança no estado de operação.
 
 ![Diagrama do Wifi Client](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_wifi.png)
 ![Diagrama do Wifi Server](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_server.png)
+
+</details>
 
 ### Métodos Principais
 
@@ -265,8 +274,6 @@ Algumas sugestões para melhorias futuras incluem:
 
 Manter a documentação atualizada e criar testes para novas funcionalidades são essenciais para a manutenção contínua do projeto.
 
-
-
 ## Estrutura de Arquivos
 
 O projeto está organizado em diretórios que separam cada componente e fase de desenvolvimento, facilitando a navegação e compreensão do sistema como um todo. Abaixo está a árvore de arquivos com a descrição de cada diretório e arquivo-chave:
@@ -352,4 +359,3 @@ O projeto está organizado em diretórios que separam cada componente e fase de 
     ├── *.pdf
 
 ```
-
