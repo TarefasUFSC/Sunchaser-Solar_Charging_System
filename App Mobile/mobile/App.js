@@ -25,7 +25,6 @@ const App = () => {
   useEffect(() => {
     reloadData();
     setIsBootingUp(false);
-    checkConnection();
   }, []);
   // Este useEffect será executado após a atualização dos estados
 
@@ -45,10 +44,12 @@ const App = () => {
     // getData() é chamado após os estados serem limpos
   }
 
-  function checkConnection(){
-    let data = axios.get('http://192.168.1.1/check', {timeout: 3000})
-      .then((response)=>{setIsConnected(true)})
-      .catch((error)=>{setIsConnected(false)})
+  function checkConnection() {
+    let data = axios.get('http://192.168.1.1/check', { timeout: 3000 })
+      .then((response) => {
+        setIsConnected(true);
+      })
+      .catch((error) => { setIsConnected(false) })
   }
 
   async function fetchData(type, page) {
@@ -141,7 +142,7 @@ const App = () => {
                   source={require('./src/assets/home.png')}
                   style={{ width: size, height: size, tintColor: color }}
                 />
-              ),headerRight: () => (
+              ), headerRight: () => (
                 <View>
                   <RoundButton palavra='Nova Leitura' page='home' color='#5DB075' tColor='white' onPressFunction={() => reloadData()} />
                 </View>
@@ -177,7 +178,7 @@ const App = () => {
             }}
           />
         </Tab.Navigator>
-        </NavigationContainer>
+      </NavigationContainer>
       {/* Modal de carregamento */}
       {isLoading && (
         <Modal transparent={true} animationType="fade">

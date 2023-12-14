@@ -13,7 +13,6 @@ function Settings({ navigation }) {
 
   useEffect(() => {
     getSettings()
-    checkConnection();
   }, []);
 
   function setSettings(leitura, envio, dias) {
@@ -36,6 +35,8 @@ function Settings({ navigation }) {
   }
 
   function getSettings() {
+
+    checkConnection();
     let data = axios.get('http://192.168.1.1/settings')
       .then(response => {
         setReadingInterval(parseInt(response.data['readingInterval']))
@@ -50,7 +51,7 @@ function Settings({ navigation }) {
       });
     return data;
   }
-  
+
   return (
     <View style={{ backgroundColor: 'white', flex: 1 }}><ScrollView>
       {readingInterval != null && cacheMaxSize != null && ltmMaxSize != null ?

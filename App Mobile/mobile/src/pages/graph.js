@@ -11,15 +11,17 @@ function Graph() {
 
 	useEffect(() => {
 		changeChartData(batVolt, 'V')
-		checkConnection();
 	}, []);
 
 	function changeChartData(data_list, unit) {
-		let newChartData = data_list.map(it => {
+
+		checkConnection();
+		let inverted_data_list = data_list.reverse()
+		let newChartData = inverted_data_list.map(it => {
 			const date = it['datetime'].split('T')[0].replaceAll('-', '/').substr(2, it.length).split('/')
 			let dt = {
 				'value': it['value'],
-				'label': + date[1] + '/' + date[0],
+				'label': date[2] + '/' + date[1],
 				'unit': unit
 			}
 			return dt;
