@@ -93,6 +93,25 @@ O projeto é configurado para ser altamente escalável e adaptável. Recomenda-s
 
 ## Configuração de Software
 
+### Pinagem
+
+| Pino (Nome no Código) | Número do Pino | Arquivo de Declaração | Observações                                                    |
+| --------------------- | -------------- | --------------------- | -------------------------------------------------------------- |
+| `PWM_Pin`             | 16             | BatteryControl.h      | Utilizado para controle PWM.                                   |
+| `S2_Pin`              | 26             | BatteryControl.h      | -                                                              |
+| `interrupt_pin`       | 33             | communicator.h        | Não pode ser 5V para evitar problemas com ADC1.                |
+| `Battery_Voltage_Pin` | 39             | Sensors.h             | Pino de leitura de tensão da bateria, deve estar no ADC1.      |
+| `Solar_Voltage_Pin`   | 34             | Sensors.h             | Pino de leitura de tensão do painel solar, deve estar no ADC1. |
+| `INA219_Sensor1_SCL`  | 11             | Obrigatório           | SCL do primeiro sensor INA219.                                 |
+| `INA219_Sensor1_SDA`  | 10             | Obrigatório           | SDA do primeiro sensor INA219.                                 |
+| `INA219_Sensor2_SCL`  | 11             | Obrigatório           | SCL do segundo sensor INA219.                                  |
+| `INA219_Sensor2_SDA`  | 10             | Obrigatório           | SDA do segundo sensor INA219.                                  |
+
+Observações Gerais:
+
+- Os pinos de leitura analógica devem estar no ADC1 devido ao uso do Wi-Fi, que interfere com o ADC2.
+- O pino `interrupt_pin` não deve receber 5V para evitar conflitos com outras leituras no ADC1.
+
 ### Ambiente de Desenvolvimento
 
 O código-fonte foi desenvolvido na Arduino IDE, uma plataforma de desenvolvimento que permite a escrita, compilação e upload de programas para placas compatíveis com Arduino, como o ESP32 utilizado neste projeto.
@@ -209,25 +228,6 @@ O software do projeto é composto por várias classes, cada uma responsável por
 - O sistema de interrupção permite que o dispositivo mude dinamicamente entre os modos de operação sem a necessidade de reinicialização ou interação manual.
 - A implementação do MQTT é robusta, com mecanismos de reconexão e callbacks para garantir a entrega de mensagens mesmo em condições de rede instáveis.
 </details>
-
-#### Pinagem
-
-| Pino (Nome no Código) | Número do Pino | Arquivo de Declaração | Observações                                                    |
-| --------------------- | -------------- | --------------------- | -------------------------------------------------------------- |
-| `PWM_Pin`             | 16             | BatteryControl.h      | Utilizado para controle PWM.                                   |
-| `S2_Pin`              | 26             | BatteryControl.h      | -                                                              |
-| `interrupt_pin`       | 33             | communicator.h        | Não pode ser 5V para evitar problemas com ADC1.                |
-| `Battery_Voltage_Pin` | 39             | Sensors.h             | Pino de leitura de tensão da bateria, deve estar no ADC1.      |
-| `Solar_Voltage_Pin`   | 34             | Sensors.h             | Pino de leitura de tensão do painel solar, deve estar no ADC1. |
-| `INA219_Sensor1_SCL`  | 11             | Obrigatório           | SCL do primeiro sensor INA219.                                 |
-| `INA219_Sensor1_SDA`  | 10             | Obrigatório           | SDA do primeiro sensor INA219.                                 |
-| `INA219_Sensor2_SCL`  | 11             | Obrigatório           | SCL do segundo sensor INA219.                                  |
-| `INA219_Sensor2_SDA`  | 10             | Obrigatório           | SDA do segundo sensor INA219.                                  |
-
-Observações Gerais:
-
-- Os pinos de leitura analógica devem estar no ADC1 devido ao uso do Wi-Fi, que interfere com o ADC2.
-- O pino `interrupt_pin` não deve receber 5V para evitar conflitos com outras leituras no ADC1.
 
 # Operação do Programa
 
