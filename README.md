@@ -160,12 +160,13 @@ O software do projeto é composto por várias classes, cada uma responsável por
 - **Arquivos**: `TimerInterrupt.cpp`, `TimerInterrupt.h`
 - **Responsabilidade**: Gerencia as interrupções do temporizador para realizar operações periódicas.
 - **Métodos Principais**:
+
   - `timer_init()`: Inicializa o timer.
   - `timer_interruption()`: Método chamado em cada interrupção do temporizador.
   - `tryToSendCacheToServer()`: Tenta enviar dados do cache para o servidor.
-
-<details>
-  <summary><b>Classe SaveToFlash</b></summary>
+  </details>
+  <details>
+    <summary><b>Classe SaveToFlash</b></summary>
 
 - **Arquivos**: `SaveToFlash.cpp`, `SaveToFlash.h`
 - **Responsabilidade**: Gerencia o armazenamento e recuperação de dados de leituras na memória flash.
