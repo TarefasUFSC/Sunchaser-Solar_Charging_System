@@ -10,6 +10,7 @@ O projeto é dividido em várias etapas de desenvolvimento, com testes dedicados
 
 O sistema é projetado para operar em locais remotos, onde a estabilidade da conexão de internet pode ser intermitente. Portanto, ele armazena dados localmente e tenta transmitir informações retroativas quando uma conexão está disponível. A abordagem de design permite o acesso local aos dados do ESP32, que pode alternar entre modos cliente e servidor para facilitar a interação com o usuário por meio de um aplicativo móvel.
 
+
 ### Objetivos
 
 - Manter uma tensão estável de 12V na bateria, conforme especificações técnicas do fabricante.
@@ -47,9 +48,9 @@ Esta estruturação facilitou a identificação e solução de problemas, permit
 
 ![Modularização das Placas](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_placas_modulo.png)
 
-### Imagens e Descrições dos Circuitos
-
-Abaixo, as imagens dos circuitos correspondem às seções descritas, proporcionando uma representação visual dos componentes e sua disposição.
+<details>
+  <summary><b>Imagens e Descrições dos Circuitos</b></summary>
+  Abaixo, as imagens dos circuitos correspondem às seções descritas, proporcionando uma representação visual dos componentes e sua disposição.
 
 #### [ESP e Sensores](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/hardware_sep_by_function/esp_and_sensors)
 
@@ -78,6 +79,9 @@ Os reguladores de tensão são componentes cruciais do projeto, desempenhando um
 #### [Circuito Geral](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/tree/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/hardware%20proteus%208.9)
 
 ![Circuito Visão Geral](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Placa%20de%20Controle/Controle%20de%20Carga%20PWM/imagens%20dos%20circuitos/circuto%20placa%20all.png)
+
+</details>
+
 
 ### Observações Técnicas Importantes
 
@@ -114,21 +118,25 @@ A pasta `Programas ESP/ProgramaFinal` contém o código-fonte consolidado que se
 
 O software do projeto é composto por várias classes, cada uma responsável por uma parte específica da lógica de controle e comunicação do sistema. Abaixo estão os arquivos principais e a descrição de suas responsabilidades e operações:
 
-## Classe BatteryControl
-
-- **Arquivos**: `BatteryControl.cpp`, `BatteryControl.h`
-- **Responsabilidade**: Controla o processo de carregamento da bateria ao modular a tensão fornecida pelo painel solar. Garante a manutenção da tensão da bateria nos níveis ideais para otimizar o carregamento e a vida útil da bateria.
-- **Métodos Principais**:
-  - `PWM_init()`: Inicializa a configuração do PWM.
-  - `battery_loop()`: Executa o loop principal de controle da bateria, ajustando o PWM conforme necessário.
-  - `check_error(float error)`: Verifica e lida com erros no sistema de carregamento.
-  - `stopCharging()`: Interrompe o processo de carregamento da bateria.
-  - `bulk_stage()`, `absorption_stage()`, `float_stage()`: Gerenciam as diferentes fases do processo de carregamento.
-  - `charging_control()`: Controle lógico para a regulação do carregamento da bateria.
-  - `load_connection()`: Gerencia a conexão e desconexão da carga da bateria.
-  - `changeDutyCycle()`: Ajusta o ciclo de trabalho do PWM para regular a tensão.
+<details>
+  <summary><b>Classe BatteryControl</b></summary>
+  
+  - **Arquivos**: `BatteryControl.cpp`, `BatteryControl.h`
+  - **Responsabilidade**: Controla o processo de carregamento da bateria ao modular a tensão fornecida pelo painel solar. Garante a manutenção da tensão da bateria nos níveis ideais para otimizar o carregamento e a vida útil da bateria.
+  - **Métodos Principais**:
+    - `PWM_init()`: Inicializa a configuração do PWM.
+    - `battery_loop()`: Executa o loop principal de controle da bateria, ajustando o PWM conforme necessário.
+    - `check_error(float error)`: Verifica e lida com erros no sistema de carregamento.
+    - `stopCharging()`: Interrompe o processo de carregamento da bateria.
+    - `bulk_stage()`, `absorption_stage()`, `float_stage()`: Gerenciam as diferentes fases do processo de carregamento.
+    - `charging_control()`: Controle lógico para a regulação do carregamento da bateria.
+    - `load_connection()`: Gerencia a conexão e desconexão da carga da bateria.
+    - `changeDutyCycle()`: Ajusta o ciclo de trabalho do PWM para regular a tensão.
 
 ![Diagrama do Cotrole de Carga](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_controle.png)
+</details>
+
+
 
 ## Classe Sensors
 
