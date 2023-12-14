@@ -23,130 +23,6 @@ Continue lendo para uma visão detalhada da implementação do projeto, incluind
 
 ![Diagrama Alto Nivel](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/alto_nivel.png)
 
-## Estrutura de Arquivos
-
-O projeto está organizado em diretórios que separam cada componente e fase de desenvolvimento, facilitando a navegação e compreensão do sistema como um todo. Abaixo está a árvore de arquivos com a descrição de cada diretório e arquivo-chave:
-
-```
-.
-├── App Mobile
-│   └── mobile
-│       ├── App.js
-│       ├── app.json
-│       ├── babel.config.js
-│       ├── package.json
-│       ├── src
-│       │   ├── assets
-│       │   │   ├── *.png
-│       │   ├── components
-│       │   │   └── components.js
-│       │   ├── pages
-│       │   │   ├── graph.js
-│       │   │   ├── home.js
-│       │   │   └── settings.js
-│       │   └── routes
-│       │       └── routes.js
-│       └── yarn.lock
-├── Documentação
-│   ├── Cronograma/
-│   ├── Diagramas/
-│   ├── Planejamento/
-│   ├── Relatorios/
-│   └── Revisão de Lietratura/
-├── logo/
-├── Placa de Controle
-│   ├── Controle de Carga PWM
-│   │   ├── ESP32-Pinout.jpg
-│   │   ├── hardware/ -> (Antigo)
-│   │   ├── hardware proteus 8.9
-│   │   │   ├── controle_PWM.PDF
-│   │   │   ├── controle_PWM.pdsprj
-│   │   │   └── PCB
-│   │   │       ├── circuito-bottom_coppper.PDF
-│   │   │       ├── circuito-top_coppper.PDF
-│   │   │       ├── circuito-top_silk.PDF
-│   │   │       └── GERBER
-│   │   │           └── controle_PWM - CADCAM.ZIP
-│   │   ├── hardware_sep_by_function
-│   │   │   ├── controle_de_pot
-│   │   │   │   ├── controle_pot.pdsprj
-│   │   │   │   ├── pcb
-│   │   │   │   │   ├── bottom_copper_controle.pdf
-│   │   │   │   │   └── top_silk_controle.pdf
-│   │   │   ├── controle_de_pot-PWM
-│   │   │   │   ├── controle_pot_pwm.pdsprj
-│   │   │   │   ├── pcb
-│   │   │   │   │   ├── BOTTOM_COPPER_PWM.pdf
-│   │   │   │   │   └── TOP_SILK_PWM.pdf
-│   │   │   ├── controle_de_pot-SWITCH
-│   │   │   │   ├── controle_pot_switch.pdsprj
-│   │   │   │   ├── pcb
-│   │   │   │   │   ├── bottom_copper_SWITCH.pdf
-│   │   │   │   │   └── top_silk_SWITCH.pdf
-│   │   │   ├── esp_and_sensors
-│   │   │   │   ├── Backup Of esp_and_sensors.pdsbak
-│   │   │   │   ├── bestsave.rte
-│   │   │   │   ├── esp_and_sensors.pdsprj
-│   │   │   │   └── pcb
-│   │   │   │       ├── esp_and_sensors_bottom_copper.pdf
-│   │   │   │       └── esp_and_sensors_top_silk_and_coopper.pdf
-│   │   │   ├── new_board_schema.xml
-│   │   │   └── reguladores_de_tensao
-│   │   │       ├── pcb
-│   │   │       │   ├── reguladores_bottom_copper.pdf
-│   │   │       │   └── reguladores_top_silk.pdf
-│   │   │       ├── reguladores.pdsprj
-│   │   ├── HJR-3FF_TIANBOGANGLIANELECTRONICS.pdf
-│   │   ├── imagens dos circuitos/
-│   │   ├── teste controle MOSFETs
-│   │   │   ├── teste_controle_mosfet.pdsprj
-│   │   └── teste controle MOSFETs com optoacoplador
-│   │       ├── teste_controle_mosfet.pdsprj
-│   ├── Cuk Converter
-│   │   └── Teste do funcionamento do Cuk
-│   │       ├── CukConverter-Teste.pdsprj
-│   ├── ESP32-DEVKITC.zip
-├── Programas ESP
-│   ├── Desenvolvimento
-│   │   ├── 1-CurrentSensorExample/
-│   │   ├── 2-VoltageReadingExample/
-│   │   ├── 3-Current_Voltage_reading/
-│   │   ├── 4-PWMControlExample/
-│   │   ├── 5-BatteryControl/
-│   │   ├── 6-TimerInterrupt/
-│   │   ├── 7-BLE_server/
-│   │   ├── 8-LittleFS/
-│   │   ├── ESP-GetTime/
-│   │   ├── MainProject/
-│   │   └── Wifi-Server_Client/
-│   ├── ProgramaFinal
-│   │   ├── BatteryControl.cpp
-│   │   ├── BatteryControl.h
-│   │   ├── communicator_client_module.cpp
-│   │   ├── communicator.cpp
-│   │   ├── communicator.h
-│   │   ├── communicator_interruption_module.cpp
-│   │   ├── communicator_mqtt_module.cpp
-│   │   ├── communicator_server_module.cpp
-│   │   ├── FinalProgram.md
-│   │   ├── FinalProgram.xml
-│   │   ├── ProgramaFinal.ino
-│   │   ├── PubSubClient.cpp
-│   │   ├── PubSubClient.h
-│   │   ├── SaveToFlash.cpp
-│   │   ├── SaveToFlash.h
-│   │   ├── Sensors.cpp
-│   │   ├── Sensors.h
-│   │   ├── TimeConfigurations.h
-│   │   ├── TimerInterrupt.cpp
-│   │   └── TimerInterrupt.h
-│   └── pubsubclient-master.zip
-├── README.md
-└── Referencias que o professor deu no inicio
-    ├── *.pdf
-
-```
-
 ## Hardware
 
 ### Visão Geral
@@ -379,3 +255,92 @@ Algumas sugestões para melhorias futuras incluem:
 - Interface de usuário aprimorada no aplicativo móvel para facilitar a interação e o monitoramento.
 
 Manter a documentação atualizada e criar testes para novas funcionalidades são essenciais para a manutenção contínua do projeto.
+
+
+
+## Estrutura de Arquivos
+
+O projeto está organizado em diretórios que separam cada componente e fase de desenvolvimento, facilitando a navegação e compreensão do sistema como um todo. Abaixo está a árvore de arquivos com a descrição de cada diretório e arquivo-chave:
+
+```
+.
+├── App Mobile
+│   └── mobile
+│       ├── App.js
+│       ├── app.json
+│       ├── babel.config.js
+│       ├── package.json
+│       ├── src
+│       │   ├── assets
+│       │   │   ├── *.png
+│       │   ├── components
+│       │   │   └── components.js
+│       │   ├── pages
+│       │   │   ├── graph.js
+│       │   │   ├── home.js
+│       │   │   └── settings.js
+│       │   └── routes
+│       │       └── routes.js
+│       └── yarn.lock
+├── Documentação
+│   ├── Cronograma/
+│   ├── Diagramas/
+│   ├── Planejamento/
+│   ├── Relatorios/
+│   └── Revisão de Lietratura/
+├── logo/
+├── Placa de Controle
+│   ├── Controle de Carga PWM
+│   │   ├── ESP32-Pinout.jpg
+│   │   ├── hardware/ -> (Antigo)
+│   │   ├── hardware proteus 8.9/ -> Placa Geral com tudo incluso
+│   │   ├── hardware_sep_by_function
+│   │   │   ├── controle_de_pot/
+│   │   │   ├── controle_de_pot-PWM/
+│   │   │   ├── controle_de_pot-SWITCH/
+│   │   │   ├── esp_and_sensors/
+│   │   │   └── reguladores_de_tensao/
+│   │   ├── imagens dos circuitos/
+│   │   ├── teste controle MOSFETs/
+│   ├── Cuk Converter/ -> Testes do inicio do projeto usando o conversor cuk (Não é usado mais)
+├── Programas ESP
+│   ├── Desenvolvimento
+│   │   ├── 1-CurrentSensorExample/
+│   │   ├── 2-VoltageReadingExample/
+│   │   ├── 3-Current_Voltage_reading/
+│   │   ├── 4-PWMControlExample/
+│   │   ├── 5-BatteryControl/
+│   │   ├── 6-TimerInterrupt/
+│   │   ├── 7-BLE_server/
+│   │   ├── 8-LittleFS/
+│   │   ├── ESP-GetTime/
+│   │   ├── MainProject/
+│   │   └── Wifi-Server_Client/
+│   ├── ProgramaFinal
+│   │   ├── BatteryControl.cpp
+│   │   ├── BatteryControl.h
+│   │   ├── communicator_client_module.cpp
+│   │   ├── communicator.cpp
+│   │   ├── communicator.h
+│   │   ├── communicator_interruption_module.cpp
+│   │   ├── communicator_mqtt_module.cpp
+│   │   ├── communicator_server_module.cpp
+│   │   ├── FinalProgram.md
+│   │   ├── FinalProgram.xml
+│   │   ├── ProgramaFinal.ino
+│   │   ├── PubSubClient.cpp
+│   │   ├── PubSubClient.h
+│   │   ├── SaveToFlash.cpp
+│   │   ├── SaveToFlash.h
+│   │   ├── Sensors.cpp
+│   │   ├── Sensors.h
+│   │   ├── TimeConfigurations.h
+│   │   ├── TimerInterrupt.cpp
+│   │   └── TimerInterrupt.h
+│   └── pubsubclient-master.zip
+├── README.md
+└── Referencias que o professor deu no inicio
+    ├── *.pdf
+
+```
+
