@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Dimensions, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { reading } from '../routes/routes';
 
 let color = '#5DB075';
 
-function setWidth(size, screenSize) {
+function setWidth(size, screenSize){
   const width = 40 * size;
   if (width < screenSize) return screenSize - 10;
   else return width
@@ -14,7 +13,6 @@ function setWidth(size, screenSize) {
 export const HorizontalList = ({ Variavel, Valor, Unidade, Input, setValor }) => {
   const handleTextChange = (newText) => {
     const numericText = newText.replace(/[^0-9]/g, '');
-    console.log("new text", numericText);
     setValor(numericText);
   };
 
@@ -52,7 +50,7 @@ export const HorizontalList = ({ Variavel, Valor, Unidade, Input, setValor }) =>
   );
 };
 
-export const Chart = ({ data }) => {
+export const Chart = ({ data, opt }) => {
   const chartData = {
     labels: data.map((item) => item.label),
     datasets: [{ data: data.map((item) => item.value) }]
@@ -60,7 +58,7 @@ export const Chart = ({ data }) => {
   const size = chartData.datasets[0].data.length;
   return (
     <View>
-      <Text>Bezier Line Chart</Text>
+      <Text styles={styles.titleChart}>{opt}</Text>
       <LineChart
         data={chartData}
         width={setWidth(size, Dimensions.get("window").width)}
@@ -70,7 +68,7 @@ export const Chart = ({ data }) => {
           backgroundColor: "#e26a00",
           backgroundGradientFrom: color,
           backgroundGradientTo: "#7abd90",
-          decimalPlaces: 1, // optional, defaults to 2dp
+          decimalPlaces: 1,
           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           style: {
@@ -230,6 +228,10 @@ const styles = StyleSheet.create({
     borderBottomColor: 'white',
     borderBottomWidth: 1,
   },
+  titleChart:{
+    fontWeight: 'bold', 
+    fontSize: 16,
+  }
 });
 
 export default styles;

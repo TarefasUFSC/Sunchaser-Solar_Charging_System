@@ -1,25 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react';
-
 import { View, ScrollView, StyleSheet, Text, Button } from 'react-native';
-import dados1 from '../../dataTest/dados7.json';
-import dados2 from '../../dataTest/dados12.json';
-import dados3 from '../../dataTest/dados15.json';
-import dados4 from '../../dataTest/dados30.json';
-import dados5 from '../../dataTest/dados60.json';
+
 import { Chart, Dropdown } from '../components/components';
-
 import { ESP32Context } from '../../App'; // Importar o contexto
+
 function Graph() {
-
-
-	const { batVolt, solarBatAmp, batLoadAmp, reloadData } = useContext(ESP32Context);
-
+	const { batVolt, solarBatAmp, batLoadAmp, reloadData, checkConnection } = useContext(ESP32Context);
 	const [selectedOption, setSelectedOption] = useState('Tensão na Bateria');
 	const [chartData, setChartData] = useState(null);
 
 	useEffect(() => {
-
 		changeChartData(batVolt, 'V')
+		checkConnection();
 	}, []);
 
 	function changeChartData(data_list, unit) {
@@ -32,13 +24,10 @@ function Graph() {
 			}
 			return dt;
 		})
-		console.log(newChartData);
 		setChartData(newChartData)
-
 	}
 
 	const handleOptionChange = (option) => {
-		console.log(batVolt);
 		setSelectedOption(option);
 		switch (option) {
 			case 'Tensão na Bateria':
@@ -54,6 +43,7 @@ function Graph() {
 				changeChartData(batVolt, 'V')
 		}
 	};
+
 	return (
 		<ScrollView style={{ backgroundColor: 'white', flex: 1 }} vertical>
 			<View style={styles.graphContainer}>
@@ -63,12 +53,11 @@ function Graph() {
 				</View>
 				{chartData ?
 					<View style={styles.chartContainer}>
-						<ScrollView horizontal><Chart data={chartData} /></ScrollView>
+						<ScrollView horizontal><Chart data={chartData} opt={selectedOption} /></ScrollView>
 					</View> :
 					<Text>Sem Dados</Text>}
 			</View>
 		</ScrollView>
-
 	);
 }
 

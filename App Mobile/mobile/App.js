@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Button, Dimensions, Image, Modal, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import Home from './src/pages/home';
 import Graph from './src/pages/graph';
 import Settings from './src/pages/settings';
+import { RoundButton } from './src/components/components';
 
 export const ESP32Context = createContext();
 
@@ -16,21 +17,23 @@ const App = () => {
   const [batVolt, setBatVolt] = useState([]);
   const [solarBatAmp, setSolarBatAmp] = useState([]);
   const [batLoadAmp, setBatLoadAmp] = useState([]);
-  const [reloadDataFlag, setReloadDataFlag] = useState(false)
+  const [reloadDataFlag, setReloadDataFlag] = useState(false);
   const [isBootingUp, setIsBootingUp] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    reloadData()
-    setIsBootingUp(false)
+    reloadData();
+    setIsBootingUp(false);
+    checkConnection();
   }, []);
-
-
   // Este useEffect será executado após a atualização dos estados
+
   useEffect(() => {
     if (!isBootingUp) {
-      console.log("Estados atualizados", { batLoadAmp, batVolt, solarBatAmp });
-
+      checkConnection();
       getData();
+      setIsLoading(false);
     }
   }, [reloadDataFlag]);
 
@@ -41,6 +44,13 @@ const App = () => {
     setReloadDataFlag(!reloadDataFlag)
     // getData() é chamado após os estados serem limpos
   }
+
+  function checkConnection(){
+    let data = axios.get('http://192.168.1.1/check', {timeout: 3000})
+      .then((response)=>{setIsConnected(true)})
+      .catch((error)=>{setIsConnected(false)})
+  }
+
   async function fetchData(type, page) {
     let data = {
       'page': 0,
@@ -51,50 +61,42 @@ const App = () => {
       "solar_bat": 0
     }
     const url = "http://192.168.1.1/" + type + "?page=" + page
-    console.log("url: ", url);
-    await axios.get('http://192.168.1.1/cache?page=' + page).then(response => {
-      console.log("deu bom na page ", page);
-      data["page"] = response.data['page']
-      data["total"] = response.data['total']
-      data["items_per_page"] = response.data['qtd_per_page']
-      data["bat_volt"] = (response.data['bat_volt']);
-      data["bat_load"] = (response.data['bat_load_amp'])
-      data["solar_bat"] = (response.data['sol_bat_amp'])
-      // console.log(pg, total, items_per_page, bat_volt, bat_load, solar_bat);
-    })
+    await axios.get(url)
+      .then(response => {
+        data["page"] = response.data['page']
+        data["total"] = response.data['total']
+        data["items_per_page"] = response.data['qtd_per_page']
+        data["bat_volt"] = (response.data['bat_volt']);
+        data["bat_load"] = (response.data['bat_load_amp'])
+        data["solar_bat"] = (response.data['sol_bat_amp'])
+      })
       .catch(error => {
         console.error('Erro na chamada GET: ', error.data);
-        // setCache({ "error": error })
       });
     return data
   }
 
-
   async function loadData(type) {
-    console.log("Pegando o ", type);
     let data = await fetchData(type, 1)
     // append das listas nas variavei
-    let page = data["page"]
+    let page = parseInt(data["page"])
     let total = data["total"]
     let items_per_page = data["items_per_page"]
     let bat_volt = data["bat_volt"]
     let bat_load = data["bat_load"]
     let solar_bat = data["solar_bat"]
 
-    console.log(page, total, items_per_page, bat_volt, bat_load, solar_bat);
     if (page > 0) {
-      console.log("Leu");
       setBatLoadAmp(currentBatLoadAmp => currentBatLoadAmp.concat(bat_load));
       setBatVolt(currentBatVolt => currentBatVolt.concat(bat_volt));
       setSolarBatAmp(currentSolarBatAmp => currentSolarBatAmp.concat(solar_bat));
 
       let pages_needed = total / (items_per_page * page)
       while (pages_needed > page) {
-        console.log("PRECISO DE MAIS PAGINASSSS");
         page = page + 1;
         data = await fetchData(type, page)
         // append das listas nas variavei
-        page = data["page"]
+        page = parseInt(data["page"])
         total = data["total"]
         items_per_page = data["items_per_page"]
         bat_volt = data["bat_volt"]
@@ -115,16 +117,14 @@ const App = () => {
   async function getData() {
     await loadData('cache')
     await loadData('ltm')
-
   };
   const espContextValue = {
     batVolt,
     solarBatAmp,
     batLoadAmp,
-    reloadData
+    reloadData,
+    checkConnection
   };
-
-
 
   return (
     <ESP32Context.Provider value={espContextValue}>
@@ -141,6 +141,10 @@ const App = () => {
                   source={require('./src/assets/home.png')}
                   style={{ width: size, height: size, tintColor: color }}
                 />
+              ),headerRight: () => (
+                <View>
+                  <RoundButton palavra='Nova Leitura' page='home' color='#5DB075' tColor='white' onPressFunction={() => reloadData()} />
+                </View>
               )
             }}
           />
@@ -173,12 +177,46 @@ const App = () => {
             }}
           />
         </Tab.Navigator>
-      </NavigationContainer>
+        </NavigationContainer>
+      {/* Modal de carregamento */}
+      {isLoading && (
+        <Modal transparent={true} animationType="fade">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text>LOADING!!</Text>
+            </View>
+          </View>
+        </Modal>
+      )}
+      {!isConnected && (
+        <Modal transparent={true} animationType="fade">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text>Você não está conectado com o esp. Por favor, conecte com a rede ESP32_SUNCHASER para continuar</Text>
+              <RoundButton palavra='Tente Novamente' page='home' color='#5DB075' tColor='white' onPressFunction={() => checkConnection()} />
+            </View>
+          </View>
+        </Modal>
+      )}
     </ESP32Context.Provider>
   );
+};
 
-}
-
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  // Estilos para o modal
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    borderRadius: 10,
+  },
+});
 
 export default App;

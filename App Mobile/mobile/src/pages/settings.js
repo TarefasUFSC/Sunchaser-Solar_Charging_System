@@ -1,37 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, ScrollView, StyleSheet, Text, Button } from 'react-native';
 import axios from 'axios';
 
 import { HorizontalList, RoundButton } from '../components/components';
-
-import { getSettings, setSettings } from '../routes/routes';
+import { ESP32Context } from '../../App'; // Importar o contexto
 
 function Settings({ navigation }) {
-  data = /*getSettings().settings*/[1, 2, 3];
+  const { batVolt, solarBatAmp, batLoadAmp, reloadData, checkConnection } = useContext(ESP32Context);
   const [readingInterval, setReadingInterval] = useState('');
-  const [sendingInterval, setSendingInterval] = useState('');
-  const [daysBackup, setDaysBackup] = useState('');
+  const [cacheMaxSize, setCacheMaxSize] = useState('');
+  const [ltmMaxSize, setLtmMaxSize] = useState('');
 
   useEffect(() => {
-
     getSettings()
+    checkConnection();
   }, []);
-
-
 
   function setSettings(leitura, envio, dias) {
     const data = {
       "readingInterval": parseInt(leitura),
-      "sendingInterval": parseInt(envio),
-      "daysBackup": parseInt(dias)
+      "cacheMaxSize": parseInt(envio),
+      "ltmMaxSize": parseInt(dias)
     }
     axios.put('http://192.168.1.1/settings', data)
       .then(response => {
-        console.log('Resposta: ', response.data);
         alert('Configurações enviadas');
         setReadingInterval(parseInt(leitura))
-        setSendingInterval(parseInt(envio))
-        setDaysBackup(parseInt(dias))
+        setCacheMaxSize(parseInt(envio))
+        setLtmMaxSize(parseInt(dias))
       })
       .catch(error => {
         console.error('Erro na chamada PUT:', error);
@@ -40,35 +36,29 @@ function Settings({ navigation }) {
   }
 
   function getSettings() {
-    axios.get('http://192.168.1.1/settings')
+    let data = axios.get('http://192.168.1.1/settings')
       .then(response => {
-        console.log(response.data);
-
-        console.log(response.data['readingInterval'], response.data['sendingInterval'], response.data['daysBackup']);
         setReadingInterval(parseInt(response.data['readingInterval']))
-        setSendingInterval(parseInt(response.data['sendingInterval']))
-        setDaysBackup(parseInt(response.data['daysBackup']))
-
-        console.log(response.data['readingInterval'], sendingInterval, daysBackup);
+        setCacheMaxSize(parseInt(response.data['cacheMaxSize']))
+        setLtmMaxSize(parseInt(response.data['ltmMaxSize']))
       })
       .catch(error => {
         console.error('Erro na chamada GET: ', error);
         setReadingInterval(null)
-        setSendingInterval(null)
-        setDaysBackup(null)
+        setCacheMaxSize(null)
+        setLtmMaxSize(null)
       });
     return data;
   }
-
-
+  
   return (
     <View style={{ backgroundColor: 'white', flex: 1 }}><ScrollView>
-      {readingInterval != null && sendingInterval != null && daysBackup != null ?
+      {readingInterval != null && cacheMaxSize != null && ltmMaxSize != null ?
         <>
           <View><HorizontalList Variavel="Intervalo entre leituras" Unidade=" minutos" Valor={readingInterval} setValor={setReadingInterval} Input={true} /></View>
-          <View><HorizontalList Variavel="Intervalo entre envios" Unidade=" horas" Valor={sendingInterval} setValor={setSendingInterval} Input={true} /></View>
-          <View><HorizontalList Variavel="Dias estocados na memoria" Unidade=" dias" Valor={daysBackup} setValor={setDaysBackup} Input={true} /></View>
-          <RoundButton palavra='Salvar' color='#5DB075' tColor='white' onPressFunction={() => setSettings(readingInterval, sendingInterval, daysBackup)/*setSettings(5,1,10)*/} />
+          <View><HorizontalList Variavel="Envios salvos no cache" Unidade=" leituras" Valor={cacheMaxSize} setValor={setCacheMaxSize} Input={true} /></View>
+          <View><HorizontalList Variavel="Leituras estocadas na memoria" Unidade=" leituras" Valor={ltmMaxSize} setValor={setLtmMaxSize} Input={true} /></View>
+          <RoundButton palavra='Salvar' color='#5DB075' tColor='white' onPressFunction={() => setSettings(readingInterval, cacheMaxSize, ltmMaxSize)/*setSettings(5,1,10)*/} />
         </> : <Text>Sem conexão com o ESP para pegar as informações das conigurações dele</Text>}
     </ScrollView></View>
   );
