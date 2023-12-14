@@ -2,7 +2,7 @@
 name: Change Request
 about: Requisição de Troca de Funcionamento Core do projeto
 title: CHANGE
-labels: ''
+labels: 'change request'
 assignees: CodeWracker
 
 ---
