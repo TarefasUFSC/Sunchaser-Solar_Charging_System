@@ -168,6 +168,8 @@ O design inicial foi acomodado na pasta `Placa de Controle/Controle de Carga PWM
 
 Esta estruturação facilitou a identificação e solução de problemas, permitindo testes isolados e otimização de cada módulo.
 
+![Modularização das Placas](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_placas_modulo.png)
+
 ### Imagens e Descrições dos Circuitos
 
 Abaixo, as imagens dos circuitos correspondem às seções descritas, proporcionando uma representação visual dos componentes e sua disposição.
