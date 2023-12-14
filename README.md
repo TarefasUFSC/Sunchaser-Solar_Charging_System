@@ -188,8 +188,6 @@ O software do projeto é composto por várias classes, cada uma responsável por
 ![Diagrama do Wifi Client](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_wifi.png)
 ![Diagrama do Wifi Server](https://github.com/TarefasUFSC/Sunchaser-Solar_Charging_System/blob/main/Documenta%C3%A7%C3%A3o/Diagramas/fluxograma_esp_server.png)
 
-</details>
-
 ### Métodos Principais
 
 - `init()`: Configura os componentes necessários e inicia a conexão Wi-Fi.
@@ -210,6 +208,7 @@ O software do projeto é composto por várias classes, cada uma responsável por
 - O método `sleep()` é crítico para a conservação de energia, especialmente em ambientes remotos onde a energia é limitada.
 - O sistema de interrupção permite que o dispositivo mude dinamicamente entre os modos de operação sem a necessidade de reinicialização ou interação manual.
 - A implementação do MQTT é robusta, com mecanismos de reconexão e callbacks para garantir a entrega de mensagens mesmo em condições de rede instáveis.
+</details>
 
 #### Pinagem
 
